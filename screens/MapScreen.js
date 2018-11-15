@@ -1,3 +1,4 @@
+/* eslint-disable react/no-deprecated */
 import React from "react";
 import {
   Image,
@@ -10,26 +11,61 @@ import {
 } from "react-native";
 
 import MapView from "react-native-maps";
-
+import { Constants, Location, Permissions } from "expo";
 import { WebBrowser } from "expo";
-
 import { MonoText } from "../components/StyledText";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
+  constructor() {
+    super();
+    this.state = {
+      longitude: 37.78825,
+      latitude: -122.4324,
+      errorMessage: null
+    };
+  }
+
+  componentWillMount() {
+    if (Platform.OS === "android" && !Constants.isDevice) {
+      this.setState({
+        errorMessage:
+          "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
+      });
+    } else {
+      this._getLocationAsync();
+    }
+  }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted") {
+      this.setState({
+        errorMessage: "Permission to access location was denied"
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    console.log(location);
+    this.setState({
+      longitude: location.coords.longitude,
+      latitude: location.coords.latitude
+    });
+  };
 
   render() {
     return (
       <View style={styles.container}>
         <MapView
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
+          region={{
+            latitude: this.state.latitude,
+            longitude: this.state.longitude,
+            latitudeDelta: 0.122,
+            longitudeDelta: 0.121
           }}
+          showsUserLocation={true}
           style={styles.map}
         />
         <View style={styles.tabBarInfoContainer}>
@@ -152,7 +188,7 @@ const styles = StyleSheet.create({
     }),
     alignItems: "center",
     backgroundColor: "#fbfbfb",
-    paddingVertical: 20
+    paddingVertical: 50
   },
   tabBarInfoText: {
     fontSize: 17,
