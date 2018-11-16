@@ -7,13 +7,20 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  Button,
+  TextInput
 } from "react-native";
 
-import MapView from "react-native-maps";
-import { Constants, Location, Permissions } from "expo";
-import { WebBrowser } from "expo";
+import { createStackNavigator } from "react-navigation";
+import MapView, { Marker } from "react-native-maps";
+import { WebBrowser, Constants, Location, Permissions } from "expo";
 import { MonoText } from "../components/StyledText";
+import CheckinScreen from "./CheckInScreen";
+
+const CheckIn = createStackNavigator({
+  CheckinScreen: CheckinScreen
+});
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -22,9 +29,10 @@ export default class HomeScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      longitude: 37.78825,
-      latitude: -122.4324,
-      errorMessage: null
+      longitude: 40.6,
+      latitude: -74,
+      errorMessage: null,
+      text: "This is a map screen"
     };
   }
 
@@ -56,6 +64,8 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
+    const { navigate } = this.props.navigation;
+
     return (
       <View style={styles.container}>
         <MapView
@@ -67,10 +77,46 @@ export default class HomeScreen extends React.Component {
           }}
           showsUserLocation={true}
           style={styles.map}
-        />
+        >
+          <Marker
+            coordinate={{ latitude: 40.6, longitude: -74 }}
+            title={"first marker"}
+            description={"jkh"}
+            onPress={() =>
+              this.state.latitude === 40.6 && longitude === -74
+                ? console.log("success")
+                : console.log("failure")
+            }
+          />
+        </MapView>
         <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a map screen </Text>
+          {this.state.latitude && this.state.longitude ? (
+            <Button
+              onPress={() => navigate("CheckIn")}
+              title="Check In"
+              color="#841584"
+              accessibilityLabel="Learn more about this purple button"
+            />
+          ) : (
+            <Text> Nah you can't check in</Text>
+          )}
+          <Text style={styles.tabBarInfoText}>
+            CurrentLatitude:{this.state.latitude}{" "}
+          </Text>
+          <Text style={styles.tabBarInfoText}>
+            CurrentLongitude:{this.state.longitude}{" "}
+          </Text>
 
+          {/* <Button
+            title="Check IN"
+            color="#841584"
+            accessibilityLabel="Learn more about this purple button"
+          /> */}
+          {/* <TextInput
+            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+            onChangeText={text => this.setState({ text })}
+            value={this.state.text}
+          /> */}
           <View
             style={[styles.codeHighlightContainer, styles.navigationFilename]}
           />
