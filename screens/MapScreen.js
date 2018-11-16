@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Image,
   Platform,
@@ -6,171 +6,225 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
-} from "react-native";
+  View,
+} from 'react-native';
+import MapView, { AnimatedRegion, Animated } from 'react-native-maps';
+import DropdownMenu from 'react-native-dropdown-menu';
+import { WebBrowser } from 'expo';
 
-import MapView from "react-native-maps";
-
-import { WebBrowser } from "expo";
-
-import { MonoText } from "../components/StyledText";
+import { MonoText } from '../components/StyledText';
 
 export default class HomeScreen extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      text: '',
+      longitude: 40.6,
+      latitude: -74,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    };
+  }
   static navigationOptions = {
-    header: null
+    header: null,
   };
 
+  getInitialState() {
+    return {
+      region: {
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+    };
+  }
+
+  // onRegionChange(region) {
+  //   this.setState({ region });
+  // }
+
   render() {
+    const data = [
+      [
+        'Times Square',
+        'Fullstack Academy',
+        'World Trade Center',
+        'Museum of Sex',
+      ],
+    ]; //will have to be data
+    const coordinates = [
+      {
+        latitude: 40.7589,
+        longitude: -73.9851,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+      {
+        latitude: 40.7051,
+        longitude: -74.0092,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+      {
+        latitude: 40.7118,
+        longitude: -74.0131,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+      {
+        latitude: 40.7441,
+        longitude: -73.9874,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+    ];
+
     return (
       <View style={styles.container}>
         <MapView
           initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
+            latitude: 40.7128,
+            longitude: -74.006,
             latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }}
+            longitudeDelta: 0.0421,
+          }} //find current location and use this
           style={styles.map}
+          onRegionChange={this.onRegionChange}
         />
+        {/* <MapView
+          region={this.state.region}
+          onRegionChange={this.onRegionChange}
+        /> */}
+        {/* <Animated
+          region={this.state.region}
+          onRegionChange={this.onRegionChange}
+        /> */}
         <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a map screen </Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.navigationFilename]}
-          />
+          <View style={{ height: 2 }} />
+          <DropdownMenu
+            style={{ flex: 1 }}
+            bgColor={'white'}
+            tintColor={'#666666'}
+            activityTintColor={'green'}
+            // arrowImg={}
+            // checkImage={}
+            // optionTextStyle={{color: '#333333'}}
+            // titleStyle={{color: '#333333'}}
+            // maxHeight={300}
+            handler={(selection, row) =>
+              this.setState({
+                text: data[selection][row],
+                latitude: coordinates[row].latitude,
+                longitude: coordinates[row].longitude,
+              })
+            }
+            data={data}
+          >
+            <View style={{ flex: 1 }}>
+              <Text>{this.state.text} is current location</Text>
+              <Text>Lat: {this.state.latitude}</Text>
+              <Text>Long: {this.state.longitude}</Text>
+            </View>
+          </DropdownMenu>
         </View>
       </View>
     );
   }
-
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
-
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use
-          useful development tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
-
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync(
-      "https://docs.expo.io/versions/latest/guides/development-mode"
-    );
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      "https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes"
-    );
-  };
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   map: {
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
-    position: "absolute"
+    position: 'absolute',
   },
   developmentModeText: {
     marginBottom: 20,
-    color: "rgba(0,0,0,0.4)",
+    color: 'rgba(0,0,0,0.4)',
     fontSize: 14,
     lineHeight: 19,
-    textAlign: "center"
+    textAlign: 'center',
   },
   contentContainer: {
-    paddingTop: 30
+    paddingTop: 30,
   },
   welcomeContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   welcomeImage: {
     width: 100,
     height: 80,
-    resizeMode: "contain",
+    resizeMode: 'contain',
     marginTop: 3,
-    marginLeft: -10
+    marginLeft: -10,
   },
   getStartedContainer: {
-    alignItems: "center",
-    marginHorizontal: 50
+    alignItems: 'center',
+    marginHorizontal: 50,
   },
   homeScreenFilename: {
-    marginVertical: 7
+    marginVertical: 7,
   },
   codeHighlightText: {
-    color: "rgba(96,100,109, 0.8)"
+    color: 'rgba(96,100,109, 0.8)',
   },
   codeHighlightContainer: {
-    backgroundColor: "rgba(0,0,0,0.05)",
+    backgroundColor: 'rgba(0,0,0,0.05)',
     borderRadius: 3,
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
   },
   getStartedText: {
     fontSize: 17,
-    color: "rgba(96,100,109, 1)",
+    color: 'rgba(96,100,109, 1)',
     lineHeight: 24,
-    textAlign: "center"
+    textAlign: 'center',
   },
   tabBarInfoContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     ...Platform.select({
       ios: {
-        shadowColor: "black",
+        shadowColor: 'black',
         shadowOffset: { height: -3 },
         shadowOpacity: 0.1,
-        shadowRadius: 3
+        shadowRadius: 3,
       },
       android: {
-        elevation: 20
-      }
+        elevation: 20,
+      },
     }),
-    alignItems: "center",
-    backgroundColor: "#fbfbfb",
-    paddingVertical: 20
+    alignItems: 'center',
+    backgroundColor: '#fbfbfb',
+    paddingVertical: 100,
   },
   tabBarInfoText: {
     fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    textAlign: "center"
+    color: 'rgba(96,100,109, 1)',
+    textAlign: 'center',
   },
   navigationFilename: {
-    marginTop: 5
+    marginTop: 5,
   },
   helpContainer: {
     marginTop: 15,
-    alignItems: "center"
+    alignItems: 'center',
   },
   helpLink: {
-    paddingVertical: 15
+    paddingVertical: 15,
   },
   helpLinkText: {
     fontSize: 14,
-    color: "#2e78b7"
-  }
+    color: '#2e78b7',
+  },
 });
