@@ -13,7 +13,7 @@ import {
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 import { connect } from 'react-redux';
-import { setDummyData } from '../redux/app-redux';
+import { setDummyData, watchUserData } from '../redux/app-redux';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -25,6 +25,14 @@ class HomeScreen extends React.Component {
     this.state = {
       dummyData: this.props.dummyData,
     };
+    this.props.watchUser();
+  }
+  componentDidMount() {
+    // console.log('this.props.userData[1]: ', this.props.userData[1]);
+  }
+
+  componentDidUpdate() {
+    console.log('this.props.userData[1]: ', this.props.userData[1]);
   }
 
   onSetDummyDataPress = () => {
@@ -32,7 +40,9 @@ class HomeScreen extends React.Component {
   };
 
   render() {
-    console.log(this.props.dummyData);
+    // console.log('\nthis.props', this.props);
+    // console.log('this.props.userData[1]: ', this.props.userData[1]);
+
     return (
       <ScrollView
         style={styles.container}
@@ -48,6 +58,9 @@ class HomeScreen extends React.Component {
           }}
         />
         <Button title="Set DummyData" onPress={this.onSetDummyDataPress} />
+        <Text>{this.props.userData.firstName}</Text>
+        <Text>{this.props.userData.lastName}</Text>
+        <Text>{this.props.userData.address}</Text>
       </ScrollView>
     );
   }
@@ -56,6 +69,7 @@ class HomeScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     dummyData: state.dummyData,
+    userData: state.userData,
   };
 };
 
@@ -64,6 +78,7 @@ const mapDispatchToProps = dispatch => {
     setDummy: text => {
       dispatch(setDummyData(text));
     },
+    watchUser: () => dispatch(watchUserData()),
   };
 };
 
