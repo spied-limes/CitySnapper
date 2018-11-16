@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { store } from './redux/app-redux';
 import * as firebase from 'firebase';
 import ignoreWarnings from 'react-native-ignore-warnings';
+
 // initialize firebase
 const firebaseConfig = {
   apiKey: 'AIzaSyCHNGtGLHIR7XzL4zIqGo9Oee-qG9WTtmE',
