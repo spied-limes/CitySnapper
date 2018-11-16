@@ -24,6 +24,7 @@ class HomeScreen extends React.Component {
     super(props);
     this.state = {
       dummyData: this.props.dummyData,
+      userData: {},
     };
     this.props.watchUser();
   }
@@ -32,7 +33,7 @@ class HomeScreen extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log('this.props.userData[1]: ', this.props.userData[1]);
+    // console.log('this.props.userData[1]: ', this.props.userData[1]);
   }
 
   onSetDummyDataPress = () => {
@@ -41,7 +42,8 @@ class HomeScreen extends React.Component {
 
   render() {
     // console.log('\nthis.props', this.props);
-    // console.log('this.props.userData[1]: ', this.props.userData[1]);
+    // console.log('this.state: ', this.state);
+    console.log('this.props.userData: ', this.props.userData);
 
     return (
       <ScrollView
@@ -58,9 +60,15 @@ class HomeScreen extends React.Component {
           }}
         />
         <Button title="Set DummyData" onPress={this.onSetDummyDataPress} />
-        <Text>{this.props.userData.firstName}</Text>
-        <Text>{this.props.userData.lastName}</Text>
-        <Text>{this.props.userData.address}</Text>
+        {this.props.userData.length ? (
+          <View>
+            <Text>{this.props.userData[1].address}</Text>
+            <Text>{this.props.userData[1].firstName}</Text>
+            <Text>{this.props.userData[1].lastName}</Text>
+          </View>
+        ) : (
+          <View />
+        )}
       </ScrollView>
     );
   }

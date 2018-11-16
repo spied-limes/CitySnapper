@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 
 const initialState = {
   dummyData: 'dummyInfo',
-  userData: {},
+  userData: [],
 };
 
 // -----------------------
@@ -41,8 +41,8 @@ export const setUserData = userData => {
 //
 
 export const watchUserData = () => {
-  return function(dispatch) {
-    firebase
+  return async function(dispatch) {
+    await firebase
       .database()
       .ref('users')
       .on(

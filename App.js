@@ -5,7 +5,7 @@ import AppNavigator from './navigation/AppNavigator';
 import { Provider } from 'react-redux';
 import { store } from './redux/app-redux';
 import * as firebase from 'firebase';
-
+import ignoreWarnings from 'react-native-ignore-warnings';
 // initialize firebase
 const firebaseConfig = {
   apiKey: 'AIzaSyCHNGtGLHIR7XzL4zIqGo9Oee-qG9WTtmE',
@@ -13,15 +13,20 @@ const firebaseConfig = {
   databaseURL: 'https://city-crawler-db.firebaseio.com',
   projectId: 'city-crawler-db',
   storageBucket: 'city-crawler-db.appspot.com',
-  // messagingSenderId: '664616982076',
+  messagingSenderId: '664616982076',
 };
 firebase.initializeApp(firebaseConfig);
 
-export default class App extends React.Component {
-  state = {
-    isLoadingComplete: false,
-  };
+ignoreWarnings('Setting a timer');
 
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoadingComplete: false,
+    };
+    console.ignoredYellowBox = ['Setting a timer'];
+  }
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
