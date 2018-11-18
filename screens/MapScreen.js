@@ -13,9 +13,9 @@ import {
 } from "react-native";
 
 import { createStackNavigator } from "react-navigation";
-import MapView, { Marker } from "react-native-maps";
-import { WebBrowser, Constants, Location, Permissions } from "expo";
-import { MonoText } from "../components/StyledText";
+import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
+import DropdownMenu from "react-native-dropdown-menu";
+import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
 
 const CheckIn = createStackNavigator({
@@ -31,11 +31,14 @@ export default class HomeScreen extends React.Component {
     this.state = {
       longitude: 40.6,
       latitude: -74,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
       errorMessage: null,
-      text: "This is a map screen"
+      text: "Dropdown on auto-locate map screen."
     };
   }
 
+  // This componentWillMount does the work of getInitial state
   componentWillMount() {
     if (Platform.OS === "android" && !Constants.isDevice) {
       this.setState({
@@ -66,10 +69,47 @@ export default class HomeScreen extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
 
+    // DROPDOWN DATA
+    const data = [
+      [
+        "Times Square",
+        "Fullstack Academy",
+        "World Trade Center",
+        "Museum of Sex"
+      ]
+    ]; //will have to be data
+    const coordinates = [
+      {
+        latitude: 40.7589,
+        longitude: -73.9851,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      },
+      {
+        latitude: 40.7051,
+        longitude: -74.0092,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      },
+      {
+        latitude: 40.7118,
+        longitude: -74.0131,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      },
+      {
+        latitude: 40.7441,
+        longitude: -73.9874,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      }
+    ];
+
     return (
       <View style={styles.container}>
         <MapView
           region={{
+            // This is hardcoded in the snapping dropdown version
             latitude: this.state.latitude,
             longitude: this.state.longitude,
             latitudeDelta: 0.122,
@@ -90,8 +130,14 @@ export default class HomeScreen extends React.Component {
           />
         </MapView>
         <View style={styles.tabBarInfoContainer}>
+          <View style={styles.mapCommentContainer}>
+            <Text style={styles.mapComment}>✔ Smooth map movement</Text>
+            <Text style={styles.mapComment}>✔ Snap to dropdown location </Text>
+          </View>
+
           {this.state.latitude && this.state.longitude ? (
             <Button
+              style={{ flex: 1 }}
               onPress={() => navigate("CheckIn")}
               title="Check In"
               color="#841584"
@@ -100,12 +146,35 @@ export default class HomeScreen extends React.Component {
           ) : (
             <Text> Nah you can't check in</Text>
           )}
-          <Text style={styles.tabBarInfoText}>
+          <DropdownMenu
+            style={{ flex: 1 }}
+            bgColor={"white"}
+            tintColor={"#000000"}
+            optionTextStyle={{ color: "red" }}
+            activityTintColor={"green"} // checkImage={} // arrowImg={}
+            // titleStyle={{color: '#333333'}}
+            // maxHeight={300}
+            handler={(selection, row) =>
+              this.setState({
+                text: data[selection][row],
+                latitude: coordinates[row].latitude,
+                longitude: coordinates[row].longitude
+              })
+            }
+            data={data}
+          >
+            <View style={{ flex: 1 }}>
+              <Text>{this.state.text} is current location</Text>
+              <Text>Lat: {this.state.latitude}</Text>
+              <Text>Long: {this.state.longitude}</Text>
+            </View>
+          </DropdownMenu>
+          {/* <Text style={styles.tabBarInfoText}>
             CurrentLatitude: {this.state.latitude}
           </Text>
           <Text style={styles.tabBarInfoText}>
             CurrentLongitude: {this.state.longitude}
-          </Text>
+          </Text> */}
 
           {/* <Button
             title="Check IN"
@@ -138,48 +207,15 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: "absolute"
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: "rgba(0,0,0,0.4)",
-    fontSize: 14,
-    lineHeight: 19,
+  mapCommentContainer: {
+    padding: 15
+  },
+  mapComment: {
+    fontSize: 18,
     textAlign: "center"
   },
   contentContainer: {
     paddingTop: 30
-  },
-  welcomeContainer: {
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 20
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: "contain",
-    marginTop: 3,
-    marginLeft: -10
-  },
-  getStartedContainer: {
-    alignItems: "center",
-    marginHorizontal: 50
-  },
-  homeScreenFilename: {
-    marginVertical: 7
-  },
-  codeHighlightText: {
-    color: "rgba(96,100,109, 0.8)"
-  },
-  codeHighlightContainer: {
-    backgroundColor: "rgba(0,0,0,0.05)",
-    borderRadius: 3,
-    paddingHorizontal: 4
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    lineHeight: 24,
-    textAlign: "center"
   },
   tabBarInfoContainer: {
     position: "absolute",
@@ -198,7 +234,7 @@ const styles = StyleSheet.create({
       }
     }),
     alignItems: "center",
-    backgroundColor: "#fbfbfb",
+    backgroundColor: "beige",
     paddingVertical: 50
   },
   tabBarInfoText: {
@@ -208,16 +244,5 @@ const styles = StyleSheet.create({
   },
   navigationFilename: {
     marginTop: 5
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: "center"
-  },
-  helpLink: {
-    paddingVertical: 15
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: "#2e78b7"
   }
 });
