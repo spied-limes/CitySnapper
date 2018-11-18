@@ -120,7 +120,7 @@ export default class HomeScreen extends React.Component {
               longitudeDelta: 0.121
             }}
             showsUserLocation={true}
-            style={styles.map}
+            // style={styles.map}
           >
             <Marker
               coordinate={{ latitude: 40.6, longitude: -74 }}
@@ -134,7 +134,7 @@ export default class HomeScreen extends React.Component {
             />
           </MapView>
         </View>
-        <View style={styles.tabBarInfoContainer}>
+        <View style={styles.optionsFlexContainer}>
           <View style={styles.mapCommentContainer}>
             <Text style={styles.mapComment}>✔ Smooth map movement</Text>
             <Text style={styles.mapComment}>✔ Snap to dropdown location </Text>
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30
   },
-  tabBarInfoContainer: {
+  optionsFlexContainer: {
     flex: 2,
     ...Platform.select({
       ios: {
@@ -239,8 +239,7 @@ const styles = StyleSheet.create({
       }
     }),
     alignItems: "center",
-    backgroundColor: "beige",
-    paddingVertical: 50
+    backgroundColor: "beige"
   },
   tabBarInfoText: {
     fontSize: 17,
