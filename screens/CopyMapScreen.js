@@ -14,12 +14,20 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 
-export default class HomeScreen extends React.Component {
+export default class CopyMapScreen extends React.Component {
   constructor() {
     super();
     this.state = {};
     this.onRegionChange = this.onRegionChange.bind(this);
     this.menuLocation = this.menuLocation.bind(this);
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state !== nextState) {
+      console.log('hello', this.state, nextState);
+      return true;
+    }
+    console.log('boo');
+    return false;
   }
   getInitialState() {
     return {
@@ -32,14 +40,18 @@ export default class HomeScreen extends React.Component {
     };
   }
   onRegionChange(region) {
+    console.log('ONREGIONCHANGE', region);
     this.setState({ region });
-    console.log(this.state);
   }
   menuLocation(selection, row, data, coordinates) {
     this.setState({
       text: data[selection][row],
-      latitude: coordinates[row].latitude,
-      longitude: coordinates[row].longitude,
+      region: {
+        latitude: coordinates[row].latitude,
+        longitude: coordinates[row].longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
     });
     console.log(this.state);
   }
@@ -80,7 +92,7 @@ export default class HomeScreen extends React.Component {
     ];
     return (
       <View style={styles.container}>
-        <Animated
+        <MapView
           initialRegion={{
             latitude: 37.78825,
             longitude: -122.4324,
