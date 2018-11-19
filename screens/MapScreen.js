@@ -17,9 +17,10 @@ import DropdownMenu from 'react-native-dropdown-menu';
 import { Constants, Location, Permissions } from 'expo';
 import CheckinScreen from './CheckInScreen';
 
-const CheckIn = createStackNavigator({
-  CheckIn: CheckinScreen,
-});
+// following not needed as per Kasim
+// const CheckIn = createStackNavigator({
+//   CheckIn: CheckinScreen,
+// });
 
 export default class HomeScreen extends React.Component {
   constructor() {
