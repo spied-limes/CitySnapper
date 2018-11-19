@@ -19,7 +19,7 @@ import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
 
 const CheckIn = createStackNavigator({
-  CheckinScreen: CheckinScreen
+  CheckIn: CheckinScreen
 });
 
 export default class HomeScreen extends React.Component {
@@ -32,13 +32,14 @@ export default class HomeScreen extends React.Component {
     this.state = {
       longitude: 40.6,
       latitude: -74,
-      // previous values
-      // latitudeDelta: 0.0922,
-      // longitudeDelta: 0.0421,
-      latitudeDelta: 0.15,
-      longitudeDelta: 0.75,
+      latitudeDelta: 0.04,
+      longitudeDelta: 0.025,
+      // test values
+      // latitudeDelta: 0.15,
+      // longitudeDelta: 0.75,
       errorMessage: null,
       text: "Dropdown on auto-locate map screen.",
+      // for current storage
       currentLat: null,
       currentLong: null
     };
@@ -116,10 +117,26 @@ export default class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
+        {/*
+  ______               ____
+ /_  __/___  ____     / __ )____  _  __
+  / / / __ \/ __ \   / __  / __ \| |/_/
+ / / / /_/ / /_/ /  / /_/ / /_/ />  <
+/_/  \____/ .___/  /_____/\____/_/|_|
+         /_/
+       */}
         <View style={styles.mapCommentContainer}>
           <Text style={styles.mapComment}>✔ Smooth map movement</Text>
           <Text style={styles.mapComment}>✔ Snap to dropdown location </Text>
         </View>
+        {/*
+    __  ___               _    ___
+   /  |/  /___ _____     | |  / (_)__ _      __
+  / /|_/ / __ `/ __ \    | | / / / _ \ | /| / /
+ / /  / / /_/ / /_/ /    | |/ / /  __/ |/ |/ /
+/_/  /_/\__,_/ .___/     |___/_/\___/|__/|__/
+            /_/
+        */}
         <View style={styles.mapFlexContainer}>
           <MapView
             region={{
@@ -145,7 +162,14 @@ export default class HomeScreen extends React.Component {
           </MapView>
         </View>
         <View style={styles.tabBarInfoContainer}>
-          {/* {this.state.latitude && this.state.longitude ? (
+          {/*
+   ________              __         ____         ____        __  __
+  / ____/ /_  ___  _____/ /__      /  _/___     / __ )__  __/ /_/ /_____  ____
+ / /   / __ \/ _ \/ ___/ //_/_____ / // __ \   / __  / / / / __/ __/ __ \/ __ \
+/ /___/ / / /  __/ /__/ ,< /_____// // / / /  / /_/ / /_/ / /_/ /_/ /_/ / / / /
+\____/_/ /_/\___/\___/_/|_|     /___/_/ /_/  /_____/\__,_/\__/\__/\____/_/ /_/
+        */}
+          {this.state.latitude && this.state.longitude ? (
             <Button
               style={{ flex: 1 }}
               onPress={() => navigate("CheckIn")}
@@ -155,7 +179,15 @@ export default class HomeScreen extends React.Component {
             />
           ) : (
             <Text> Nah you can't check in</Text>
-          )} */}
+          )}
+          {/*
+    ____                       __
+   / __ \_________  ____  ____/ /___ _      ______
+  / / / / ___/ __ \/ __ \/ __  / __ \ | /| / / __ \
+ / /_/ / /  / /_/ / /_/ / /_/ / /_/ / |/ |/ / / / /
+/_____/_/   \____/ .___/\__,_/\____/|__/|__/_/ /_/
+                /_/
+          */}
           <DropdownMenu
             style={{ flex: 1 }}
             bgColor={"white"}
@@ -173,6 +205,13 @@ export default class HomeScreen extends React.Component {
             }
             data={data}
           >
+            {/*
+    ____        __  __                     ____
+    / __ )____  / /_/ /_____  ____ ___     / __ )____  _  __
+    / __  / __ \/ __/ __/ __ \/ __ `__ \   / __  / __ \| |/_/
+    / /_/ / /_/ / /_/ /_/ /_/ / / / / / /  / /_/ / /_/ />  <
+    /_____/\____/\__/\__/\____/_/ /_/ /_/  /_____/\____/_/|_|
+  */}
             <View style={{ flex: 1 }}>
               <Text>{this.state.text} is current location</Text>
               <Text>Lat: {this.state.latitude}</Text>
