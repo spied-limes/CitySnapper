@@ -7,101 +7,192 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TextInput,
+  // Button,
 } from 'react-native';
 import { WebBrowser } from 'expo';
-
 import { MonoText } from '../components/StyledText';
+import { connect } from 'react-redux';
+import { setDummyData, watchUserData } from '../redux/app-redux';
+import {
+  Container,
+  Content,
+  Header,
+  Form,
+  Input,
+  Item,
+  Button,
+  Label,
+} from 'native-base';
+import * as firebase from 'firebase';
 
-export default class HomeScreen extends React.Component {
+import { firebaseConfig, signUpuser, loginUser, db } from '../App.js';
+
+class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/robot-dev.png')
-                  : require('../assets/images/robot-prod.png')
-              }
-              style={styles.welcomeImage}
-            />
-          </View>
-
-          <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
-
-            <Text style={styles.getStartedText}>Get started by opening</Text>
-
-            <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <MonoText style={styles.codeHighlightText}>screens/HomeScreen.js</MonoText>
-            </View>
-
-            <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
-            </Text>
-          </View>
-
-          <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this._handleHelpPress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
-          </View>
-        </View>
-      </View>
-    );
+  constructor(props) {
+    super(props);
+    this.state = {
+      // dummyData: this.props.dummyData,
+      // userData: {},
+      email: '',
+      password: '',
+    };
+    // this.props.watchUser();
+    this.signUpUser = this.signUpUser.bind(this);
+    this.loginUser = this.loginUser.bind(this);
+  }
+  componentDidMount() {
+    // console.log('this.props.userData[1]: ', this.props.userData[1]);
   }
 
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
+  componentDidUpdate() {
+    // console.log('this.props.userData[1]: ', this.props.userData[1]);
+  }
 
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use useful development
-          tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
+  // onSetDummyDataPress = () => {
+  //   this.props.setDummy(this.state.dummyData);
+  // };
+
+  signUpUser(email, password) {
+    try {
+      if (this.state.password.length < 6) {
+        console.log('Password must be longer than 6 characters');
+        return;
+      }
+
+      firebase.auth().createUserWithEmailAndPassword(email, password);
+    } catch (error) {
+      console.log(error.toString());
     }
   }
 
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/guides/development-mode');
-  };
+  loginUser(email, password) {
+    try {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(function(user) {
+          console.log(user);
+        });
+    } catch (error) {
+      console.log(error.toString());
+    }
+  }
 
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
+  render() {
+    // console.log('\nthis.props', this.props);
+    // console.log('this.state: ', this.state);
+    console.log('this.props.userData: ', this.props.userData);
+
+    return (
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+      >
+        <Container>
+          <Form>
+            <Item floatingLabel>
+              <Label>Email</Label>
+              <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={email => this.setState({ email })}
+              />
+            </Item>
+
+            <Item floatingLabel>
+              <Label>Password</Label>
+              <Input
+                secureTextEntry={true}
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={password => this.setState({ password })}
+              />
+            </Item>
+
+            <Button
+              style={{ marginTop: 15 }}
+              full
+              rounded
+              success
+              onPress={() =>
+                this.loginUser(this.state.email, this.state.password)
+              }
+            >
+              <Text style={{ color: 'white' }}>Login</Text>
+            </Button>
+            <Button
+              style={{ marginTop: 15 }}
+              full
+              rounded
+              primary
+              onPress={() =>
+                this.signUpUser(this.state.email, this.state.password)
+              }
+            >
+              <Text style={{ color: 'white' }}>Sign Up</Text>
+            </Button>
+          </Form>
+        </Container>
+        {/* <Text style={{ paddingTop: 100 }}>{this.props.dummyData}</Text>
+        <View style={styles.welcomeContainer} />
+        <TextInput
+          style={{ borderWidth: 1, width: 200, height: 40 }}
+          value={this.state.dummyData}
+          onChangeText={text => {
+            this.setState({ dummyData: text });
+          }}
+        />
+        <Button title="Set DummyData" onPress={this.onSetDummyDataPress} />
+        {this.props.userData.length ? (
+          <View>
+            <Text>{this.props.userData[1].address}</Text>
+            <Text>{this.props.userData[1].firstName}</Text>
+            <Text>{this.props.userData[1].lastName}</Text>
+          </View>
+        ) : (
+          <View />
+        )} */}
+      </ScrollView>
     );
-  };
+  }
 }
+
+const mapStateToProps = state => {
+  return {
+    dummyData: state.dummyData,
+    userData: state.userData,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setDummy: text => {
+      dispatch(setDummyData(text));
+    },
+    watchUser: () => dispatch(watchUserData()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    // justifyContent: 'center',
+  },
+  loginFields: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
   },
   developmentModeText: {
     marginBottom: 20,
@@ -112,6 +203,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 30,
+    justifyContent: 'center',
   },
   welcomeContainer: {
     alignItems: 'center',

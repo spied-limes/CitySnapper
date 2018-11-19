@@ -1,5 +1,4 @@
-/* eslint-disable react/no-deprecated */
-import React from "react";
+import React from 'react';
 import {
   Image,
   Platform,
@@ -9,24 +8,20 @@ import {
   TouchableOpacity,
   View,
   Button,
-  TextInput
-} from "react-native";
+  TextInput,
+} from 'react-native';
 
-import { createStackNavigator } from "react-navigation";
-import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
-import DropdownMenu from "react-native-dropdown-menu";
-import { Constants, Location, Permissions } from "expo";
-import CheckinScreen from "./CheckInScreen";
+import { createStackNavigator } from 'react-navigation';
+import MapView, { Marker, AnimatedRegion, Animated } from 'react-native-maps';
+import DropdownMenu from 'react-native-dropdown-menu';
+import { Constants, Location, Permissions } from 'expo';
+import CheckinScreen from './CheckInScreen';
 
 const CheckIn = createStackNavigator({
-  CheckIn: CheckinScreen
+  CheckIn: CheckinScreen,
 });
 
 export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    header: null
-  };
-
   constructor() {
     super();
     this.state = {
@@ -38,19 +33,19 @@ export default class HomeScreen extends React.Component {
       // latitudeDelta: 0.15,
       // longitudeDelta: 0.75,
       errorMessage: null,
-      text: "Dropdown on auto-locate map screen.",
+      text: 'Dropdown on auto-locate map screen.',
       // for current storage
       currentLat: null,
-      currentLong: null
+      currentLong: null,
     };
   }
 
   // This componentWillMount does the work of getInitialState() in setting up the region
   componentWillMount() {
-    if (Platform.OS === "android" && !Constants.isDevice) {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage:
-          "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
       });
     } else {
       this._getLocationAsync();
@@ -59,20 +54,20 @@ export default class HomeScreen extends React.Component {
 
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
+    if (status !== 'granted') {
       this.setState({
-        errorMessage: "Permission to access location was denied"
+        errorMessage: 'Permission to access location was denied',
       });
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    console.log("Current location below");
+    console.log('Current location below');
     console.log(location);
     this.setState({
       longitude: location.coords.longitude,
       latitude: location.coords.latitude,
       latitudeDelta: 0.035,
-      longitudeDelta: 0.0175
+      longitudeDelta: 0.0175,
     });
   };
 
@@ -82,37 +77,37 @@ export default class HomeScreen extends React.Component {
     // DROPDOWN DATA
     const data = [
       [
-        "Times Square",
-        "Fullstack Academy",
-        "World Trade Center",
-        "Museum of Sex"
-      ]
+        'Times Square',
+        'Fullstack Academy',
+        'World Trade Center',
+        'Museum of Sex',
+      ],
     ]; //will have to be data
     const coordinates = [
       {
         latitude: 40.7589,
         longitude: -73.9851,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
       },
       {
         latitude: 40.7051,
         longitude: -74.0092,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
       },
       {
         latitude: 40.7118,
         longitude: -74.0131,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
       },
       {
         latitude: 40.7441,
         longitude: -73.9874,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
-      }
+        longitudeDelta: 0.0421,
+      },
     ];
 
     return (
@@ -144,19 +139,19 @@ export default class HomeScreen extends React.Component {
               latitude: this.state.latitude,
               longitude: this.state.longitude,
               latitudeDelta: 0.122,
-              longitudeDelta: 0.121
+              longitudeDelta: 0.121,
             }}
             showsUserLocation={true}
             style={styles.map}
           >
             <Marker
               coordinate={{ latitude: 40.6, longitude: -74 }}
-              title={"first marker"}
-              description={"jkh"}
+              title={'first marker'}
+              description={'jkh'}
               onPress={() =>
                 this.state.latitude === 40.6 && longitude === -74
-                  ? console.log("success")
-                  : console.log("failure")
+                  ? console.log('success')
+                  : console.log('failure')
               }
             />
           </MapView>
@@ -172,7 +167,7 @@ export default class HomeScreen extends React.Component {
           {this.state.latitude && this.state.longitude ? (
             <Button
               style={{ flex: 1 }}
-              onPress={() => navigate("CheckIn")}
+              onPress={() => navigate('CheckIn')}
               title="Check In"
               color="#841584"
               accessibilityLabel="Learn more about this purple button"
@@ -190,17 +185,17 @@ export default class HomeScreen extends React.Component {
           */}
           <DropdownMenu
             style={{ flex: 1 }}
-            bgColor={"white"}
-            tintColor={"#000000"}
-            optionTextStyle={{ color: "red" }}
-            activityTintColor={"green"} // checkImage={} // arrowImg={}
-            titleStyle={{ color: "#333333" }}
+            bgColor={'white'}
+            tintColor={'#000000'}
+            optionTextStyle={{ color: 'red' }}
+            activityTintColor={'green'} // checkImage={} // arrowImg={}
+            titleStyle={{ color: '#333333' }}
             // maxHeight={300}
             handler={(selection, row) =>
               this.setState({
                 text: data[selection][row],
                 latitude: coordinates[row].latitude,
-                longitude: coordinates[row].longitude
+                longitude: coordinates[row].longitude,
               })
             }
             data={data}
@@ -228,54 +223,54 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 27,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   mapFlexContainer: {
-    flex: 7
+    flex: 7,
   },
   map: {
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
-    position: "absolute"
+    position: 'absolute',
   },
   mapCommentContainer: {
     flex: 1,
     padding: 15,
-    backgroundColor: "beige"
+    backgroundColor: 'beige',
   },
   mapComment: {
     fontSize: 18,
-    textAlign: "center",
-    justifyContent: "center"
+    textAlign: 'center',
+    justifyContent: 'center',
   },
   contentContainer: {
-    paddingTop: 30
+    paddingTop: 30,
   },
   tabBarInfoContainer: {
     flex: 3,
     ...Platform.select({
       ios: {
-        shadowColor: "black",
+        shadowColor: 'black',
         shadowOffset: { height: -3 },
         shadowOpacity: 0.1,
-        shadowRadius: 3
+        shadowRadius: 3,
       },
       android: {
-        elevation: 20
-      }
+        elevation: 20,
+      },
     }),
-    alignItems: "center",
-    backgroundColor: "beige",
-    paddingVertical: 50
+    alignItems: 'center',
+    backgroundColor: 'beige',
+    paddingVertical: 50,
   },
   tabBarInfoText: {
     fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    textAlign: "center"
+    color: 'rgba(96,100,109, 1)',
+    textAlign: 'center',
   },
   navigationFilename: {
-    marginTop: 5
-  }
+    marginTop: 5,
+  },
 });
