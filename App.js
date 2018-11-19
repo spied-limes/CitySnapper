@@ -2,55 +2,12 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
-import { Provider } from 'react-redux';
-import { store } from './redux/app-redux';
-import * as firebase from 'firebase';
-import ignoreWarnings from 'react-native-ignore-warnings';
-import { firebaseSecrets } from './secrets.js';
-
-// initialize firebase
-export const firebaseConfig = firebaseSecrets;
-const app = firebase.initializeApp(firebaseConfig);
-
-export const db = app.database();
-
-// ignore yell bow warning due to error in latest RN version
-ignoreWarnings('Setting a timer');
-
-export function signUpuser(email, password) {
-  try {
-    if (this.state.password.length < 6) {
-      console.log('Password must be longer than 6 characters');
-      return;
-    }
-
-    firebase.auth().createUserWithEmailAndPassword(email, password);
-  } catch (error) {
-    console.log(error.toString());
-  }
-}
-
-export function loginUser(email, password) {
-  try {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(function(user) {
-        console.log(user);
-      });
-  } catch (error) {
-    console.log(error.toString());
-  }
-}
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoadingComplete: false,
-    };
-    console.ignoredYellowBox = ['Setting a timer'];
-  }
+  state = {
+    isLoadingComplete: false,
+  };
+
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
@@ -62,12 +19,10 @@ export default class App extends React.Component {
       );
     } else {
       return (
-        <Provider store={store}>
-          <View style={styles.container}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            <AppNavigator />
-          </View>
-        </Provider>
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <AppNavigator />
+        </View>
       );
     }
   }
