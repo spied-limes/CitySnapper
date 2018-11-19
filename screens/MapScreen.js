@@ -7,65 +7,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-<<<<<<< HEAD
-  Button,
-  TextInput,
-} from 'react-native';
-
-import { createStackNavigator } from 'react-navigation';
-import MapView, { Marker } from 'react-native-maps';
-import { WebBrowser, Constants, Location, Permissions } from 'expo';
-import { MonoText } from '../components/StyledText';
-// import CheckinScreen from './CheckInScreen';
-
-// const CheckIn = createStackNavigator({
-//   CheckinScreen: CheckinScreen,
-// });
-
-export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    header: null,
-  };
-  constructor() {
-    super();
-    this.state = {
-      longitude: 40.6,
-      latitude: -74,
-      errorMessage: null,
-      text: 'This is a map screen',
-    };
-  }
-
-  componentWillMount() {
-    if (Platform.OS === 'android' && !Constants.isDevice) {
-      this.setState({
-        errorMessage:
-          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-      });
-    } else {
-      this._getLocationAsync();
-    }
-  }
-
-  _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
-    console.log(location);
-    this.setState({
-      longitude: location.coords.longitude,
-      latitude: location.coords.latitude,
-    });
-  };
-
-  render() {
-    const { navigate } = this.props.navigation;
-=======
 } from 'react-native';
 import MapView, { AnimatedRegion, Animated } from 'react-native-maps';
 import DropdownMenu from 'react-native-dropdown-menu';
@@ -138,63 +79,10 @@ export default class HomeScreen extends React.Component {
         longitudeDelta: 0.0421,
       },
     ];
->>>>>>> a84e3e64605b0286fe54602bdf151641b898607a
 
     return (
       <View style={styles.container}>
         <MapView
-<<<<<<< HEAD
-          region={{
-            latitude: this.state.latitude,
-            longitude: this.state.longitude,
-            latitudeDelta: 0.122,
-            longitudeDelta: 0.121,
-          }}
-          showsUserLocation={true}
-          style={styles.map}
-        >
-          <Marker
-            coordinate={{ latitude: 40.6, longitude: -74 }}
-            title={'first marker'}
-            description={'jkh'}
-            onPress={() =>
-              this.state.latitude === 40.6 && longitude === -74
-                ? console.log('success')
-                : console.log('failure')
-            }
-          />
-        </MapView>
-        <View style={styles.tabBarInfoContainer}>
-          {this.state.latitude && this.state.longitude ? (
-            <Button
-              onPress={() => /*navigate('CheckIn')*/ alert('Checked In!')}
-              title="Check In"
-              color="#841584"
-              accessibilityLabel="Learn more about this purple button"
-            />
-          ) : (
-            <Text> Nah you can't check in</Text>
-          )}
-          <Text style={styles.tabBarInfoText}>
-            CurrentLatitude:{this.state.latitude}{' '}
-          </Text>
-          <Text style={styles.tabBarInfoText}>
-            CurrentLongitude:{this.state.longitude}{' '}
-          </Text>
-          {/* <Button
-            title="Check IN"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          /> */}
-          {/* <TextInput
-            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-            onChangeText={text => this.setState({ text })}
-            value={this.state.text}
-          /> */}
-          <View
-            style={[styles.codeHighlightContainer, styles.navigationFilename]}
-          />
-=======
           initialRegion={{
             latitude: 40.7128,
             longitude: -74.006,
@@ -239,49 +127,10 @@ export default class HomeScreen extends React.Component {
               <Text>Long: {this.state.longitude}</Text>
             </View>
           </DropdownMenu>
->>>>>>> a84e3e64605b0286fe54602bdf151641b898607a
         </View>
       </View>
     );
   }
-<<<<<<< HEAD
-
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
-
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use
-          useful development tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
-
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/development-mode'
-    );
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
-=======
->>>>>>> a84e3e64605b0286fe54602bdf151641b898607a
 }
 
 const styles = StyleSheet.create({
@@ -357,11 +206,7 @@ const styles = StyleSheet.create({
     }),
     alignItems: 'center',
     backgroundColor: '#fbfbfb',
-<<<<<<< HEAD
-    paddingVertical: 50,
-=======
     paddingVertical: 100,
->>>>>>> a84e3e64605b0286fe54602bdf151641b898607a
   },
   tabBarInfoText: {
     fontSize: 17,

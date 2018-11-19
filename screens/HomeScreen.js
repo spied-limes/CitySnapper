@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
   TextInput,
-  Button,
+  // Button,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -24,6 +24,9 @@ import {
   Button,
   Label,
 } from 'native-base';
+import * as firebase from 'firebase';
+
+import { firebaseConfig, signUpuser, loginUser, db } from '../App.js';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -33,10 +36,14 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dummyData: this.props.dummyData,
-      userData: {},
+      // dummyData: this.props.dummyData,
+      // userData: {},
+      email: '',
+      password: '',
     };
-    this.props.watchUser();
+    // this.props.watchUser();
+    this.signUpUser = this.signUpUser.bind(this);
+    this.loginUser = this.loginUser.bind(this);
   }
   componentDidMount() {
     // console.log('this.props.userData[1]: ', this.props.userData[1]);
@@ -46,9 +53,35 @@ class HomeScreen extends React.Component {
     // console.log('this.props.userData[1]: ', this.props.userData[1]);
   }
 
-  onSetDummyDataPress = () => {
-    this.props.setDummy(this.state.dummyData);
-  };
+  // onSetDummyDataPress = () => {
+  //   this.props.setDummy(this.state.dummyData);
+  // };
+
+  signUpUser(email, password) {
+    try {
+      if (this.state.password.length < 6) {
+        console.log('Password must be longer than 6 characters');
+        return;
+      }
+
+      firebase.auth().createUserWithEmailAndPassword(email, password);
+    } catch (error) {
+      console.log(error.toString());
+    }
+  }
+
+  loginUser(email, password) {
+    try {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(function(user) {
+          console.log(user);
+        });
+    } catch (error) {
+      console.log(error.toString());
+    }
+  }
 
   render() {
     // console.log('\nthis.props', this.props);
@@ -60,11 +93,15 @@ class HomeScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-        <Container style={styles.container}>
+        <Container>
           <Form>
             <Item floatingLabel>
               <Label>Email</Label>
-              <Input autoCorrect={false} autoCapitalize="none" />
+              <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={email => this.setState({ email })}
+              />
             </Item>
 
             <Item floatingLabel>
@@ -73,11 +110,35 @@ class HomeScreen extends React.Component {
                 secureTextEntry={true}
                 autoCorrect={false}
                 autoCapitalize="none"
+                onChangeText={password => this.setState({ password })}
               />
             </Item>
+
+            <Button
+              style={{ marginTop: 15 }}
+              full
+              rounded
+              success
+              onPress={() =>
+                this.loginUser(this.state.email, this.state.password)
+              }
+            >
+              <Text style={{ color: 'white' }}>Login</Text>
+            </Button>
+            <Button
+              style={{ marginTop: 15 }}
+              full
+              rounded
+              primary
+              onPress={() =>
+                this.signUpUser(this.state.email, this.state.password)
+              }
+            >
+              <Text style={{ color: 'white' }}>Sign Up</Text>
+            </Button>
           </Form>
         </Container>
-        <Text style={{ paddingTop: 100 }}>{this.props.dummyData}</Text>
+        {/* <Text style={{ paddingTop: 100 }}>{this.props.dummyData}</Text>
         <View style={styles.welcomeContainer} />
         <TextInput
           style={{ borderWidth: 1, width: 200, height: 40 }}
@@ -95,7 +156,7 @@ class HomeScreen extends React.Component {
           </View>
         ) : (
           <View />
-        )}
+        )} */}
       </ScrollView>
     );
   }
@@ -126,7 +187,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'true',
+    // justifyContent: 'center',
+  },
+  loginFields: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
   },
   developmentModeText: {
     marginBottom: 20,
@@ -137,6 +203,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 30,
+    justifyContent: 'center',
   },
   welcomeContainer: {
     alignItems: 'center',

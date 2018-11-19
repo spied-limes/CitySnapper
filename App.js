@@ -6,19 +6,42 @@ import { Provider } from 'react-redux';
 import { store } from './redux/app-redux';
 import * as firebase from 'firebase';
 import ignoreWarnings from 'react-native-ignore-warnings';
+import { firebaseSecrets } from './secrets.js';
 
 // initialize firebase
-const firebaseConfig = {
-  apiKey: 'AIzaSyCHNGtGLHIR7XzL4zIqGo9Oee-qG9WTtmE',
-  authDomain: 'city-crawler-db.firebaseapp.com',
-  databaseURL: 'https://city-crawler-db.firebaseio.com',
-  projectId: 'city-crawler-db',
-  storageBucket: 'city-crawler-db.appspot.com',
-  messagingSenderId: '664616982076',
-};
-firebase.initializeApp(firebaseConfig);
+export const firebaseConfig = firebaseSecrets;
+const app = firebase.initializeApp(firebaseConfig);
 
+export const db = app.database();
+
+// ignore yell bow warning due to error in latest RN version
 ignoreWarnings('Setting a timer');
+
+export function signUpuser(email, password) {
+  try {
+    if (this.state.password.length < 6) {
+      console.log('Password must be longer than 6 characters');
+      return;
+    }
+
+    firebase.auth().createUserWithEmailAndPassword(email, password);
+  } catch (error) {
+    console.log(error.toString());
+  }
+}
+
+export function loginUser(email, password) {
+  try {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(function(user) {
+        console.log(user);
+      });
+  } catch (error) {
+    console.log(error.toString());
+  }
+}
 
 export default class App extends React.Component {
   constructor(props) {
