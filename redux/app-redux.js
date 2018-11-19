@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 
 const initialState = {
   dummyData: 'dummyInfo',
-  userData: [],
+  userData: {},
 };
 
 // -----------------------

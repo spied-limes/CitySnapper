@@ -65,13 +65,43 @@ class HomeScreen extends React.Component {
         return;
       }
 
-      firebase.auth().createUserWithEmailAndPassword(email, password);
+      firebase.auth().createUserWithEmailAndPassword (email, password);
+      Alert.alert(
+        'Sign Up Status',
+        'Sign Up Successful',
+        [
+          // {
+          //   text: 'Cancel',
+          //   onPress: () => console.log('Cancel Pressed'),
+          //   style: 'cancel',
+          // },
+          { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ],
+        {
+          cancelable: false,
+        }
+      );
     } catch (error) {
       console.log(error.toString());
+      Alert.alert(
+        'Sign Up Status',
+        'Sign Up Failed',
+        [
+          // {
+          //   text: 'Cancel',
+          //   onPress: () => console.log('Cancel sign Pressed'),
+          //   style: 'cancel',
+          // },
+          { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ],
+        { cancelable: false }
+      );
     }
   }
 
   loginUser(email, password) {
+    // unimplemented navigate to map screen from login successful
+    // const { navigate } = this.props.navigation
     try {
       firebase
         .auth()
@@ -83,12 +113,12 @@ class HomeScreen extends React.Component {
         'Login Status',
         'Login Successful',
         [
-          {
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-          { text: 'OK', onPress: () => console.log('OK Pressed') },
+          // {
+          //   text: 'Cancel',
+          //   onPress: () => console.log('Cancel Pressed'),
+          //   style: 'cancel',
+          // },
+          { text: 'OK', onPress: () => /*console.log('OK Pressed')*/ },
         ],
         {
           cancelable: false,
@@ -100,11 +130,11 @@ class HomeScreen extends React.Component {
         'Login Status',
         'Login Failed',
         [
-          {
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
+          // {
+          //   text: 'Cancel',
+          //   onPress: () => console.log('Cancel Pressed'),
+          //   style: 'cancel',
+          // },
           { text: 'OK', onPress: () => console.log('OK Pressed') },
         ],
         { cancelable: false }
