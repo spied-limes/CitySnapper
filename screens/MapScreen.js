@@ -26,13 +26,17 @@ export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
+
   constructor() {
     super();
     this.state = {
       longitude: 40.6,
       latitude: -74,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
+      // previous values
+      // latitudeDelta: 0.0922,
+      // longitudeDelta: 0.0421,
+      latitudeDelta: 0.15,
+      longitudeDelta: 0.75,
       errorMessage: null,
       text: "Dropdown on auto-locate map screen.",
       currentLat: null,
@@ -65,7 +69,9 @@ export default class HomeScreen extends React.Component {
     console.log(location);
     this.setState({
       longitude: location.coords.longitude,
-      latitude: location.coords.latitude
+      latitude: location.coords.latitude,
+      latitudeDelta: 0.035,
+      longitudeDelta: 0.0175
     });
   };
 
@@ -110,6 +116,10 @@ export default class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
+        <View style={styles.mapCommentContainer}>
+          <Text style={styles.mapComment}>✔ Smooth map movement</Text>
+          <Text style={styles.mapComment}>✔ Snap to dropdown location </Text>
+        </View>
         <View style={styles.mapFlexContainer}>
           <MapView
             region={{
@@ -135,12 +145,7 @@ export default class HomeScreen extends React.Component {
           </MapView>
         </View>
         <View style={styles.tabBarInfoContainer}>
-          <View style={styles.mapCommentContainer}>
-            <Text style={styles.mapComment}>✔ Smooth map movement</Text>
-            <Text style={styles.mapComment}>✔ Snap to dropdown location </Text>
-          </View>
-
-          {this.state.latitude && this.state.longitude ? (
+          {/* {this.state.latitude && this.state.longitude ? (
             <Button
               style={{ flex: 1 }}
               onPress={() => navigate("CheckIn")}
@@ -150,14 +155,14 @@ export default class HomeScreen extends React.Component {
             />
           ) : (
             <Text> Nah you can't check in</Text>
-          )}
+          )} */}
           <DropdownMenu
             style={{ flex: 1 }}
             bgColor={"white"}
             tintColor={"#000000"}
             optionTextStyle={{ color: "red" }}
             activityTintColor={"green"} // checkImage={} // arrowImg={}
-            // titleStyle={{color: '#333333'}}
+            titleStyle={{ color: "#333333" }}
             // maxHeight={300}
             handler={(selection, row) =>
               this.setState({
@@ -174,26 +179,6 @@ export default class HomeScreen extends React.Component {
               <Text>Long: {this.state.longitude}</Text>
             </View>
           </DropdownMenu>
-          {/* <Text style={styles.tabBarInfoText}>
-            CurrentLatitude: {this.state.latitude}
-          </Text>
-          <Text style={styles.tabBarInfoText}>
-            CurrentLongitude: {this.state.longitude}
-          </Text> */}
-
-          {/* <Button
-            title="Check IN"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          /> */}
-          {/* <TextInput
-            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-            onChangeText={text => this.setState({ text })}
-            value={this.state.text}
-          /> */}
-          <View
-            style={[styles.codeHighlightContainer, styles.navigationFilename]}
-          />
         </View>
       </View>
     );
@@ -203,10 +188,11 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 27,
     backgroundColor: "#fff"
   },
   mapFlexContainer: {
-    flex: 8
+    flex: 7
   },
   map: {
     left: 0,
@@ -216,17 +202,20 @@ const styles = StyleSheet.create({
     position: "absolute"
   },
   mapCommentContainer: {
-    padding: 15
+    flex: 1,
+    padding: 15,
+    backgroundColor: "beige"
   },
   mapComment: {
     fontSize: 18,
-    textAlign: "center"
+    textAlign: "center",
+    justifyContent: "center"
   },
   contentContainer: {
     paddingTop: 30
   },
   tabBarInfoContainer: {
-    flex: 2,
+    flex: 3,
     ...Platform.select({
       ios: {
         shadowColor: "black",
