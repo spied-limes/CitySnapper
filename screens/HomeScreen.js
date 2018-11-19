@@ -14,6 +14,16 @@ import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 import { connect } from 'react-redux';
 import { setDummyData, watchUserData } from '../redux/app-redux';
+import {
+  Container,
+  Content,
+  Header,
+  Form,
+  Input,
+  Item,
+  Button,
+  Label,
+} from 'native-base';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -50,6 +60,23 @@ class HomeScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
+        <Container style={styles.container}>
+          <Form>
+            <Item floatingLabel>
+              <Label>Email</Label>
+              <Input autoCorrect={false} autoCapitalize="none" />
+            </Item>
+
+            <Item floatingLabel>
+              <Label>Password</Label>
+              <Input
+                secureTextEntry={true}
+                autoCorrect={false}
+                autoCapitalize="none"
+              />
+            </Item>
+          </Form>
+        </Container>
         <Text style={{ paddingTop: 100 }}>{this.props.dummyData}</Text>
         <View style={styles.welcomeContainer} />
         <TextInput
@@ -99,6 +126,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: 'true',
   },
   developmentModeText: {
     marginBottom: 20,

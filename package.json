@@ -14,15 +14,18 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
-    "expo": "^31.0.2",
+    "expo": "^31.0.5",
     "firebase": "^5.5.8",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
+    "react": "16.6.3",
+    "react-native": "0.57.5",
     "react-native-ignore-warnings": "^0.1.1",
-    "react-navigation": "^2.18.2",
+    "react-navigation": "^3.0.0",
     "react-redux": "^5.1.1",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "react-native-dropdown": "0.0.6",
+    "react-native-dropdown-menu": "^2.0.0",
+    "react-native-maps": "^0.22.1"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0",

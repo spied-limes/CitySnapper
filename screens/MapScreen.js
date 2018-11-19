@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+<<<<<<< HEAD
   Button,
   TextInput,
 } from 'react-native';
@@ -64,10 +65,85 @@ export default class HomeScreen extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation;
+=======
+} from 'react-native';
+import MapView, { AnimatedRegion, Animated } from 'react-native-maps';
+import DropdownMenu from 'react-native-dropdown-menu';
+import { WebBrowser } from 'expo';
+
+import { MonoText } from '../components/StyledText';
+
+export default class HomeScreen extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      text: '',
+      longitude: 40.6,
+      latitude: -74,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    };
+  }
+  static navigationOptions = {
+    header: null,
+  };
+
+  getInitialState() {
+    return {
+      region: {
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+    };
+  }
+
+  // onRegionChange(region) {
+  //   this.setState({ region });
+  // }
+
+  render() {
+    const data = [
+      [
+        'Times Square',
+        'Fullstack Academy',
+        'World Trade Center',
+        'Museum of Sex',
+      ],
+    ]; //will have to be data
+    const coordinates = [
+      {
+        latitude: 40.7589,
+        longitude: -73.9851,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+      {
+        latitude: 40.7051,
+        longitude: -74.0092,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+      {
+        latitude: 40.7118,
+        longitude: -74.0131,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+      {
+        latitude: 40.7441,
+        longitude: -73.9874,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+    ];
+>>>>>>> a84e3e64605b0286fe54602bdf151641b898607a
 
     return (
       <View style={styles.container}>
         <MapView
+<<<<<<< HEAD
           region={{
             latitude: this.state.latitude,
             longitude: this.state.longitude,
@@ -118,10 +194,57 @@ export default class HomeScreen extends React.Component {
           <View
             style={[styles.codeHighlightContainer, styles.navigationFilename]}
           />
+=======
+          initialRegion={{
+            latitude: 40.7128,
+            longitude: -74.006,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }} //find current location and use this
+          style={styles.map}
+          onRegionChange={this.onRegionChange}
+        />
+        {/* <MapView
+          region={this.state.region}
+          onRegionChange={this.onRegionChange}
+        /> */}
+        {/* <Animated
+          region={this.state.region}
+          onRegionChange={this.onRegionChange}
+        /> */}
+        <View style={styles.tabBarInfoContainer}>
+          <View style={{ height: 2 }} />
+          <DropdownMenu
+            style={{ flex: 1 }}
+            bgColor={'white'}
+            tintColor={'#666666'}
+            activityTintColor={'green'}
+            // arrowImg={}
+            // checkImage={}
+            // optionTextStyle={{color: '#333333'}}
+            // titleStyle={{color: '#333333'}}
+            // maxHeight={300}
+            handler={(selection, row) =>
+              this.setState({
+                text: data[selection][row],
+                latitude: coordinates[row].latitude,
+                longitude: coordinates[row].longitude,
+              })
+            }
+            data={data}
+          >
+            <View style={{ flex: 1 }}>
+              <Text>{this.state.text} is current location</Text>
+              <Text>Lat: {this.state.latitude}</Text>
+              <Text>Long: {this.state.longitude}</Text>
+            </View>
+          </DropdownMenu>
+>>>>>>> a84e3e64605b0286fe54602bdf151641b898607a
         </View>
       </View>
     );
   }
+<<<<<<< HEAD
 
   _maybeRenderDevelopmentModeWarning() {
     if (__DEV__) {
@@ -157,6 +280,8 @@ export default class HomeScreen extends React.Component {
       'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
     );
   };
+=======
+>>>>>>> a84e3e64605b0286fe54602bdf151641b898607a
 }
 
 const styles = StyleSheet.create({
@@ -232,7 +357,11 @@ const styles = StyleSheet.create({
     }),
     alignItems: 'center',
     backgroundColor: '#fbfbfb',
+<<<<<<< HEAD
     paddingVertical: 50,
+=======
+    paddingVertical: 100,
+>>>>>>> a84e3e64605b0286fe54602bdf151641b898607a
   },
   tabBarInfoText: {
     fontSize: 17,
