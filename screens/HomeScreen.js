@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   TextInput,
+  Alert,
   // Button,
 } from 'react-native';
 import { WebBrowser } from 'expo';
@@ -76,10 +77,38 @@ class HomeScreen extends React.Component {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(function(user) {
-          console.log(user);
+          console.log('userLoggedIn: ', user);
         });
+      Alert.alert(
+        'Login Status',
+        'Login Successful',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ],
+        {
+          cancelable: false,
+        }
+      );
     } catch (error) {
       console.log(error.toString());
+      Alert.alert(
+        'Login Status',
+        'Login Failed',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ],
+        { cancelable: false }
+      );
     }
   }
 
