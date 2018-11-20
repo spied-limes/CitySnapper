@@ -11,12 +11,16 @@ import {
   Button,
   TextInput
 } from "react-native";
-
+import { createStackNavigator } from "react-navigation";
 import MapViewDirections from "react-native-maps-directions";
 import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
+
+const CheckIn = createStackNavigator({
+  CheckIn: CheckinScreen
+});
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -92,19 +96,27 @@ export default class HomeScreen extends React.Component {
       {
         //times square
         latitude: 40.7589,
-        longitude: -73.9851
+        longitude: -73.9851,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
       },
       {
         latitude: 40.7051,
-        longitude: -74.0092
+        longitude: -74.0092,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
       },
       {
         latitude: 40.7118,
-        longitude: -74.0131
+        longitude: -74.0131,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
       },
       {
         latitude: 40.7441,
-        longitude: -73.9874
+        longitude: -73.9874,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
       }
     ];
 
@@ -136,12 +148,23 @@ export default class HomeScreen extends React.Component {
               // This is hardcoded in the snapping dropdown version
               latitude: this.state.latitude,
               longitude: this.state.longitude,
-              latitudeDelta: this.state.latitudeDelta,
-              longitudeDelta: this.state.longitudeDelta
+              latitudeDelta: 0.122,
+              longitudeDelta: 0.121
             }}
             showsUserLocation={true}
             style={styles.map}
-          />
+          >
+            <Marker
+              coordinate={{ latitude: 40.6, longitude: -74 }}
+              title={"first marker"}
+              description={"jkh"}
+              onPress={() =>
+                this.state.latitude === 40.6 && longitude === -74
+                  ? console.log("success")
+                  : console.log("failure")
+              }
+            />
+          </MapView>
         </View>
         <View style={styles.tabBarInfoContainer}>
           {/*
@@ -155,7 +178,7 @@ export default class HomeScreen extends React.Component {
           this.state.longitude === this.state.currentLong ? (
             <Button
               style={{ flex: 1 }}
-              onPress={() => navigate("Screen", { name: this.state.text })}
+              onPress={() => navigate("CheckIn")}
               title="Check In"
               color="#841584"
             />
