@@ -1,33 +1,21 @@
-<<<<<<< HEAD
 import React from "react";
 import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { AppLoading, Asset, Font, Icon } from "expo";
 import AppNavigator from "./navigation/AppNavigator";
-
-export default class App extends React.Component {
-  state = {
-    isLoadingComplete: false
-  };
-=======
-import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { AppLoading, Asset, Font, Icon } from 'expo';
-import AppNavigator from './navigation/AppNavigator';
-import { Provider } from 'react-redux';
-import { store } from './redux/app-redux';
-import ignoreWarnings from 'react-native-ignore-warnings';
+import { Provider } from "react-redux";
+import { store } from "./redux/app-redux";
+import ignoreWarnings from "react-native-ignore-warnings";
 // import { db } from './firebase/firebaseConfig';
 
-ignoreWarnings('Setting a timer');
->>>>>>> origin/firebaseReduxStore
+ignoreWarnings("Setting a timer");
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoadingComplete: false,
+      isLoadingComplete: false
     };
-    console.ignoredYellowBox = ['Setting a timer'];
+    console.ignoredYellowBox = ["Setting a timer"];
   }
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
@@ -40,19 +28,12 @@ export default class App extends React.Component {
       );
     } else {
       return (
-<<<<<<< HEAD
-        <View style={styles.container}>
-          {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-          <AppNavigator />
-        </View>
-=======
         <Provider store={store}>
           <View style={styles.container}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
             <AppNavigator />
           </View>
         </Provider>
->>>>>>> origin/firebaseReduxStore
       );
     }
   }
