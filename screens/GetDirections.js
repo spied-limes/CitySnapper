@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff"
   },
   mapFlexContainer: {
-    flex: 7
+    flex: 9
   },
   map: {
     left: 0,
@@ -89,42 +89,21 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: "absolute"
   },
-  mapCommentContainer: {
-    flex: 1,
-    padding: 15,
-    backgroundColor: "beige"
-  },
-  mapComment: {
-    fontSize: 18,
-    textAlign: "center",
-    justifyContent: "center"
-  },
-  contentContainer: {
-    paddingTop: 30
-  },
   tabBarInfoContainer: {
-    flex: 3,
-    ...Platform.select({
-      ios: {
-        shadowColor: "black",
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3
-      },
-      android: {
-        elevation: 20
-      }
-    }),
+    flex: 1,
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: "black",
+    //     shadowOffset: { height: -3 },
+    //     shadowOpacity: 0.1,
+    //     shadowRadius: 3
+    //   },
+    //   android: {
+    //     elevation: 20
+    //   }
+    // }),
     alignItems: "center",
-    backgroundColor: "beige",
-    paddingVertical: 50
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    textAlign: "center"
-  },
-  navigationFilename: {
-    marginTop: 5
+    justifyContent: "center",
+    backgroundColor: "beige"
   }
 });
