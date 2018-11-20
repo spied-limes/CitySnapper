@@ -75,8 +75,6 @@ export default class HomeScreen extends React.Component {
 
   render() {
     const { push, navigate } = this.props.navigation;
-    console.log(typeof this.state.currentLat, this.state.currentLat);
-    console.log(typeof this.state.currentLong, this.state.currentLong);
 
     // DROPDOWN DATA
     const data = [
@@ -185,7 +183,14 @@ export default class HomeScreen extends React.Component {
           ) : (
             <Button
               style={{ flex: 1 }}
-              onPress={() => navigate("Directions", { name: this.state.text })}
+              onPress={() =>
+                navigate("Directions", {
+                  destLat: this.state.latitude,
+                  destLong: this.state.longitude,
+                  currentLong: this.state.currentLong,
+                  currentLat: this.state.currentLat
+                })
+              }
               title="Get Directions"
               color="#841584"
             />
