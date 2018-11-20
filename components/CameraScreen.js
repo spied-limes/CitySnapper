@@ -211,7 +211,8 @@ export default class CameraScreen extends React.Component {
  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝   ╚═╝
   */
   renderGallery() {
-    return <GalleryScreen onPress={this.toggleView.bind(this)} />;
+    // return <GalleryScreen onPress={this.toggleView.bind(this)} />;
+    console.log("this is where the ca");
   }
 
   renderNoPermissions = () => (
@@ -272,12 +273,16 @@ export default class CameraScreen extends React.Component {
           <Ionicons name="ios-radio-button-on" size={85} color="white" />
         </TouchableOpacity>
       </View>
+      {/*
+
+      OLD Gallery Component button
+
       <TouchableOpacity style={styles.bottomButton} onPress={this.toggleView}>
         <View>
           <Ionicons name="md-images" size={40} color="white" />
           {this.state.newPhotos && <View style={styles.newPhotosDot} />}
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 
