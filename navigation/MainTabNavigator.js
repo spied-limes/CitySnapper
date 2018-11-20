@@ -10,6 +10,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import MapScreen from '../screens/MapScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -35,6 +36,24 @@ const MapStack = createStackNavigator({
 
 MapStack.navigationOptions = {
   tabBarLabel: 'Map',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-information-circle${focused ? '' : '-outline'}`
+          : 'md-information-circle'
+      }
+    />
+  ),
+};
+
+const SignUpStack = createStackNavigator({
+  SignUp: SignUpScreen,
+});
+
+SignUpStack.navigationOptions = {
+  tabBarLabel: 'SignUp',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -80,4 +99,5 @@ export default createBottomTabNavigator({
   // LinksStack,
   // SettingsStack,
   MapStack,
+  SignUpStack,
 });

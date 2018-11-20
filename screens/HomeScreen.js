@@ -37,13 +37,11 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // dummyData: this.props.dummyData,
       // userData: {},
       email: '',
       password: '',
     };
     // this.props.watchUser();
-    this.signUpUser = this.signUpUser.bind(this);
     this.loginUser = this.loginUser.bind(this);
   }
   componentDidMount() {
@@ -54,68 +52,12 @@ class HomeScreen extends React.Component {
     // console.log('this.props.userData[1]: ', this.props.userData[1]);
   }
 
-  async signUpUser(email, password) {
-    try {
-      if (this.state.password.length < 6) {
-        console.log('Password must be longer than 6 characters');
-        return;
-      }
-      // create user in firebase auth page (email, pass, userId)
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
-      // capture current userID directly after creation
-      const userId = firebase.auth().currentUser.uid;
-      console.log('HomeScreen auth() userId: ', userId);
-
-      // custom func that (hopefully) writes a user entry in database matched by userId
-      await writeUserData(userId, {
-        username: 'chrisM',
-        firstName: 'Chris',
-        lastName: 'Mejia',
-        email: 'ChrisM@gmail.com',
-        streetAddress: '123 DumbFace Way',
-        city: 'dumb city',
-        state: 'DS',
-        zipCode: '98765',
-        isAdult: true,
-        activities: [1, 2, 3],
-        // current location should be these below
-        latitude: null,
-        longitude: null,
-      });
-
-      // alert box to user---------
-      Alert.alert(
-        'Sign Up Status',
-        'Sign Up Successful',
-        [
-          // {
-          //   text: 'Cancel',
-          //   onPress: () => console.log('Cancel Pressed'),
-          //   style: 'cancel',
-          // },
-          { text: 'OK', onPress: () => console.log('OK Pressed') },
-        ],
-        {
-          cancelable: false,
-        }
-      );
-    } catch (error) {
-      console.log(error.toString());
-      Alert.alert(
-        'Sign Up Status',
-        'Sign Up Failed',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-        { cancelable: false }
-      );
-    }
-  }
-
-  loginUser(email, password) {
+  async loginUser(email, password) {
     // unimplemented navigate to map screen from login successful
     // const { navigate } = this.props.navigation
 
     try {
-      firebase
+      await firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(function(user) {
@@ -169,7 +111,10 @@ class HomeScreen extends React.Component {
     // console.log('this.state: ', this.state);
     console.log('this.props.userData: ', this.props.userData);
     console.log('this.props.activities: ', this.props.activities);
-
+    console.log(
+      'this.props.navigation.navigate',
+      this.props.navigation.navigate
+    );
     return (
       <ScrollView
         style={styles.container}
@@ -212,9 +157,10 @@ class HomeScreen extends React.Component {
               full
               rounded
               primary
-              onPress={() =>
-                this.signUpUser(this.state.email, this.state.password)
-              }
+              onPress={() => {
+                console.log('signUp pressed');
+                this.props.navigation.navigate('SignUp');
+              }}
             >
               <Text style={{ color: 'white' }}>Sign Up</Text>
             </Button>
@@ -228,8 +174,6 @@ class HomeScreen extends React.Component {
               <Text style={{ color: 'white' }}>Log Out</Text>
             </Button>
           </Form>
-
-          <View>{this.props.activities}</View>
         </Container>
       </ScrollView>
     );
