@@ -11,6 +11,7 @@ import {
   Alert,
   // Button,
 } from 'react-native';
+import { navigate } from 'react-navigation';
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 import { connect } from 'react-redux';
@@ -54,8 +55,6 @@ class HomeScreen extends React.Component {
   }
 
   async signUpUser(email, password) {
-    const userId = firebase.auth().currentUser.uid;
-    console.log('HomeScreen auth() userId: ', userId);
     try {
       if (this.state.password.length < 6) {
         console.log('Password must be longer than 6 characters');
@@ -63,6 +62,10 @@ class HomeScreen extends React.Component {
       }
       // create user in firebase auth page (email, pass, userId)
       await firebase.auth().createUserWithEmailAndPassword(email, password);
+      // capture current userID directly after creation
+      const userId = firebase.auth().currentUser.uid;
+      console.log('HomeScreen auth() userId: ', userId);
+
       // custom func that (hopefully) writes a user entry in database matched by userId
       await writeUserData(userId, {
         username: 'chrisM',
@@ -75,6 +78,7 @@ class HomeScreen extends React.Component {
         zipCode: '98765',
         isAdult: true,
         activities: [1, 2, 3],
+        // current location should be these below
         latitude: null,
         longitude: null,
       });
@@ -117,6 +121,9 @@ class HomeScreen extends React.Component {
         .then(function(user) {
           console.log('userLoggedIn: ', user);
         });
+
+      // alert box to user---------
+
       Alert.alert(
         'Login Status',
         'Login Successful',
@@ -135,6 +142,27 @@ class HomeScreen extends React.Component {
       );
     }
   }
+
+  signOutUser = async () => {
+    try {
+      await firebase.auth().signOut();
+      console.log('currentUser: ', firebase.auth().currentUser.uid);
+      // navigate('Auth');
+
+      // alert box to user---------
+
+      Alert.alert(
+        'Logout Status',
+        'Logout Successful',
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        {
+          cancelable: false,
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   render() {
     // console.log('\nthis.props', this.props);
@@ -189,6 +217,15 @@ class HomeScreen extends React.Component {
               }
             >
               <Text style={{ color: 'white' }}>Sign Up</Text>
+            </Button>
+            <Button
+              style={{ marginTop: 15 }}
+              full
+              rounded
+              primary
+              onPress={() => this.signOutUser()}
+            >
+              <Text style={{ color: 'white' }}>Log Out</Text>
             </Button>
           </Form>
 
