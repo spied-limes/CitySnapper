@@ -13,16 +13,10 @@ import {
 } from "react-native";
 
 import MapViewDirections from "react-native-maps-directions";
-
-import { createStackNavigator } from "react-navigation";
 import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
-
-const CheckIn = createStackNavigator({
-  CheckIn: CheckinScreen
-});
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -32,15 +26,13 @@ export default class HomeScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      longitude: 40.6,
-      latitude: -74,
-      latitudeDelta: 0.003596,
-      longitudeDelta: 0.00175,
-      // test values
-      // latitudeDelta: 0.15,
-      // longitudeDelta: 0.75,
+      longitude: 40.7589,
+      latitude: -73.9851,
+      latitudeDelta: 0.005596,
+      longitudeDelta: 0.00475,
+
       errorMessage: null,
-      text: "Dropdown on auto-locate map screen.",
+      text: "Current Location",
       // for current storage
       currentLat: null,
       currentLong: null
@@ -68,20 +60,24 @@ export default class HomeScreen extends React.Component {
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    console.log("Current location below");
-    console.log(location);
+
     this.setState({
       longitude: location.coords.longitude,
-      latitude: location.coords.latitude
+      latitude: location.coords.latitude,
+      currentLong: location.coords.longitude,
+      currentLat: location.coords.latitude
     });
   };
 
   render() {
     const { push, navigate } = this.props.navigation;
+    console.log(typeof this.state.currentLat, this.state.currentLat);
+    console.log(typeof this.state.currentLong, this.state.currentLong);
 
     // DROPDOWN DATA
     const data = [
       [
+        "Current Location",
         "Times Square",
         "Fullstack Academy",
         "World Trade Center",
@@ -90,6 +86,11 @@ export default class HomeScreen extends React.Component {
     ]; //will have to be data
     const coordinates = [
       {
+        latitude: this.state.currentLat,
+        longitude: this.state.currentLong
+      },
+      {
+        //times square
         latitude: 40.7589,
         longitude: -73.9851
       },
@@ -150,16 +151,21 @@ export default class HomeScreen extends React.Component {
 / /___/ / / /  __/ /__/ ,< /_____// // / / /  / /_/ / /_/ / /_/ /_/ /_/ / / / /
 \____/_/ /_/\___/\___/_/|_|     /___/_/ /_/  /_____/\__,_/\__/\__/\____/_/ /_/
         */}
-          {this.state.latitude && this.state.longitude ? (
+          {this.state.latitude === this.state.currentLat &&
+          this.state.longitude === this.state.currentLong ? (
             <Button
               style={{ flex: 1 }}
               onPress={() => navigate("Screen", { name: this.state.text })}
               title="Check In"
               color="#841584"
-              accessibilityLabel="Learn more about this purple button"
             />
           ) : (
-            <Text> Nah you can't checkk in</Text>
+            <Button
+              style={{ flex: 1 }}
+              onPress={() => navigate("Directions", { name: this.state.text })}
+              title="Get Directions"
+              color="#841584"
+            />
           )}
           {/*
     ____                       __
