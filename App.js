@@ -4,19 +4,8 @@ import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import { Provider } from 'react-redux';
 import { store } from './redux/app-redux';
-import * as firebase from 'firebase';
 import ignoreWarnings from 'react-native-ignore-warnings';
-
-// initialize firebase
-const firebaseConfig = {
-  apiKey: 'AIzaSyCHNGtGLHIR7XzL4zIqGo9Oee-qG9WTtmE',
-  authDomain: 'city-crawler-db.firebaseapp.com',
-  databaseURL: 'https://city-crawler-db.firebaseio.com',
-  projectId: 'city-crawler-db',
-  storageBucket: 'city-crawler-db.appspot.com',
-  messagingSenderId: '664616982076',
-};
-firebase.initializeApp(firebaseConfig);
+// import { db } from './firebase/firebaseConfig';
 
 ignoreWarnings('Setting a timer');
 

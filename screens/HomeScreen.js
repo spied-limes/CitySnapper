@@ -14,7 +14,7 @@ import {
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 import { connect } from 'react-redux';
-import { setDummyData, watchUserData } from '../redux/app-redux';
+import { watchUserData, watchActivityData } from '../redux/app-redux';
 import {
   Container,
   Content,
@@ -26,8 +26,7 @@ import {
   Label,
 } from 'native-base';
 import * as firebase from 'firebase';
-
-import { firebaseConfig, signUpuser, loginUser, db } from '../App.js';
+import { writeUserData } from '../firebase/firebaseConfig';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -54,18 +53,33 @@ class HomeScreen extends React.Component {
     // console.log('this.props.userData[1]: ', this.props.userData[1]);
   }
 
-  // onSetDummyDataPress = () => {
-  //   this.props.setDummy(this.state.dummyData);
-  // };
-
-  signUpUser(email, password) {
+  async signUpUser(email, password) {
+    const userId = firebase.auth().currentUser.uid;
+    console.log('HomeScreen auth() userId: ', userId);
     try {
       if (this.state.password.length < 6) {
         console.log('Password must be longer than 6 characters');
         return;
       }
+      // create user in firebase auth page (email, pass, userId)
+      await firebase.auth().createUserWithEmailAndPassword(email, password);
+      // custom func that (hopefully) writes a user entry in database matched by userId
+      await writeUserData(userId, {
+        username: 'chrisM',
+        firstName: 'Chris',
+        lastName: 'Mejia',
+        email: 'ChrisM@gmail.com',
+        streetAddress: '123 DumbFace Way',
+        city: 'dumb city',
+        state: 'DS',
+        zipCode: '98765',
+        isAdult: true,
+        activities: [1, 2, 3],
+        latitude: null,
+        longitude: null,
+      });
 
-      firebase.auth().createUserWithEmailAndPassword (email, password);
+      // alert box to user---------
       Alert.alert(
         'Sign Up Status',
         'Sign Up Successful',
@@ -86,14 +100,7 @@ class HomeScreen extends React.Component {
       Alert.alert(
         'Sign Up Status',
         'Sign Up Failed',
-        [
-          // {
-          //   text: 'Cancel',
-          //   onPress: () => console.log('Cancel sign Pressed'),
-          //   style: 'cancel',
-          // },
-          { text: 'OK', onPress: () => console.log('OK Pressed') },
-        ],
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
         { cancelable: false }
       );
     }
@@ -102,6 +109,7 @@ class HomeScreen extends React.Component {
   loginUser(email, password) {
     // unimplemented navigate to map screen from login successful
     // const { navigate } = this.props.navigation
+
     try {
       firebase
         .auth()
@@ -112,14 +120,7 @@ class HomeScreen extends React.Component {
       Alert.alert(
         'Login Status',
         'Login Successful',
-        [
-          // {
-          //   text: 'Cancel',
-          //   onPress: () => console.log('Cancel Pressed'),
-          //   style: 'cancel',
-          // },
-          { text: 'OK', onPress: () => /*console.log('OK Pressed')*/ },
-        ],
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
         {
           cancelable: false,
         }
@@ -129,14 +130,7 @@ class HomeScreen extends React.Component {
       Alert.alert(
         'Login Status',
         'Login Failed',
-        [
-          // {
-          //   text: 'Cancel',
-          //   onPress: () => console.log('Cancel Pressed'),
-          //   style: 'cancel',
-          // },
-          { text: 'OK', onPress: () => console.log('OK Pressed') },
-        ],
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
         { cancelable: false }
       );
     }
@@ -146,6 +140,7 @@ class HomeScreen extends React.Component {
     // console.log('\nthis.props', this.props);
     // console.log('this.state: ', this.state);
     console.log('this.props.userData: ', this.props.userData);
+    console.log('this.props.activities: ', this.props.activities);
 
     return (
       <ScrollView
@@ -196,26 +191,9 @@ class HomeScreen extends React.Component {
               <Text style={{ color: 'white' }}>Sign Up</Text>
             </Button>
           </Form>
+
+          <View>{this.props.activities}</View>
         </Container>
-        {/* <Text style={{ paddingTop: 100 }}>{this.props.dummyData}</Text>
-        <View style={styles.welcomeContainer} />
-        <TextInput
-          style={{ borderWidth: 1, width: 200, height: 40 }}
-          value={this.state.dummyData}
-          onChangeText={text => {
-            this.setState({ dummyData: text });
-          }}
-        />
-        <Button title="Set DummyData" onPress={this.onSetDummyDataPress} />
-        {this.props.userData.length ? (
-          <View>
-            <Text>{this.props.userData[1].address}</Text>
-            <Text>{this.props.userData[1].firstName}</Text>
-            <Text>{this.props.userData[1].lastName}</Text>
-          </View>
-        ) : (
-          <View />
-        )} */}
       </ScrollView>
     );
   }
@@ -223,17 +201,15 @@ class HomeScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    dummyData: state.dummyData,
     userData: state.userData,
+    activities: state.activities,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    setDummy: text => {
-      dispatch(setDummyData(text));
-    },
     watchUser: () => dispatch(watchUserData()),
+    watchActivities: () => dispatch(watchUserData()),
   };
 };
 

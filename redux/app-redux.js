@@ -1,38 +1,39 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import * as firebase from 'firebase';
+import { db } from '../firebase/firebaseConfig';
 
 //-----------------------
 // Initial State
 //
 
 const initialState = {
-  dummyData: 'dummyInfo',
   userData: {},
+  activities: [],
 };
 
 // -----------------------
 // Action Types
 //
 
-const SET_DUMMY_DATA = 'SET_DUMMY_DATA';
-const SET_USER_DATA = 'SET_USER_DATA';
+const GET_USER_DATA = 'GET_USER_DATA';
+const GET_ACTIVITY_DATA = 'GET_ACTIVITY_DATA';
 
 // -----------------------
 // Action Creators
 //
 
-export const setDummyData = dummyData => {
+export const getUserData = userData => {
   return {
-    type: SET_DUMMY_DATA,
-    value: dummyData,
+    type: GET_USER_DATA,
+    value: userData,
   };
 };
 
-export const setUserData = userData => {
+export const getActivityData = activityData => {
   return {
-    type: SET_USER_DATA,
-    value: userData,
+    type: GET_ACTIVITY_DATA,
+    value: activityData,
   };
 };
 
@@ -40,24 +41,50 @@ export const setUserData = userData => {
 // Thunk
 //
 
+// get userData
 export const watchUserData = () => {
   return async function(dispatch) {
-    await firebase
-      .database()
-      .ref('users')
-      .on(
-        'value',
-        function(snapshot) {
-          var userData = snapshot.val();
-          var actionSetUserData = setUserData(userData);
-          dispatch(actionSetUserData);
-        },
-        function(error) {
-          console.log(error);
-        }
-      );
+    const userId = firebase.auth().currentUser.uid;
+
+    await db.ref('/users/' + userId).on(
+      'value',
+      function(snapshot) {
+        var userData = snapshot.val();
+        var actionGetUserData = getUserData(userData);
+        dispatch(actionGetUserData);
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
   };
 };
+
+export const watchActivityData = () => {
+  return async function(dispatch) {
+    await db.ref('activities').on(
+      'value',
+      function(snapshot) {
+        var activityData = snapshot.val();
+        var actionGetActivityData = getActivityData(activityData);
+        dispatch(actionGetActivityData);
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
+  };
+};
+
+// Write to firebase example:
+// firebase
+//   .database()
+//   .ref(`/voting-app/users/${userID}/newPoll`)
+//   .set(newPoll)
+//   .then(() => {
+//     console.log('New poll data sent!');
+//   })
+//   .catch(error => console.log('Error when creating new poll.', error));
 
 //------------------------
 // Reducer
@@ -65,10 +92,10 @@ export const watchUserData = () => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_DUMMY_DATA:
-      return { ...state, dummyData: action.value };
-    case SET_USER_DATA:
+    case GET_USER_DATA:
       return { ...state, userData: action.value };
+    case GET_ACTIVITY_DATA:
+      return { ...state, activities: action.value };
     default:
       return state;
   }
