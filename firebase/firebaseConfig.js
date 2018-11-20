@@ -1,5 +1,5 @@
-import * as firebase from 'firebase';
-import { firebaseSecrets } from '../secrets';
+import * as firebase from "firebase";
+import { firebaseSecrets } from "../Secrets";
 // initialize firebase
 const firebaseConfig = firebaseSecrets;
 
@@ -11,7 +11,7 @@ export const db = firebase.database();
 export function writeUserData(userId, userObj) {
   firebase
     .database()
-    .ref('/users/' + userId)
+    .ref("/users/" + userId)
     .set({
       username: userObj.username,
       firstName: userObj.firstName,
@@ -24,7 +24,7 @@ export function writeUserData(userId, userObj) {
       isAdult: userObj.isAdult,
       activities: userObj.activities,
       latitude: userObj.latitude,
-      longitude: userObj.longitude,
+      longitude: userObj.longitude
     });
 }
 

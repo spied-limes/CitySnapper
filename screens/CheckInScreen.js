@@ -50,6 +50,9 @@ export default class CheckinScreen extends React.Component {
               </Text>
             </View>
           </ImageBackground>
+          <View>
+            <Text>ACTIVITIES GO HERE</Text>
+          </View>
         </ScrollView>
       </SafeAreaView>
     );
