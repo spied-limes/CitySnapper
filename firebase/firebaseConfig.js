@@ -1,5 +1,5 @@
 import * as firebase from "firebase";
-import { firebaseSecrets } from "../Secrets";
+import { firebaseSecrets } from "../secrets";
 // initialize firebase
 const firebaseConfig = firebaseSecrets;
 
