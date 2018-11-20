@@ -18,10 +18,6 @@ import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
 
-const CheckIn = createStackNavigator({
-  CheckIn: CheckinScreen
-});
-
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
@@ -176,7 +172,7 @@ export default class HomeScreen extends React.Component {
           this.state.longitude === this.state.currentLong ? (
             <Button
               style={{ flex: 1 }}
-              onPress={() => navigate("CheckIn")}
+              onPress={() => navigate("Screen", { name: this.state.text })}
               title="Check In"
               color="#841584"
             />

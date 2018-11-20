@@ -12,7 +12,7 @@ import {
   TextInput
 } from "react-native";
 
-import { GOOGLE_MAPS_APIKEY } from "../Secrets";
+import { GOOGLE_MAPS_APIKEY } from "../secrets";
 import MapViewDirections from "react-native-maps-directions";
 import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import { Constants, Location, Permissions } from "expo";
