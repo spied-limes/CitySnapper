@@ -26,6 +26,8 @@ import {
   Octicons,
 } from '@expo/vector-icons';
 
+import { writeAndCompareImage } from '../firebase/firebaseConfig';
+
 const landmarkSize = 2;
 
 const flashModeOrder = {
@@ -147,11 +149,19 @@ export default class CameraScreen extends React.Component {
       depth,
     });
 
-  takePicture = () => {
-    if (this.camera) {
-      this.camera.takePictureAsync({
-        base64: true,
-      });
+  takePicture = async () => {
+    try {
+      if (this.camera) {
+        const takenPicture = await this.camera.takePictureAsync({
+          // onPictureSaved: this.onPictureSaved,
+          base64: true,
+        });
+        console.log('this is taken picture obj\n\n\n');
+        console.log(takenPicture.base64.slice(0, 100));
+        writeAndCompareImage(takenPicture);
+      }
+    } catch (error) {
+      console.log('i have an error', error);
     }
   };
 
