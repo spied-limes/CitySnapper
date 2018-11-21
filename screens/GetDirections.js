@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   View,
   Button,
-  TextInput
+  TextInput,
+  Dimensions
 } from "react-native";
 
 import { GOOGLE_MAPS_APIKEY } from "../secrets";
@@ -17,16 +18,18 @@ import MapViewDirections from "react-native-maps-directions";
 import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import { Constants, Location, Permissions } from "expo";
 
+const { width, height } = Dimensions.get("window");
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: "Directions"
   };
   constructor() {
     super();
-    this.state = {
-      latitudeDelta: 0.005596,
-      longitudeDelta: 0.00475
-    };
+    this.state = {};
   }
   render() {
     const { push, navigate } = this.props.navigation;
@@ -46,14 +49,15 @@ export default class HomeScreen extends React.Component {
         <View style={styles.mapFlexContainer}>
           <MapView
             region={{
-              // This is hardcoded in the snapping dropdown version
-              latitude: params.currentLat,
-              longitude: params.currentLong,
-              latitudeDelta: this.state.latitudeDelta,
-              longitudeDelta: this.state.longitudeDelta
+              latitude: (params.currentLat + destination.latitude) / 2,
+              longitude: (params.currentLong + destination.longitude) / 2,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
             }}
             showsUserLocation={true}
             style={styles.map}
+            followUserLocation={true}
+            showsMyLocationButton={true}
           >
             <MapViewDirections
               origin={origin}
@@ -62,6 +66,11 @@ export default class HomeScreen extends React.Component {
               mode={"walking"}
               strokeWidth={4}
               strokeColor="hotpink"
+            />
+            <Marker
+              coordinate={destination}
+              title={"finish"}
+              description={"get here asap!!"}
             />
           </MapView>
         </View>

@@ -9,14 +9,17 @@ import {
   TouchableOpacity,
   View,
   Button,
-  TextInput
+  TextInput,
+  Dimensions
 } from "react-native";
-import { createStackNavigator } from "react-navigation";
-import MapViewDirections from "react-native-maps-directions";
 import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
-import CheckinScreen from "./CheckInScreen";
+
+const { width, height } = Dimensions.get("window");
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.00922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -26,14 +29,9 @@ export default class HomeScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      longitude: 40.7589,
-      latitude: -73.9851,
-      latitudeDelta: 0.005596,
-      longitudeDelta: 0.00475,
-
-      errorMessage: null,
+      longitude: 50.567,
+      latitude: 50.765,
       text: "Current Location",
-      // for current storage
       currentLat: null,
       currentLong: null
     };
@@ -75,7 +73,6 @@ export default class HomeScreen extends React.Component {
     // DROPDOWN DATA
     const data = [
       [
-        "Current Location",
         "Times Square",
         "Fullstack Academy",
         "World Trade Center",
@@ -84,33 +81,21 @@ export default class HomeScreen extends React.Component {
     ]; //will have to be data
     const coordinates = [
       {
-        latitude: this.state.currentLat,
-        longitude: this.state.currentLong
-      },
-      {
         //times square
         latitude: 40.7589,
-        longitude: -73.9851,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitude: -73.9851
       },
       {
         latitude: 40.7051,
-        longitude: -74.0092,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitude: -74.0092
       },
       {
         latitude: 40.7118,
-        longitude: -74.0131,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitude: -74.0131
       },
       {
         latitude: 40.7441,
-        longitude: -73.9874,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitude: -73.9874
       }
     ];
 
@@ -210,22 +195,22 @@ export default class HomeScreen extends React.Component {
               // This is hardcoded in the snapping dropdown version
               latitude: this.state.latitude,
               longitude: this.state.longitude,
-              latitudeDelta: 0.0075,
-              longitudeDelta: 0.003
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
             }}
             showsUserLocation={true}
             style={styles.map}
+            showsMyLocationButton={true}
           >
-            <Marker
-              coordinate={{ latitude: 40.6, longitude: -74 }}
-              title={"first marker"}
-              description={"jkh"}
-              onPress={() =>
-                this.state.latitude === 40.6 && longitude === -74
-                  ? console.log("success")
-                  : console.log("failure")
-              }
-            />
+            {coordinates.map(marker => (
+              // eslint-disable-next-line react/jsx-key
+              <Marker
+                key={marker.latitude}
+                coordinate={marker}
+                title={"hi"}
+                description={"lol"}
+              />
+            ))}
           </MapView>
         </View>
       </View>
