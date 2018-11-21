@@ -9,7 +9,8 @@ import { db } from '../firebase/firebaseConfig';
 
 const initialState = {
   userData: {},
-  activities: [],
+  activities: {},
+  places: {},
 };
 
 // -----------------------
@@ -18,6 +19,7 @@ const initialState = {
 
 const GET_USER_DATA = 'GET_USER_DATA';
 const GET_ACTIVITY_DATA = 'GET_ACTIVITY_DATA';
+const GET_PLACE_DATA = 'GET_PLACE_DATA';
 
 // -----------------------
 // Action Creators
@@ -37,6 +39,13 @@ export const getActivityData = activityData => {
   };
 };
 
+export const getPlaceData = placeData => {
+  return {
+    type: GET_PLACE_DATA,
+    value: placeData,
+  };
+};
+
 // -----------------------
 // Thunk
 //
@@ -44,7 +53,10 @@ export const getActivityData = activityData => {
 // get userData
 export const watchUserData = () => {
   return async function(dispatch) {
-    const userId = firebase.auth().currentUser.uid;
+    console.log('firebase.auth().currentUser: ', firebase.auth().currentUser);
+    const userId = firebase.auth().currentUser
+      ? firebase.auth().currentUser.uid
+      : undefined;
 
     await db.ref('/users/' + userId).on(
       'value',
@@ -59,7 +71,7 @@ export const watchUserData = () => {
     );
   };
 };
-
+// get activity data
 export const watchActivityData = () => {
   return async function(dispatch) {
     await db.ref('activities').on(
@@ -68,6 +80,22 @@ export const watchActivityData = () => {
         var activityData = snapshot.val();
         var actionGetActivityData = getActivityData(activityData);
         dispatch(actionGetActivityData);
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
+  };
+};
+// get places data
+export const watchPlaceData = () => {
+  return async function(dispatch) {
+    await db.ref('places').on(
+      'value',
+      function(snapshot) {
+        var placeData = snapshot.val();
+        var actionGetPlaceData = getPlaceData(placeData);
+        dispatch(actionGetPlaceData);
       },
       function(error) {
         console.log(error);
@@ -96,6 +124,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, userData: action.value };
     case GET_ACTIVITY_DATA:
       return { ...state, activities: action.value };
+    case GET_PLACE_DATA:
+      return { ...state, places: action.value };
     default:
       return state;
   }

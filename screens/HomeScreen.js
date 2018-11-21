@@ -15,7 +15,11 @@ import { navigate } from 'react-navigation';
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 import { connect } from 'react-redux';
-import { watchUserData, watchActivityData } from '../redux/app-redux';
+import {
+  watchUserData,
+  watchActivityData,
+  watchPlaceData,
+} from '../redux/app-redux';
 import {
   Container,
   Content,
@@ -45,7 +49,8 @@ class HomeScreen extends React.Component {
     this.loginUser = this.loginUser.bind(this);
   }
   componentDidMount() {
-    // console.log('this.props.userData[1]: ', this.props.userData[1]);
+    this.props.watchUser();
+    console.log('this.state.userData: ', this.state.userData);
   }
 
   componentDidUpdate() {
@@ -111,10 +116,7 @@ class HomeScreen extends React.Component {
     // console.log('this.state: ', this.state);
     console.log('this.props.userData: ', this.props.userData);
     console.log('this.props.activities: ', this.props.activities);
-    console.log(
-      'this.props.navigation.navigate',
-      this.props.navigation.navigate
-    );
+
     return (
       <ScrollView
         style={styles.container}
@@ -184,13 +186,15 @@ const mapStateToProps = state => {
   return {
     userData: state.userData,
     activities: state.activities,
+    places: state.places,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     watchUser: () => dispatch(watchUserData()),
-    watchActivities: () => dispatch(watchUserData()),
+    watchActivities: () => dispatch(watchActivityData()),
+    watchPlaces: () => dispatch(watchPlaceData()),
   };
 };
 
