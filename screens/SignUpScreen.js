@@ -66,7 +66,14 @@ class SignUpScreen extends React.Component {
             //   onPress: () => console.log('Cancel Pressed'),
             //   style: 'cancel',
             // },
-            { text: 'OK', onPress: () => console.log('OK Pressed') },
+            {
+              text: 'OK',
+              onPress: () => {
+                this.props.navigation.navigate('SignUp');
+
+                console.log('OK Pressed');
+              },
+            },
           ],
           {
             cancelable: false,
@@ -79,7 +86,7 @@ class SignUpScreen extends React.Component {
       await firebase.auth().createUserWithEmailAndPassword(email, password);
       // capture current userID directly after creation
       const userId = firebase.auth().currentUser.uid;
-      console.log('HomeScreen auth() userId: ', userId);
+      console.log('SignUpScreen auth() userId: ', userId);
 
       // custom func that (hopefully) writes a user entry in database matched by userId
       await writeUserData(userId, {

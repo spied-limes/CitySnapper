@@ -41,8 +41,7 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // userData: {},
-      email: '',
+      email: this.props.userData.email || '',
       password: '',
     };
     // this.props.watchUser();
@@ -50,7 +49,9 @@ class HomeScreen extends React.Component {
   }
   componentDidMount() {
     this.props.watchUser();
-    console.log('this.state.userData: ', this.state.userData);
+    this.props.watchActivities();
+    this.props.watchPlaces();
+    console.log('this.props: ', this.props);
   }
 
   componentDidUpdate() {
@@ -67,14 +68,25 @@ class HomeScreen extends React.Component {
         .signInWithEmailAndPassword(email, password)
         .then(function(user) {
           console.log('userLoggedIn: ', user);
+          // console.log('this.props.userData: ', this.props.userData);
         });
+      this.componentDidMount();
 
       // alert box to user---------
 
       Alert.alert(
         'Login Status',
         'Login Successful',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              this.props.navigation.navigate('Map');
+
+              console.log('OK Pressed');
+            },
+          },
+        ],
         {
           cancelable: false,
         }
@@ -93,15 +105,25 @@ class HomeScreen extends React.Component {
   signOutUser = async () => {
     try {
       await firebase.auth().signOut();
-      console.log('currentUser: ', firebase.auth().currentUser.uid);
-      // navigate('Auth');
+      const userId = firebase.auth().currentUser
+        ? firebase.auth().currentUser.uid
+        : undefined;
+      console.log('currentUser useId: ', userId);
 
       // alert box to user---------
 
       Alert.alert(
         'Logout Status',
         'Logout Successful',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              this.setState({ email: '', password: '' });
+              console.log('OK Pressed');
+            },
+          },
+        ],
         {
           cancelable: false,
         }
@@ -113,69 +135,80 @@ class HomeScreen extends React.Component {
 
   render() {
     // console.log('\nthis.props', this.props);
-    // console.log('this.state: ', this.state);
-    console.log('this.props.userData: ', this.props.userData);
-    console.log('this.props.activities: ', this.props.activities);
-
+    console.log('this.state: ', this.state);
+    console.log('HomeScreen this.props.userData: ', this.props.userData);
+    console.log('HomeScreen this.props.activities: ', this.props.activities);
+    // is a user logged in? this ternary below should let us know:
+    const userId = firebase.auth().currentUser
+      ? firebase.auth().currentUser.uid
+      : undefined;
     return (
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
         <Container>
-          <Form>
-            <Item floatingLabel>
-              <Label>Email</Label>
-              <Input
-                autoCorrect={false}
-                autoCapitalize="none"
-                onChangeText={email => this.setState({ email })}
-              />
-            </Item>
+          {!userId ? (
+            <Form>
+              <Item floatingLabel>
+                <Label>Email</Label>
+                <Input
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  onChangeText={email => this.setState({ email })}
+                />
+              </Item>
 
-            <Item floatingLabel>
-              <Label>Password</Label>
-              <Input
-                secureTextEntry={true}
-                autoCorrect={false}
-                autoCapitalize="none"
-                onChangeText={password => this.setState({ password })}
-              />
-            </Item>
+              <Item floatingLabel>
+                <Label>Password</Label>
+                <Input
+                  secureTextEntry={true}
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  onChangeText={password => this.setState({ password })}
+                />
+              </Item>
 
-            <Button
-              style={{ marginTop: 15 }}
-              full
-              rounded
-              success
-              onPress={() =>
-                this.loginUser(this.state.email, this.state.password)
-              }
-            >
-              <Text style={{ color: 'white' }}>Login</Text>
-            </Button>
-            <Button
-              style={{ marginTop: 15 }}
-              full
-              rounded
-              primary
-              onPress={() => {
-                console.log('signUp pressed');
-                this.props.navigation.navigate('SignUp');
-              }}
-            >
-              <Text style={{ color: 'white' }}>Sign Up</Text>
-            </Button>
-            <Button
-              style={{ marginTop: 15 }}
-              full
-              rounded
-              primary
-              onPress={() => this.signOutUser()}
-            >
-              <Text style={{ color: 'white' }}>Log Out</Text>
-            </Button>
-          </Form>
+              <Button
+                style={{ marginTop: 15 }}
+                full
+                rounded
+                success
+                onPress={() =>
+                  this.loginUser(this.state.email, this.state.password)
+                }
+              >
+                <Text style={{ color: 'white' }}>Login</Text>
+              </Button>
+              <Button
+                style={{ marginTop: 15 }}
+                full
+                rounded
+                primary
+                onPress={() => {
+                  console.log('signUp pressed');
+                  this.props.navigation.navigate('SignUp');
+                }}
+              >
+                <Text style={{ color: 'white' }}>Sign Up</Text>
+              </Button>
+            </Form>
+          ) : (
+            <Form>
+              <Button
+                style={{ marginTop: 15 }}
+                full
+                rounded
+                primary
+                onPress={() => this.signOutUser()}
+              >
+                <Text style={{ color: 'white' }}>Log Out</Text>
+              </Button>
+            </Form>
+          )}
+          {/* <View style={{ flex: 1 }}>
+            <Text>{userId && this.props.userData}</Text>
+          </View> */}
         </Container>
       </ScrollView>
     );

@@ -58,7 +58,7 @@ export const watchUserData = () => {
       ? firebase.auth().currentUser.uid
       : undefined;
 
-    await db.ref('/users/' + userId).on(
+    await db.ref('users/' + userId).on(
       'value',
       function(snapshot) {
         var userData = snapshot.val();
