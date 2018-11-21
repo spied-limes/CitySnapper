@@ -10,6 +10,6 @@ export default {
   },
   isSmallDevice: width < 375,
   marginTop: 28,
-  checkInImageHeight: height * 0.6,
-  activityBoxHeight: height * 0.4
+  checkInImageHeight: height * 0.65,
+  activityBoxHeight: height * 0.35
 };

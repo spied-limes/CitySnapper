@@ -4,7 +4,6 @@
 import React from "react";
 import {
   ImageBackground,
-  LinearGradient,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -27,9 +26,8 @@ export default class CheckInScreen extends React.Component {
           <ImageBackground
             source={require("../assets/images/timesSquare.jpg")}
             style={{
-              width: "100%",
-              height: Layout.checkInImageHeight,
-              resizeMode: "cover"
+              width: undefined,
+              height: Layout.checkInImageHeight
             }}
           >
             {/* ########## BG OVERLAY BOX ########## */}
@@ -75,9 +73,7 @@ export default class CheckInScreen extends React.Component {
             </View>
           </ImageBackground>
           <View style={styles.activityBox}>
-            <View style={styles.activityHeader}>
-              <Text>ACTIVITIES GO HERE</Text>
-            </View>
+            <Text style={styles.activityHeadline}>ACTIVITIES GO HERE</Text>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -86,14 +82,9 @@ export default class CheckInScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  locationDetailsBox: {
-    flex: 1,
-    width: null,
-    height: null,
-    resizeMode: "contain"
-  },
   bgOverlayBox: {
-    flex: 1
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
   },
   navBox: {
     marginTop: 28,
@@ -149,10 +140,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     height: Layout.activityBoxHeight,
-    backgroundColor: "pink"
+    backgroundColor: "black"
   },
-  activityHeader: {
+  activityHeadline: {
+    color: "white",
     flex: 1,
-    fontSize: 16
+    fontSize: 24,
+    fontFamily: "Abril-FatFace"
   }
 });
