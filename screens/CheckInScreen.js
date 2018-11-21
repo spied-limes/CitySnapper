@@ -1,20 +1,21 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable quotes */
+
 import React from "react";
 import {
   ImageBackground,
-  Text,
-  View,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Button,
-  Platform,
-  TouchableOpacity
+  Text,
+  TouchableOpacity,
+  View
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import LocationText from "../components/StyledText";
 
-export default class CheckinScreen extends React.Component {
+export default class CheckInScreen extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
 
@@ -44,6 +45,7 @@ export default class CheckinScreen extends React.Component {
               </View>
             </View>
             <View style={styles.infoBox}>
+              <Text style={styles.locationName}>Times Square</Text>
               <Text style={styles.infoBoxText}>Hello Matess! </Text>
               <Text style={styles.infoBoxText}>
                 you have checked in to {params.name}
@@ -74,6 +76,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.4)"
+  },
+  locationName: {
+    color: "white",
+    fontFamily: "Abril-FatFace",
+    fontSize: 30
   },
   borough: {
     color: "white",

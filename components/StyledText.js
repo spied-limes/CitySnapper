@@ -12,8 +12,13 @@ export class MonoText extends React.Component {
   }
 }
 
-// export class LocationText extends React.Component {
-//   render() {
-//     return <Text {...this.props} style={[this.props.style, { fontFamily: 'space-mono' }]} />;
-//   }
-// }
+export class LocationText extends React.Component {
+  render() {
+    return (
+      <Text
+        {...this.props}
+        style={[this.props.style, { fontFamily: "Abril-FatFace" }]}
+      />
+    );
+  }
+}
