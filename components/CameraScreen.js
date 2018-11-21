@@ -16,7 +16,6 @@ import {
   Platform,
 } from 'react-native';
 // import GalleryScreen from "../components/Gallery";
-// import isIPhoneX from "react-native-is-iphonex";
 
 import {
   Ionicons,
@@ -25,7 +24,6 @@ import {
   MaterialCommunityIcons,
   Octicons,
 } from '@expo/vector-icons';
-
 import { writeAndCompareImage } from '../firebase/firebaseConfig';
 
 const landmarkSize = 2;
@@ -221,8 +219,9 @@ export default class CameraScreen extends React.Component {
  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝   ╚═╝
   */
   renderGallery() {
+    console.log('this is where the gallery would go');
+    // return cama;
     // return <GalleryScreen onPress={this.toggleView.bind(this)} />;
-    console.log('this is where the ca');
   }
 
   renderNoPermissions = () => (
@@ -283,16 +282,12 @@ export default class CameraScreen extends React.Component {
           <Ionicons name="ios-radio-button-on" size={85} color="white" />
         </TouchableOpacity>
       </View>
-      {/*
-
-      OLD Gallery Component button
-
       <TouchableOpacity style={styles.bottomButton} onPress={this.toggleView}>
         <View>
           <Ionicons name="md-images" size={40} color="white" />
           {this.state.newPhotos && <View style={styles.newPhotosDot} />}
         </View>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 
@@ -337,19 +332,6 @@ export default class CameraScreen extends React.Component {
         ratio={this.state.ratio}
         pictureSize={this.state.pictureSize}
         onMountError={this.handleMountError}
-        onFacesDetected={
-          this.state.faceDetecting ? this.onFacesDetected : undefined
-        }
-        onFaceDetectionError={this.onFaceDetectionError}
-        barCodeScannerSettings={{
-          barCodeTypes: [
-            BarCodeScanner.Constants.BarCodeType.qr,
-            BarCodeScanner.Constants.BarCodeType.pdf417,
-          ],
-        }}
-        onBarCodeScanned={
-          this.state.barcodeScanning ? this.onBarCodeScanned : undefined
-        }
       >
         {this.renderTopBar()}
         {this.renderBottomBar()}
