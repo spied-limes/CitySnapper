@@ -3,9 +3,9 @@ import {
   Camera,
   FileSystem,
   Permissions,
-  BarCodeScanner
-} from "expo";
-import React from "react";
+  BarCodeScanner,
+} from 'expo';
+import React from 'react';
 import {
   Alert,
   StyleSheet,
@@ -13,9 +13,9 @@ import {
   View,
   TouchableOpacity,
   Slider,
-  Platform
-} from "react-native";
-import GalleryScreen from "../components/Gallery";
+  Platform,
+} from 'react-native';
+// import GalleryScreen from "../components/Gallery";
 // import isIPhoneX from "react-native-is-iphonex";
 
 import {
@@ -23,51 +23,51 @@ import {
   MaterialIcons,
   Foundation,
   MaterialCommunityIcons,
-  Octicons
-} from "@expo/vector-icons";
+  Octicons,
+} from '@expo/vector-icons';
 
 const landmarkSize = 2;
 
 const flashModeOrder = {
-  off: "on",
-  on: "auto",
-  auto: "torch",
-  torch: "off"
+  off: 'on',
+  on: 'auto',
+  auto: 'torch',
+  torch: 'off',
 };
 
 const flashIcons = {
-  off: "flash-off",
-  on: "flash-on",
-  auto: "flash-auto",
-  torch: "highlight"
+  off: 'flash-off',
+  on: 'flash-on',
+  auto: 'flash-auto',
+  torch: 'highlight',
 };
 
 const wbOrder = {
-  auto: "sunny",
-  sunny: "cloudy",
-  cloudy: "shadow",
-  shadow: "fluorescent",
-  fluorescent: "incandescent",
-  incandescent: "auto"
+  auto: 'sunny',
+  sunny: 'cloudy',
+  cloudy: 'shadow',
+  shadow: 'fluorescent',
+  fluorescent: 'incandescent',
+  incandescent: 'auto',
 };
 
 const wbIcons = {
-  auto: "wb-auto",
-  sunny: "wb-sunny",
-  cloudy: "wb-cloudy",
-  shadow: "beach-access",
-  fluorescent: "wb-iridescent",
-  incandescent: "wb-incandescent"
+  auto: 'wb-auto',
+  sunny: 'wb-sunny',
+  cloudy: 'wb-cloudy',
+  shadow: 'beach-access',
+  fluorescent: 'wb-iridescent',
+  incandescent: 'wb-incandescent',
 };
 
 export default class CameraScreen extends React.Component {
   state = {
-    flash: "off",
+    flash: 'off',
     zoom: 0,
-    autoFocus: "on",
-    type: "back",
-    whiteBalance: "auto",
-    ratio: "16:9",
+    autoFocus: 'on',
+    type: 'back',
+    whiteBalance: 'auto',
+    ratio: '16:9',
     ratios: [],
     newPhotos: false,
     permissionsGranted: false,
@@ -75,22 +75,22 @@ export default class CameraScreen extends React.Component {
     pictureSizes: [],
     pictureSizeId: 0,
     showGallery: false,
-    showMoreOptions: false
+    showMoreOptions: false,
   };
   static navigationOptions = { header: null };
 
   async componentWillMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({
-      permissionsGranted: status === "granted"
+      permissionsGranted: status === 'granted',
     });
   }
 
   componentDidMount() {
     FileSystem.makeDirectoryAsync(
-      FileSystem.documentDirectory + "photos"
+      FileSystem.documentDirectory + 'photos'
     ).catch(e => {
-      console.log(e, "Directory exists");
+      console.log(e, 'Directory exists');
     });
   }
 
@@ -102,55 +102,55 @@ export default class CameraScreen extends React.Component {
   toggleView = () =>
     this.setState({
       showGallery: !this.state.showGallery,
-      newPhotos: false
+      newPhotos: false,
     });
 
   toggleMoreOptions = () =>
     this.setState({
-      showMoreOptions: !this.state.showMoreOptions
+      showMoreOptions: !this.state.showMoreOptions,
     });
 
   toggleFacing = () =>
     this.setState({
-      type: this.state.type === "back" ? "front" : "back"
+      type: this.state.type === 'back' ? 'front' : 'back',
     });
 
   toggleFlash = () =>
     this.setState({
-      flash: flashModeOrder[this.state.flash]
+      flash: flashModeOrder[this.state.flash],
     });
 
   setRatio = ratio => this.setState({ ratio });
 
   toggleWB = () =>
     this.setState({
-      whiteBalance: wbOrder[this.state.whiteBalance]
+      whiteBalance: wbOrder[this.state.whiteBalance],
     });
 
   toggleFocus = () =>
     this.setState({
-      autoFocus: this.state.autoFocus === "on" ? "off" : "on"
+      autoFocus: this.state.autoFocus === 'on' ? 'off' : 'on',
     });
 
   zoomOut = () =>
     this.setState({
-      zoom: this.state.zoom - 0.1 < 0 ? 0 : this.state.zoom - 0.1
+      zoom: this.state.zoom - 0.1 < 0 ? 0 : this.state.zoom - 0.1,
     });
 
   zoomIn = () =>
     this.setState({
-      zoom: this.state.zoom + 0.1 > 1 ? 1 : this.state.zoom + 0.1
+      zoom: this.state.zoom + 0.1 > 1 ? 1 : this.state.zoom + 0.1,
     });
 
   setFocusDepth = depth =>
     this.setState({
-      depth
+      depth,
     });
 
   takePicture = () => {
     if (this.camera) {
       this.camera.takePictureAsync({
-        onPictureSaved: this.onPictureSaved
+        base64: true,
       });
     }
   };
@@ -160,7 +160,7 @@ export default class CameraScreen extends React.Component {
   onPictureSaved = async photo => {
     await FileSystem.moveAsync({
       from: photo.uri,
-      to: `${FileSystem.documentDirectory}photos/${Date.now()}.jpg`
+      to: `${FileSystem.documentDirectory}photos/${Date.now()}.jpg`,
     });
     console.log(photo);
     this.setState({ newPhotos: true });
@@ -172,8 +172,8 @@ export default class CameraScreen extends React.Component {
         this.state.ratio
       );
       let pictureSizeId = 0;
-      if (Platform.OS === "ios") {
-        pictureSizeId = pictureSizes.indexOf("High");
+      if (Platform.OS === 'ios') {
+        pictureSizeId = pictureSizes.indexOf('High');
       } else {
         // returned array is sorted in ascending order - default size is the largest one
         pictureSizeId = pictureSizes.length - 1;
@@ -181,7 +181,7 @@ export default class CameraScreen extends React.Component {
       this.setState({
         pictureSizes,
         pictureSizeId,
-        pictureSize: pictureSizes[pictureSizeId]
+        pictureSize: pictureSizes[pictureSizeId],
       });
     }
   };
@@ -199,7 +199,7 @@ export default class CameraScreen extends React.Component {
     }
     this.setState({
       pictureSize: this.state.pictureSizes[newId],
-      pictureSizeId: newId
+      pictureSizeId: newId,
     });
   };
   /*
@@ -212,12 +212,12 @@ export default class CameraScreen extends React.Component {
   */
   renderGallery() {
     // return <GalleryScreen onPress={this.toggleView.bind(this)} />;
-    console.log("this is where the ca");
+    console.log('this is where the ca');
   }
 
   renderNoPermissions = () => (
     <View style={styles.noPermissions}>
-      <Text style={{ color: "white" }}>
+      <Text style={{ color: 'white' }}>
         Camera permissions not granted - cannot open camera preview.
       </Text>
     </View>
@@ -247,8 +247,8 @@ export default class CameraScreen extends React.Component {
           style={[
             styles.autoFocusLabel,
             {
-              color: this.state.autoFocus === "on" ? "white" : "#6b6b6b"
-            }
+              color: this.state.autoFocus === 'on' ? 'white' : '#6b6b6b',
+            },
           ]}
         >
           AF
@@ -268,7 +268,7 @@ export default class CameraScreen extends React.Component {
       <View style={{ flex: 0.4 }}>
         <TouchableOpacity
           onPress={this.takePicture}
-          style={{ alignSelf: "center" }}
+          style={{ alignSelf: 'center' }}
         >
           <Ionicons name="ios-radio-button-on" size={85} color="white" />
         </TouchableOpacity>
@@ -298,7 +298,7 @@ export default class CameraScreen extends React.Component {
             <Ionicons name="md-arrow-dropleft" size={24} color="white" />
           </TouchableOpacity>
           <View style={styles.pictureSizeLabel}>
-            <Text style={{ color: "white" }}>{this.state.pictureSize}</Text>
+            <Text style={{ color: 'white' }}>{this.state.pictureSize}</Text>
           </View>
           <TouchableOpacity
             onPress={this.nextPictureSize}
@@ -334,8 +334,8 @@ export default class CameraScreen extends React.Component {
         barCodeScannerSettings={{
           barCodeTypes: [
             BarCodeScanner.Constants.BarCodeType.qr,
-            BarCodeScanner.Constants.BarCodeType.pdf417
-          ]
+            BarCodeScanner.Constants.BarCodeType.pdf417,
+          ],
         }}
         onBarCodeScanned={
           this.state.barcodeScanning ? this.onBarCodeScanned : undefined
@@ -364,37 +364,37 @@ export default class CameraScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000"
+    backgroundColor: '#000',
   },
   camera: {
     flex: 1,
-    justifyContent: "space-between"
+    justifyContent: 'space-between',
   },
   topBar: {
     flex: 0.2,
-    backgroundColor: "transparent",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingTop: Constants.statusBarHeight / 2
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingTop: Constants.statusBarHeight / 2,
   },
   bottomBar: {
     paddingBottom: 5,
-    backgroundColor: "transparent",
-    alignSelf: "center",
-    justifyContent: "space-between",
+    backgroundColor: 'transparent',
+    alignSelf: 'center',
+    justifyContent: 'space-between',
     flex: 0.12,
-    flexDirection: "row"
+    flexDirection: 'row',
   },
   noPermissions: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
   },
   gallery: {
     flex: 1,
-    flexDirection: "row",
-    flexWrap: "wrap"
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   toggleButton: {
     flex: 0.25,
@@ -403,61 +403,61 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 20,
     padding: 5,
-    alignItems: "center",
-    justifyContent: "center"
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   autoFocusLabel: {
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: 'bold',
   },
   bottomButton: {
     flex: 0.3,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   newPhotosDot: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     right: -5,
     width: 16,
     height: 16,
     borderRadius: 4,
-    backgroundColor: "springgreen"
+    backgroundColor: 'springgreen',
   },
   options: {
     flex: 1,
-    position: "absolute",
+    position: 'absolute',
     bottom: 100,
     left: 15,
     width: 150,
     height: 80,
-    backgroundColor: "#000000BA",
+    backgroundColor: '#000000BA',
     borderRadius: 10,
-    padding: 10
+    padding: 10,
   },
   pictureQualityLabel: {
     flex: 1,
     fontSize: 16,
-    color: "white",
-    flexDirection: "row"
+    color: 'white',
+    flexDirection: 'row',
   },
   pictureSizeContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row"
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
   pictureSizeChooser: {
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexDirection: "row"
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
   pictureSizeLabel: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   row: {
-    flexDirection: "row"
-  }
+    flexDirection: 'row',
+  },
 });
