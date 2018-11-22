@@ -41,9 +41,3 @@ TabSelector.propTypes = {
 
 </KeyboardAvoidingView>
 ```
-
-## Navigation flow
-
-```
-LogIn/SignUp Page
-```

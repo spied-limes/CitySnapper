@@ -112,200 +112,78 @@ class HomeScreen extends React.Component {
   };
 
   render() {
-    // console.log('\nthis.props', this.props);
-    // console.log('this.state: ', this.state);
-    // console.log("this.props.userData: ", this.props.userData);
-    // console.log("this.props.activities: ", this.props.activities);
-    // console.log(
-    //   "this.props.navigation.navigate",
-    //   this.props.navigation.navigate
-    // );
     return (
-      <ScrollView style={styles.container}>
-        <Container>
-          <Tabs>
-            <Tab heading="Log In">
-              <ImageBackground
-                source={require("../assets/images/BridgeToManhattan.jpg")}
-                style={styles.welcomeImage}
-              >
-                <Form style={styles.formContainer}>
-                  <Item floatingLabel>
-                    <Label style={styles.inputText}>Email</Label>
-                    <Input
-                      style={styles.inputText}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={email => this.setState({ email })}
-                    />
-                  </Item>
-
-                  <Item floatingLabel>
-                    <Label style={styles.inputText}>Password</Label>
-                    <Input
-                      style={styles.inputText}
-                      secureTextEntry={true}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={password => this.setState({ password })}
-                    />
-                  </Item>
-
-                  <Button
-                    style={{ marginTop: 15 }}
-                    full
-                    rounded
-                    success
-                    onPress={() =>
-                      this.loginUser(this.state.email, this.state.password)
-                    }
-                  >
-                    <Text style={{ color: "white" }}>Login</Text>
-                  </Button>
-                  <Button
-                    style={{ marginTop: 15 }}
-                    full
-                    rounded
-                    primary
-                    onPress={() => {
-                      console.log("signUp pressed");
-                      this.props.navigation.navigate("SignUp");
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>Sign Up</Text>
-                  </Button>
-                  <Button
-                    style={{ marginTop: 15 }}
-                    full
-                    rounded
-                    primary
-                    onPress={() => this.signOutUser()}
-                  >
-                    <Text style={{ color: "white" }}>Log Out</Text>
-                  </Button>
-                </Form>
-              </ImageBackground>
-            </Tab>
-
-            {/* ########## SIGN UP TAB ########## */}
-
-            <Tab heading="Sign Up">
-              <ImageBackground
-                source={require("../assets/images/BridgeToManhattan.jpg")}
-                style={styles.welcomeImage}
-              >
-                <Form>
-                  <Item floatingLabel>
-                    <Label>Email</Label>
-                    <Input
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={email => this.setState({ email })}
-                    />
-                  </Item>
-
-                  <Item floatingLabel>
-                    <Label>Password</Label>
-                    <Input
-                      secureTextEntry={true}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={password => this.setState({ password })}
-                    />
-                  </Item>
-
-                  <Item floatingLabel>
-                    <Label>First Name</Label>
-                    <Input
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={firstName => this.setState({ firstName })}
-                    />
-                  </Item>
-
-                  <Item floatingLabel>
-                    <Label>Last Name</Label>
-                    <Input
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={lastName => this.setState({ lastName })}
-                    />
-                  </Item>
-
-                  <Item floatingLabel>
-                    <Label>UserName</Label>
-                    <Input
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={username => this.setState({ username })}
-                    />
-                  </Item>
-
-                  <Item floatingLabel>
-                    <Label>Street Address</Label>
-                    <Input
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={streetAddress =>
-                        this.setState({ streetAddress })
-                      }
-                    />
-                  </Item>
-
-                  <Item floatingLabel>
-                    <Label>City</Label>
-                    <Input
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={city => this.setState({ city })}
-                    />
-                  </Item>
-
-                  <Item floatingLabel>
-                    <Label>State</Label>
-                    <Input
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={state => this.setState({ state })}
-                    />
-                  </Item>
-
-                  <Item floatingLabel>
-                    <Label>Zip Code</Label>
-                    <Input
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={zipCode => this.setState({ zipCode })}
-                    />
-                  </Item>
-
-                  {/* the following should be a binary choice button or something
+      <Container style={styles.container}>
+        <ImageBackground
+          source={require("../assets/images/BridgeToManhattan.jpg")}
+          style={styles.welcomeImage}
+        >
+          <Button
+            style={{ marginTop: 15 }}
+            full
+            success
+            onPress={() => this.props.navigation.navigate("Main")}
+          >
+            <Text style={{ color: "white" }}>Proceed as Guest</Text>
+          </Button>
+          <Form style={styles.formContainer}>
             <Item floatingLabel>
-              <Label>Over 18?</Label>
+              <Label style={styles.inputText}>Email</Label>
               <Input
+                style={styles.inputText}
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={isAdult => this.setState({ isAdult })}
+                onChangeText={email => this.setState({ email })}
               />
-            </Item> */}
+            </Item>
 
-                  <Button
-                    style={{ marginTop: 15 }}
-                    full
-                    rounded
-                    primary
-                    onPress={() =>
-                      this.signUpUser(this.state.email, this.state.password)
-                    }
-                  >
-                    <Text style={{ color: "white" }}>Sign Up</Text>
-                  </Button>
-                </Form>
-              </ImageBackground>
-            </Tab>
-          </Tabs>
-        </Container>
-      </ScrollView>
+            <Item floatingLabel>
+              <Label style={styles.inputText}>Password</Label>
+              <Input
+                style={styles.inputText}
+                secureTextEntry={true}
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={password => this.setState({ password })}
+              />
+            </Item>
+
+            <Button
+              style={{ marginTop: 15 }}
+              full
+              rounded
+              success
+              onPress={() =>
+                this.loginUser(this.state.email, this.state.password)
+              }
+            >
+              <Text style={{ color: "white" }}>Login</Text>
+            </Button>
+            <Button
+              style={{ marginTop: 15 }}
+              full
+              rounded
+              primary
+              onPress={() => {
+                console.log("signUp pressed");
+                this.props.navigation.navigate("SignUp");
+              }}
+            >
+              <Text style={{ color: "white" }}>Sign Up</Text>
+            </Button>
+            <Button
+              style={{ marginTop: 15 }}
+              full
+              rounded
+              primary
+              onPress={() => this.signOutUser()}
+            >
+              <Text style={{ color: "white" }}>Log Out</Text>
+            </Button>
+          </Form>
+          {/* ##### Navigate to Map Screen for Auto-location */}
+        </ImageBackground>
+      </Container>
     );
   }
 }

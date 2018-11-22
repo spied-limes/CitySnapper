@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Image,
   Platform,
@@ -8,14 +8,14 @@ import {
   TouchableOpacity,
   View,
   TextInput,
-  Alert,
+  Alert
   // Button,
-} from 'react-native';
-import { navigate } from 'react-navigation';
-import { WebBrowser } from 'expo';
-import { MonoText } from '../components/StyledText';
-import { connect } from 'react-redux';
-import { watchUserData, watchActivityData } from '../redux/app-redux';
+} from "react-native";
+import { navigate } from "react-navigation";
+import { WebBrowser } from "expo";
+import { MonoText } from "../components/StyledText";
+import { connect } from "react-redux";
+import { watchUserData, watchActivityData } from "../redux/app-redux";
 import {
   Container,
   Content,
@@ -24,31 +24,31 @@ import {
   Input,
   Item,
   Button,
-  Label,
-} from 'native-base';
-import * as firebase from 'firebase';
-import { writeUserData } from '../firebase/firebaseConfig';
+  Label
+} from "native-base";
+import * as firebase from "firebase";
+import { writeUserData } from "../firebase/firebaseConfig";
 
 class SignUpScreen extends React.Component {
   static navigationOptions = {
-    header: null,
+    header: null
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
-      username: '',
-      firstName: '',
-      lastName: '',
-      streetAddress: '',
-      city: '',
-      state: '',
-      zipCode: '',
+      email: "",
+      password: "",
+      username: "",
+      firstName: "",
+      lastName: "",
+      streetAddress: "",
+      city: "",
+      state: "",
+      zipCode: "",
       isAdult: true,
       latitude: null /*want this to be current location*/,
-      longitude: null /*want this to be current location*/,
+      longitude: null /*want this to be current location*/
     };
 
     this.signUpUser = this.signUpUser.bind(this);
@@ -58,28 +58,28 @@ class SignUpScreen extends React.Component {
     try {
       if (this.state.password.length < 6) {
         Alert.alert(
-          'Sign Up Failed',
-          'Password must be longer than 6 characters',
+          "Sign Up Failed",
+          "Password must be longer than 6 characters",
           [
             // {
             //   text: 'Cancel',
             //   onPress: () => console.log('Cancel Pressed'),
             //   style: 'cancel',
             // },
-            { text: 'OK', onPress: () => console.log('OK Pressed') },
+            { text: "OK", onPress: () => console.log("OK Pressed") }
           ],
           {
-            cancelable: false,
+            cancelable: false
           }
         );
-        console.log('Password must be longer than 6 characters');
+        console.log("Password must be longer than 6 characters");
         return;
       }
       // create user in firebase auth page (email, pass, userId)
       await firebase.auth().createUserWithEmailAndPassword(email, password);
       // capture current userID directly after creation
       const userId = firebase.auth().currentUser.uid;
-      console.log('HomeScreen auth() userId: ', userId);
+      console.log("HomeScreen auth() userId: ", userId);
 
       // custom func that (hopefully) writes a user entry in database matched by userId
       await writeUserData(userId, {
@@ -94,14 +94,14 @@ class SignUpScreen extends React.Component {
         isAdult: this.state.isAdult,
         activities: {} /*will be additional func to ad activiy IDs to user entry*/,
         // current location should be these below
-        latitude: '',
-        longitude: '',
+        latitude: "",
+        longitude: ""
       });
 
       // alert box to user---------
       Alert.alert(
-        'Sign Up Status',
-        'Sign Up Successful',
+        "Sign Up Status",
+        "Sign Up Successful",
         [
           // {
           //   text: 'Cancel',
@@ -109,20 +109,20 @@ class SignUpScreen extends React.Component {
           //   style: 'cancel',
           // },
           {
-            text: 'OK',
-            onPress: () => this.props.navigation.navigate('Map'),
-          },
+            text: "OK",
+            onPress: () => this.props.navigation.navigate("Map")
+          }
         ],
         {
-          cancelable: false,
+          cancelable: false
         }
       );
     } catch (error) {
       console.log(error.toString());
       Alert.alert(
-        'Sign Up Status',
-        'Sign Up Failed',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        "Sign Up Status",
+        "Sign Up Failed",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
         { cancelable: false }
       );
     }
@@ -131,8 +131,8 @@ class SignUpScreen extends React.Component {
   render() {
     // console.log('\nthis.props', this.props);
     // console.log('this.state: ', this.state);
-    console.log('this.props.userData: ', this.props.userData);
-    console.log('this.props.activities: ', this.props.activities);
+    console.log("this.props.userData: ", this.props.userData);
+    console.log("this.props.activities: ", this.props.activities);
 
     return (
       <ScrollView
@@ -242,7 +242,7 @@ class SignUpScreen extends React.Component {
                 this.signUpUser(this.state.email, this.state.password)
               }
             >
-              <Text style={{ color: 'white' }}>Sign Up</Text>
+              <Text style={{ color: "white" }}>Sign Up</Text>
             </Button>
           </Form>
 
@@ -255,14 +255,14 @@ class SignUpScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    userData: state.userData,
+    userData: state.userData
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     watchUser: () => dispatch(watchUserData()),
-    watchActivities: () => dispatch(watchUserData()),
+    watchActivities: () => dispatch(watchUserData())
   };
 };
 
@@ -274,96 +274,215 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff"
     // justifyContent: 'center',
   },
   loginFields: {
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    justifyContent: "center"
   },
   developmentModeText: {
     marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
+    color: "rgba(0,0,0,0.4)",
     fontSize: 14,
     lineHeight: 19,
-    textAlign: 'center',
+    textAlign: "center"
   },
   contentContainer: {
     paddingTop: 50,
-    justifyContent: 'center',
-    paddingBottom: 450,
+    justifyContent: "center",
+    paddingBottom: 450
   },
   welcomeContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 20
   },
   welcomeImage: {
     width: 100,
     height: 80,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginTop: 3,
-    marginLeft: -10,
+    marginLeft: -10
   },
   getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
+    alignItems: "center",
+    marginHorizontal: 50
   },
   homeScreenFilename: {
-    marginVertical: 7,
+    marginVertical: 7
   },
   codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
+    color: "rgba(96,100,109, 0.8)"
   },
   codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: "rgba(0,0,0,0.05)",
     borderRadius: 3,
-    paddingHorizontal: 4,
+    paddingHorizontal: 4
   },
   getStartedText: {
     fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
+    color: "rgba(96,100,109, 1)",
     lineHeight: 24,
-    textAlign: 'center',
+    textAlign: "center"
   },
   tabBarInfoContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     ...Platform.select({
       ios: {
-        shadowColor: 'black',
+        shadowColor: "black",
         shadowOffset: { height: -3 },
         shadowOpacity: 0.1,
-        shadowRadius: 3,
+        shadowRadius: 3
       },
       android: {
-        elevation: 20,
-      },
+        elevation: 20
+      }
     }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
+    alignItems: "center",
+    backgroundColor: "#fbfbfb",
+    paddingVertical: 20
   },
   tabBarInfoText: {
     fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
+    color: "rgba(96,100,109, 1)",
+    textAlign: "center"
   },
   navigationFilename: {
-    marginTop: 5,
+    marginTop: 5
   },
   helpContainer: {
     marginTop: 15,
-    alignItems: 'center',
+    alignItems: "center"
   },
   helpLink: {
-    paddingVertical: 15,
+    paddingVertical: 15
   },
   helpLinkText: {
     fontSize: 14,
-    color: '#2e78b7',
-  },
+    color: "#2e78b7"
+  }
 });
+
+{
+  /*  ##### TAB TEST SETUP
+
+  <Tab heading="Sign Up">
+  <ImageBackground
+    source={require("../assets/images/BridgeToManhattan.jpg")}
+    style={styles.welcomeImage}
+  >
+    <Form>
+      <Item floatingLabel>
+        <Label>Email</Label>
+        <Input
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={email => this.setState({ email })}
+        />
+      </Item>
+
+      <Item floatingLabel>
+        <Label>Password</Label>
+        <Input
+          secureTextEntry={true}
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={password => this.setState({ password })}
+        />
+      </Item>
+
+      <Item floatingLabel>
+        <Label>First Name</Label>
+        <Input
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={firstName => this.setState({ firstName })}
+        />
+      </Item>
+
+      <Item floatingLabel>
+        <Label>Last Name</Label>
+        <Input
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={lastName => this.setState({ lastName })}
+        />
+      </Item>
+
+      <Item floatingLabel>
+        <Label>UserName</Label>
+        <Input
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={username => this.setState({ username })}
+        />
+      </Item>
+
+      <Item floatingLabel>
+        <Label>Street Address</Label>
+        <Input
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={streetAddress =>
+            this.setState({ streetAddress })
+          }
+        />
+      </Item>
+
+      <Item floatingLabel>
+        <Label>City</Label>
+        <Input
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={city => this.setState({ city })}
+        />
+      </Item>
+
+      <Item floatingLabel>
+        <Label>State</Label>
+        <Input
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={state => this.setState({ state })}
+        />
+      </Item>
+
+      <Item floatingLabel>
+        <Label>Zip Code</Label>
+        <Input
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={zipCode => this.setState({ zipCode })}
+        />
+      </Item>
+
+      {/* the following should be a binary choice button or something
+            <Item floatingLabel>
+              <Label>Over 18?</Label>
+              <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={isAdult => this.setState({ isAdult })}
+              />
+            </Item> */
+}
+
+//       <Button
+//         style={{ marginTop: 15 }}
+//         full
+//         rounded
+//         primary
+//         onPress={() =>
+//           this.signUpUser(this.state.email, this.state.password)
+//         }
+//       >
+//         <Text style={{ color: "white" }}>Sign Up</Text>
+//       </Button>
+//     </Form>
+//   </ImageBackground>
+// </Tab> */}
