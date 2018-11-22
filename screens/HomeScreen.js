@@ -1,6 +1,7 @@
 import React from "react";
 import {
   ImageBackground,
+  Image,
   Platform,
   ScrollView,
   StyleSheet,
@@ -17,14 +18,16 @@ import { MonoText } from "../components/StyledText";
 import { connect } from "react-redux";
 import { watchUserData, watchActivityData } from "../redux/app-redux";
 import {
+  Button,
   Container,
   Content,
-  Header,
   Form,
   Input,
   Item,
-  Button,
-  Label
+  Header,
+  Label,
+  Tab,
+  Tabs
 } from "native-base";
 import * as firebase from "firebase";
 import { writeUserData } from "../firebase/firebaseConfig";
@@ -40,7 +43,8 @@ class HomeScreen extends React.Component {
     this.state = {
       // userData: {},
       email: "",
-      password: ""
+      password: "",
+      logInForm: true
     };
     // this.props.watchUser();
     this.loginUser = this.loginUser.bind(this);
@@ -110,75 +114,198 @@ class HomeScreen extends React.Component {
   render() {
     // console.log('\nthis.props', this.props);
     // console.log('this.state: ', this.state);
-    console.log("this.props.userData: ", this.props.userData);
-    console.log("this.props.activities: ", this.props.activities);
-    console.log(
-      "this.props.navigation.navigate",
-      this.props.navigation.navigate
-    );
+    // console.log("this.props.userData: ", this.props.userData);
+    // console.log("this.props.activities: ", this.props.activities);
+    // console.log(
+    //   "this.props.navigation.navigate",
+    //   this.props.navigation.navigate
+    // );
     return (
-      <View style={styles.container}>
-        <ImageBackground
-          source={require("../assets/images/BridgeToManhattan.jpg")}
-          style={{ width: "100%", height: undefined }}
-        >
-          <Container style={styles.contentContainer}>
-            <Form>
-              <Item floatingLabel>
-                <Label>Email</Label>
-                <Input
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onChangeText={email => this.setState({ email })}
-                />
-              </Item>
+      <ScrollView style={styles.container}>
+        <Container>
+          <Tabs>
+            <Tab heading="Log In">
+              <ImageBackground
+                source={require("../assets/images/BridgeToManhattan.jpg")}
+                style={styles.welcomeImage}
+              >
+                <Form style={styles.formContainer}>
+                  <Item floatingLabel>
+                    <Label style={styles.inputText}>Email</Label>
+                    <Input
+                      style={styles.inputText}
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={email => this.setState({ email })}
+                    />
+                  </Item>
 
-              <Item floatingLabel>
-                <Label>Password</Label>
-                <Input
-                  secureTextEntry={true}
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onChangeText={password => this.setState({ password })}
-                />
-              </Item>
+                  <Item floatingLabel>
+                    <Label style={styles.inputText}>Password</Label>
+                    <Input
+                      style={styles.inputText}
+                      secureTextEntry={true}
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={password => this.setState({ password })}
+                    />
+                  </Item>
 
-              <Button
-                style={{ marginTop: 15 }}
-                full
-                rounded
-                success
-                onPress={() =>
-                  this.loginUser(this.state.email, this.state.password)
-                }
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    success
+                    onPress={() =>
+                      this.loginUser(this.state.email, this.state.password)
+                    }
+                  >
+                    <Text style={{ color: "white" }}>Login</Text>
+                  </Button>
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    primary
+                    onPress={() => {
+                      console.log("signUp pressed");
+                      this.props.navigation.navigate("SignUp");
+                    }}
+                  >
+                    <Text style={{ color: "white" }}>Sign Up</Text>
+                  </Button>
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    primary
+                    onPress={() => this.signOutUser()}
+                  >
+                    <Text style={{ color: "white" }}>Log Out</Text>
+                  </Button>
+                </Form>
+              </ImageBackground>
+            </Tab>
+
+            {/* ########## SIGN UP TAB ########## */}
+
+            <Tab heading="Sign Up">
+              <ImageBackground
+                source={require("../assets/images/BridgeToManhattan.jpg")}
+                style={styles.welcomeImage}
               >
-                <Text style={{ color: "white" }}>Login</Text>
-              </Button>
-              <Button
-                style={{ marginTop: 15 }}
-                full
-                rounded
-                primary
-                onPress={() => {
-                  console.log("signUp pressed");
-                  this.props.navigation.navigate("SignUp");
-                }}
-              >
-                <Text style={{ color: "white" }}>Sign Up</Text>
-              </Button>
-              <Button
-                style={{ marginTop: 15 }}
-                full
-                rounded
-                primary
-                onPress={() => this.signOutUser()}
-              >
-                <Text style={{ color: "white" }}>Log Out</Text>
-              </Button>
-            </Form>
-          </Container>
-        </ImageBackground>
-      </View>
+                <Form>
+                  <Item floatingLabel>
+                    <Label>Email</Label>
+                    <Input
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={email => this.setState({ email })}
+                    />
+                  </Item>
+
+                  <Item floatingLabel>
+                    <Label>Password</Label>
+                    <Input
+                      secureTextEntry={true}
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={password => this.setState({ password })}
+                    />
+                  </Item>
+
+                  <Item floatingLabel>
+                    <Label>First Name</Label>
+                    <Input
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={firstName => this.setState({ firstName })}
+                    />
+                  </Item>
+
+                  <Item floatingLabel>
+                    <Label>Last Name</Label>
+                    <Input
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={lastName => this.setState({ lastName })}
+                    />
+                  </Item>
+
+                  <Item floatingLabel>
+                    <Label>UserName</Label>
+                    <Input
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={username => this.setState({ username })}
+                    />
+                  </Item>
+
+                  <Item floatingLabel>
+                    <Label>Street Address</Label>
+                    <Input
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={streetAddress =>
+                        this.setState({ streetAddress })
+                      }
+                    />
+                  </Item>
+
+                  <Item floatingLabel>
+                    <Label>City</Label>
+                    <Input
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={city => this.setState({ city })}
+                    />
+                  </Item>
+
+                  <Item floatingLabel>
+                    <Label>State</Label>
+                    <Input
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={state => this.setState({ state })}
+                    />
+                  </Item>
+
+                  <Item floatingLabel>
+                    <Label>Zip Code</Label>
+                    <Input
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={zipCode => this.setState({ zipCode })}
+                    />
+                  </Item>
+
+                  {/* the following should be a binary choice button or something
+            <Item floatingLabel>
+              <Label>Over 18?</Label>
+              <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={isAdult => this.setState({ isAdult })}
+              />
+            </Item> */}
+
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    primary
+                    onPress={() =>
+                      this.signUpUser(this.state.email, this.state.password)
+                    }
+                  >
+                    <Text style={{ color: "white" }}>Sign Up</Text>
+                  </Button>
+                </Form>
+              </ImageBackground>
+            </Tab>
+          </Tabs>
+        </Container>
+      </ScrollView>
     );
   }
 }
@@ -207,55 +334,24 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "pink"
   },
+  welcomeImage: {
+    width: undefined,
+    height: "100%",
+    resizeMode: "cover"
+  },
+  formContainer: {
+    flex: 1,
+    paddingHorizontal: 100,
+    justifyContent: "center",
+    alignContent: "flex-end"
+  },
   loginFields: {
     flex: 1,
     backgroundColor: "#fff",
     justifyContent: "center"
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: "rgba(0,0,0,0.4)",
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: "center"
-  },
-  contentContainer: {
-    paddingTop: 30,
-    paddingHorizontal: 100,
-    justifyContent: "center"
-  },
-  welcomeContainer: {
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 20
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: "contain",
-    marginTop: 3,
-    marginLeft: -10
-  },
-  getStartedContainer: {
-    alignItems: "center",
-    marginHorizontal: 50
-  },
-  homeScreenFilename: {
-    marginVertical: 7
-  },
-  codeHighlightText: {
-    color: "rgba(96,100,109, 0.8)"
-  },
-  codeHighlightContainer: {
-    backgroundColor: "rgba(0,0,0,0.05)",
-    borderRadius: 3,
-    paddingHorizontal: 4
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    lineHeight: 24,
-    textAlign: "center"
+  inputText: {
+    color: "white"
   },
   tabBarInfoContainer: {
     position: "absolute",
@@ -276,24 +372,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fbfbfb",
     paddingVertical: 20
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    textAlign: "center"
-  },
-  navigationFilename: {
-    marginTop: 5
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: "center"
-  },
-  helpLink: {
-    paddingVertical: 15
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: "#2e78b7"
   }
 });
