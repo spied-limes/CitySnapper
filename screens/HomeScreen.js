@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   ImageBackground,
   Image,
@@ -9,14 +9,14 @@ import {
   TouchableOpacity,
   View,
   TextInput,
-  Alert
+  Alert,
   // Button,
-} from "react-native";
-import { navigate } from "react-navigation";
-import { WebBrowser } from "expo";
-import { MonoText } from "../components/StyledText";
-import { connect } from "react-redux";
-import { watchUserData, watchActivityData } from "../redux/app-redux";
+} from 'react-native';
+import { navigate } from 'react-navigation';
+import { WebBrowser } from 'expo';
+import { MonoText } from '../components/StyledText';
+import { connect } from 'react-redux';
+import { watchUserData, watchActivityData } from '../redux/app-redux';
 import {
   Button,
   Container,
@@ -27,24 +27,24 @@ import {
   Header,
   Label,
   Tab,
-  Tabs
-} from "native-base";
-import * as firebase from "firebase";
-import { writeUserData } from "../firebase/firebaseConfig";
-import Layout from "../constants/Layout";
+  Tabs,
+} from 'native-base';
+import * as firebase from 'firebase';
+import { writeUserData } from '../firebase/firebaseConfig';
+import Layout from '../constants/Layout';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    header: null
+    header: null,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       // userData: {},
-      email: "",
-      password: "",
-      logInForm: true
+      email: '',
+      password: '',
+      logInForm: true,
     };
     // this.props.watchUser();
     this.loginUser = this.loginUser.bind(this);
@@ -66,25 +66,36 @@ class HomeScreen extends React.Component {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(function(user) {
-          console.log("userLoggedIn: ", user);
+          console.log('userLoggedIn: ', user);
         });
 
       // alert box to user---------
 
       Alert.alert(
-        "Login Status",
-        "Login Successful",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        'Login Status',
+        'Login Successful',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              console.log('OK Pressed');
+              this.setState({
+                email: '',
+                password: '',
+              });
+            },
+          },
+        ],
         {
-          cancelable: false
+          cancelable: false,
         }
       );
     } catch (error) {
       console.log(error.toString());
       Alert.alert(
-        "Login Status",
-        "Login Failed",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        'Login Status',
+        'Login Failed',
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
         { cancelable: false }
       );
     }
@@ -93,17 +104,29 @@ class HomeScreen extends React.Component {
   signOutUser = async () => {
     try {
       await firebase.auth().signOut();
-      console.log("currentUser: ", firebase.auth().currentUser.uid);
+      firebase.auth().currentUser &&
+        console.log('currentUser: ', firebase.auth().currentUser.uid);
       // navigate('Auth');
 
       // alert box to user---------
 
       Alert.alert(
-        "Logout Status",
-        "Logout Successful",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        'Logout Status',
+        'Logout Successful',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              console.log('OK Pressed');
+              this.setState({
+                email: '',
+                password: '',
+              });
+            },
+          },
+        ],
         {
-          cancelable: false
+          cancelable: false,
         }
       );
     } catch (error) {
@@ -120,70 +143,79 @@ class HomeScreen extends React.Component {
     //   "this.props.navigation.navigate",
     //   this.props.navigation.navigate
     // );
+
+    const userId = firebase.auth().currentUser
+      ? firebase.auth().currentUser.uid
+      : undefined;
     return (
       <ScrollView style={styles.container}>
         <Container>
-          <Tabs>
+          <Tabs style={{ paddingVertical: 25 }}>
             <Tab heading="Log In">
               <ImageBackground
-                source={require("../assets/images/BridgeToManhattan.jpg")}
+                source={require('../assets/images/BridgeToManhattan.jpg')}
                 style={styles.welcomeImage}
               >
-                <Form style={styles.formContainer}>
-                  <Item floatingLabel>
-                    <Label style={styles.inputText}>Email</Label>
-                    <Input
-                      style={styles.inputText}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={email => this.setState({ email })}
-                    />
-                  </Item>
+                {!userId ? (
+                  <Form style={styles.formContainer}>
+                    <Item floatingLabel>
+                      <Label style={styles.inputText}>Email</Label>
+                      <Input
+                        style={styles.inputText}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={email => this.setState({ email })}
+                      />
+                    </Item>
 
-                  <Item floatingLabel>
-                    <Label style={styles.inputText}>Password</Label>
-                    <Input
-                      style={styles.inputText}
-                      secureTextEntry={true}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={password => this.setState({ password })}
-                    />
-                  </Item>
+                    <Item floatingLabel>
+                      <Label style={styles.inputText}>Password</Label>
+                      <Input
+                        style={styles.inputText}
+                        secureTextEntry={true}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={password => this.setState({ password })}
+                      />
+                    </Item>
 
-                  <Button
-                    style={{ marginTop: 15 }}
-                    full
-                    rounded
-                    success
-                    onPress={() =>
-                      this.loginUser(this.state.email, this.state.password)
-                    }
-                  >
-                    <Text style={{ color: "white" }}>Login</Text>
-                  </Button>
-                  <Button
-                    style={{ marginTop: 15 }}
-                    full
-                    rounded
-                    primary
-                    onPress={() => {
-                      console.log("signUp pressed");
-                      this.props.navigation.navigate("SignUp");
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>Sign Up</Text>
-                  </Button>
-                  <Button
-                    style={{ marginTop: 15 }}
-                    full
-                    rounded
-                    primary
-                    onPress={() => this.signOutUser()}
-                  >
-                    <Text style={{ color: "white" }}>Log Out</Text>
-                  </Button>
-                </Form>
+                    <Button
+                      style={{ marginTop: 15 }}
+                      full
+                      rounded
+                      success
+                      onPress={() =>
+                        this.loginUser(this.state.email, this.state.password)
+                      }
+                    >
+                      <Text style={{ color: 'white' }}>Login</Text>
+                    </Button>
+                    <Button
+                      style={{ marginTop: 15 }}
+                      full
+                      rounded
+                      primary
+                      onPress={() => {
+                        console.log('signUp pressed');
+                        this.props.navigation.navigate('SignUp');
+                      }}
+                    >
+                      <Text style={{ color: 'white' }}>Sign Up</Text>
+                    </Button>
+                  </Form>
+                ) : (
+                  <Form style={styles.formContainer}>
+                    <Button
+                      style={{ marginTop: 15 }}
+                      full
+                      rounded
+                      primary
+                      onPress={() => this.signOutUser()}
+                    >
+                      <Text style={{ color: 'white' }}>Log Out</Text>
+                    </Button>
+                  </Form>
+                )}
               </ImageBackground>
             </Tab>
 
@@ -191,7 +223,7 @@ class HomeScreen extends React.Component {
 
             <Tab heading="Sign Up">
               <ImageBackground
-                source={require("../assets/images/BridgeToManhattan.jpg")}
+                source={require('../assets/images/BridgeToManhattan.jpg')}
                 style={styles.welcomeImage}
               >
                 <Form>
@@ -298,7 +330,7 @@ class HomeScreen extends React.Component {
                       this.signUpUser(this.state.email, this.state.password)
                     }
                   >
-                    <Text style={{ color: "white" }}>Sign Up</Text>
+                    <Text style={{ color: 'white' }}>Sign Up</Text>
                   </Button>
                 </Form>
               </ImageBackground>
@@ -313,14 +345,14 @@ class HomeScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     userData: state.userData,
-    activities: state.activities
+    activities: state.activities,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     watchUser: () => dispatch(watchUserData()),
-    watchActivities: () => dispatch(watchUserData())
+    watchActivities: () => dispatch(watchUserData()),
   };
 };
 
@@ -332,45 +364,45 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "pink"
+    backgroundColor: 'pink',
   },
   welcomeImage: {
     width: undefined,
-    height: "100%",
-    resizeMode: "cover"
+    height: '100%',
+    resizeMode: 'cover',
   },
   formContainer: {
     flex: 1,
     paddingHorizontal: 100,
-    justifyContent: "center",
-    alignContent: "flex-end"
+    justifyContent: 'center',
+    alignContent: 'flex-end',
   },
   loginFields: {
     flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "center"
+    backgroundColor: '#fff',
+    justifyContent: 'center',
   },
   inputText: {
-    color: "white"
+    color: 'white',
   },
   tabBarInfoContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     ...Platform.select({
       ios: {
-        shadowColor: "black",
+        shadowColor: 'black',
         shadowOffset: { height: -3 },
         shadowOpacity: 0.1,
-        shadowRadius: 3
+        shadowRadius: 3,
       },
       android: {
-        elevation: 20
-      }
+        elevation: 20,
+      },
     }),
-    alignItems: "center",
-    backgroundColor: "#fbfbfb",
-    paddingVertical: 20
-  }
+    alignItems: 'center',
+    backgroundColor: '#fbfbfb',
+    paddingVertical: 20,
+  },
 });
