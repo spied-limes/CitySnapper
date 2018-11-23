@@ -178,7 +178,7 @@ class HomeScreen extends React.Component {
               full
               rounded
               info
-              onPress={() => this.props.navigation.navigate("Main")}
+              onPress={() => this.props.navigation.navigate("IntroSlider")}
             >
               <Text style={{ color: "white" }}>Proceed as Guest</Text>
             </Button>
