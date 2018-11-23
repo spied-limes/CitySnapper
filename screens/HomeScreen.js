@@ -118,14 +118,6 @@ class HomeScreen extends React.Component {
           source={require("../assets/images/BridgeToManhattan.jpg")}
           style={styles.welcomeImage}
         >
-          <Button
-            style={{ marginTop: 15 }}
-            full
-            success
-            onPress={() => this.props.navigation.navigate("Main")}
-          >
-            <Text style={{ color: "white" }}>Proceed as Guest</Text>
-          </Button>
           <Form style={styles.formContainer}>
             <Item floatingLabel>
               <Label style={styles.inputText}>Email</Label>
@@ -171,14 +163,24 @@ class HomeScreen extends React.Component {
             >
               <Text style={{ color: "white" }}>Sign Up</Text>
             </Button>
-            <Button
+            {/* <Button
               style={{ marginTop: 15 }}
               full
               rounded
+              disabled
               primary
               onPress={() => this.signOutUser()}
             >
               <Text style={{ color: "white" }}>Log Out</Text>
+            </Button> */}
+            <Button
+              style={{ marginTop: 15 }}
+              full
+              rounded
+              info
+              onPress={() => this.props.navigation.navigate("Main")}
+            >
+              <Text style={{ color: "white" }}>Proceed as Guest</Text>
             </Button>
           </Form>
           {/* ##### Navigate to Map Screen for Auto-location */}
