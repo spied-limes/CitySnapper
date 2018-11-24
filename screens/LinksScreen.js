@@ -10,9 +10,6 @@ export default class LinksScreen extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
-        {/* Go ahead and delete ExpoLinksView and replace it with your
-         * content, we just wanted to provide you with some helpful links */}
-        {/* <ExpoLinksView /> */}
         <Text>here only to resolve samples</Text>
       </ScrollView>
     );
