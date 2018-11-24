@@ -1,12 +1,16 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable quotes */
 import React from "react";
 import {
   ImageBackground,
   Image,
+  LayoutAnimation,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  UIManager,
   View,
   TextInput,
   Alert
@@ -22,6 +26,7 @@ import {
   Container,
   Content,
   Form,
+  Icon,
   Input,
   Item,
   Header,
@@ -30,110 +35,33 @@ import {
   Tabs
 } from "native-base";
 import * as firebase from "firebase";
+import { loginUser, signUpUser } from "../components/UserEntryFunctions";
 import { writeUserData } from "../firebase/firebaseConfig";
 import Layout from "../constants/Layout";
 
-class HomeScreen extends React.Component {
-  static navigationOptions = {
-    header: null
-  };
+// Enable LayoutAnimation on Android
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
 
+class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       // userData: {},
       email: "",
       password: "",
+      name: "",
       logInForm: true
     };
-    // this.props.watchUser();
-    this.loginUser = this.loginUser.bind(this);
-  }
-  componentDidMount() {
-    // console.log('this.props.userData[1]: ', this.props.userData[1]);
   }
 
-  componentDidUpdate() {
-    // console.log('this.props.userData[1]: ', this.props.userData[1]);
-  }
-
-  async loginUser(email, password) {
-    // unimplemented navigate to map screen from login successful
-    // const { navigate } = this.props.navigation
-
-    try {
-      await firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(function(user) {
-          console.log("userLoggedIn: ", user);
-        });
-
-      // alert box to user---------
-
-      Alert.alert(
-        "Login Status",
-        "Login Successful",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              console.log("OK Pressed");
-              this.setState({
-                email: "",
-                password: ""
-              });
-            }
-          }
-        ],
-        {
-          cancelable: false
-        }
-      );
-    } catch (error) {
-      console.log(error.toString());
-      Alert.alert(
-        "Login Status",
-        "Login Failed",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-        { cancelable: false }
-      );
-    }
-  }
-
-  signOutUser = async () => {
-    try {
-      await firebase.auth().signOut();
-      firebase.auth().currentUser &&
-        console.log("currentUser: ", firebase.auth().currentUser.uid);
-      // navigate('Auth');
-
-      // alert box to user---------
-
-      Alert.alert(
-        "Logout Status",
-        "Logout Successful",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              console.log("OK Pressed");
-              this.setState({
-                email: "",
-                password: ""
-              });
-            }
-          }
-        ],
-        {
-          cancelable: false
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  /*
+    ____                 __
+   / __ \___  ____  ____/ /__  _____
+  / /_/ / _ \/ __ \/ __  / _ \/ ___/
+ / _, _/  __/ / / / /_/ /  __/ /
+/_/ |_|\___/_/ /_/\__,_/\___/_/
+*/
   render() {
     return (
       <Container style={styles.container}>
@@ -141,72 +69,124 @@ class HomeScreen extends React.Component {
           source={require("../assets/images/BridgeToManhattan.jpg")}
           style={styles.welcomeImage}
         >
-          <Form style={styles.formContainer}>
-            <Item floatingLabel>
-              <Label style={styles.inputText}>Email</Label>
-              <Input
-                style={styles.inputText}
-                autoCorrect={false}
-                autoCapitalize="none"
-                onChangeText={email => this.setState({ email })}
-              />
-            </Item>
+          <View style={styles.formBox}>
+            <View style={styles.toggleInputView}>
+              <TouchableOpacity
+                onPress={() => {
+                  console.log("left button pressed");
+                  LayoutAnimation.easeInEaseOut();
+                  this.setState({
+                    logInForm: true
+                  });
+                }}
+              >
+                <Text style={styles.toggleButtons}>Log In</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  console.log("right button pressed");
+                  LayoutAnimation.easeInEaseOut();
+                  this.setState({
+                    logInForm: false
+                  });
+                }}
+              >
+                <Text style={styles.toggleButtons}>Sign Up</Text>
+              </TouchableOpacity>
+            </View>
+            {/*
+    ______                   ______
+   / ____/___  _________ ___/_  __/__  _________  ____ ________  __
+  / /_  / __ \/ ___/ __ `__ \/ / / _ \/ ___/ __ \/ __ `/ ___/ / / /
+ / __/ / /_/ / /  / / / / / / / /  __/ /  / / / / /_/ / /  / /_/ /
+/_/    \____/_/  /_/ /_/ /_/_/  \___/_/  /_/ /_/\__,_/_/   \__, /
+                                                          /____/
+            */}
+            {this.state.logInForm ? (
+              <View>
+                <Form style={styles.formBGColor}>
+                  <Item>
+                    <Icon active name="at" />
+                    <Input
+                      placeholder="E-Mail"
+                      style={styles.inputText}
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={email => this.setState({ email })}
+                    />
+                  </Item>
+                  <Item>
+                    <Icon active name="lock" />
+                    <Input
+                      placeholder="Password"
+                      style={styles.inputText}
+                      secureTextEntry={true}
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={password => this.setState({ password })}
+                    />
+                  </Item>
+                </Form>
+                <Button
+                  style={{ marginTop: 15 }}
+                  full
+                  rounded
+                  success
+                  onPress={() =>
+                    loginUser(this.state.email, this.state.password)
+                  }
+                >
+                  <Text style={{ color: "white" }}>Login</Text>
+                </Button>
+              </View>
+            ) : (
+              <View>
+                <Form style={styles.formBGColor}>
+                  <Item>
+                    <Icon active name="person" />
+                    <Input
+                      placeholder="Name"
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={name => this.setState({ name })}
+                    />
+                  </Item>
 
-            <Item floatingLabel>
-              <Label style={styles.inputText}>Password</Label>
-              <Input
-                style={styles.inputText}
-                secureTextEntry={true}
-                autoCorrect={false}
-                autoCapitalize="none"
-                onChangeText={password => this.setState({ password })}
-              />
-            </Item>
+                  <Item>
+                    <Icon active name="at" />
+                    <Input
+                      placeholder="E-Mail"
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={email => this.setState({ email })}
+                    />
+                  </Item>
 
-            <Button
-              style={{ marginTop: 15 }}
-              full
-              rounded
-              success
-              onPress={() =>
-                this.loginUser(this.state.email, this.state.password)
-              }
-            >
-              <Text style={{ color: "white" }}>Login</Text>
-            </Button>
-            <Button
-              style={{ marginTop: 15 }}
-              full
-              rounded
-              primary
-              onPress={() => {
-                console.log("signUp pressed");
-                this.props.navigation.navigate("SignUp");
-              }}
-            >
-              <Text style={{ color: "white" }}>Sign Up</Text>
-            </Button>
-            {/* <Button
-              style={{ marginTop: 15 }}
-              full
-              rounded
-              disabled
-              primary
-              onPress={() => this.signOutUser()}
-            >
-              <Text style={{ color: "white" }}>Log Out</Text>
-            </Button> */}
-            <Button
-              style={{ marginTop: 15 }}
-              full
-              rounded
-              info
-              onPress={() => this.props.navigation.navigate("IntroSlider")}
-            >
-              <Text style={{ color: "white" }}>Proceed as Guest</Text>
-            </Button>
-          </Form>
-          {/* ##### Navigate to Map Screen for Auto-location */}
+                  <Item>
+                    <Icon active name="lock" />
+                    <Input
+                      placeholder="Password"
+                      secureTextEntry={true}
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      onChangeText={password => this.setState({ password })}
+                    />
+                  </Item>
+                </Form>
+                <Button
+                  style={{ marginTop: 15 }}
+                  full
+                  rounded
+                  primary
+                  onPress={() =>
+                    signUpUser(this.state.email, this.state.password)
+                  }
+                >
+                  <Text style={{ color: "white" }}>Sign Up</Text>
+                </Button>
+              </View>
+            )}
+          </View>
         </ImageBackground>
       </Container>
     );
@@ -234,27 +214,36 @@ export default connect(
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "pink"
+    flex: 1
   },
   welcomeImage: {
     width: undefined,
     height: "100%",
-    resizeMode: "cover"
-  },
-  formContainer: {
-    flex: 1,
-    paddingHorizontal: 100,
+    resizeMode: "cover",
     justifyContent: "center",
-    alignContent: "flex-end"
+    alignContent: "center"
   },
-  loginFields: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "center"
+  formBox: {
+    marginHorizontal: 50,
+    paddingBottom: 50,
+    paddingHorizontal: 25
+  },
+  toggleInputView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingBottom: 20
+  },
+  toggleButtons: {
+    color: "white",
+    fontSize: 30
+  },
+  formBGColor: {
+    paddingVertical: 15,
+    backgroundColor: "white",
+    borderRadius: 10
   },
   inputText: {
-    color: "white"
+    color: "black"
   },
   tabBarInfoContainer: {
     position: "absolute",
