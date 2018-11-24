@@ -74,7 +74,18 @@ class HomeScreen extends React.Component {
       Alert.alert(
         "Login Status",
         "Login Successful",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+              this.setState({
+                email: "",
+                password: ""
+              });
+            }
+          }
+        ],
         {
           cancelable: false
         }
@@ -93,7 +104,8 @@ class HomeScreen extends React.Component {
   signOutUser = async () => {
     try {
       await firebase.auth().signOut();
-      console.log("currentUser: ", firebase.auth().currentUser.uid);
+      firebase.auth().currentUser &&
+        console.log("currentUser: ", firebase.auth().currentUser.uid);
       // navigate('Auth');
 
       // alert box to user---------
@@ -101,7 +113,18 @@ class HomeScreen extends React.Component {
       Alert.alert(
         "Logout Status",
         "Logout Successful",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+              this.setState({
+                email: "",
+                password: ""
+              });
+            }
+          }
+        ],
         {
           cancelable: false
         }
