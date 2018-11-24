@@ -18,6 +18,8 @@ import MapView, { Marker, AnimatedRegion, Animated } from 'react-native-maps';
 import DropdownMenu from 'react-native-dropdown-menu';
 import { Constants, Location, Permissions } from 'expo';
 import CheckinScreen from './CheckInScreen';
+import { updateUserLocationData } from '../firebase/firebaseConfig';
+import * as firebase from 'firebase';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -27,8 +29,8 @@ export default class HomeScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      longitude: 40.7589,
-      latitude: -73.9851,
+      longitude: null,
+      latitude: null,
       latitudeDelta: 0.005596,
       longitudeDelta: 0.00475,
       permittedLocationUse: false,
@@ -53,6 +55,8 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
+    const userId = firebase.auth().currentUser.uid;
+
     console.log('permittedLocationUse: ', this.state.permittedLocationUse);
     !this.state.permittedLocationUse &&
       Alert.alert(
@@ -70,8 +74,19 @@ export default class HomeScreen extends React.Component {
           },
           {
             text: 'OK',
-            onPress: () => {
+            onPress: async () => {
               this.setState({ permittedLocationUse: true });
+              await this._getLocationAsync();
+              await updateUserLocationData(userId, {
+                latitude: this.state.currentLat,
+                longitude: this.state.currentLong,
+              });
+              console.log(
+                'this.state.currentLat: ',
+                this.state.currentLat,
+                'this.state.currentLong: ',
+                this.state.currentLong
+              );
               console.log('OK Pressed');
             },
           },

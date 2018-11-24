@@ -23,17 +23,22 @@ export function writeUserData(userId, userObj) {
 
 // Func to update user info (completed activities, etc)**in progress**
 
-export function updateUserData(userId, userObj) {
+export function updateUserLocationData(userId, userObj) {
   firebase
     .database()
     .ref('/users/' + userId)
     .update({
-      name: userObj.name,
-      email: userObj.email,
-      activities: userObj.activities,
       latitude: userObj.latitude,
       longitude: userObj.longitude,
     });
 }
 
+export function updateUserActivityData(userId, userObj) {
+  firebase
+    .database()
+    .ref('/users/' + userId)
+    .update({
+      activities: userObj.activities,
+    });
+}
 // CRUD funcs for users in firebase db
