@@ -4,6 +4,7 @@ import React from "react";
 import {
   ImageBackground,
   Image,
+  KeyboardAvoidingView,
   LayoutAnimation,
   Platform,
   StyleSheet,
@@ -14,15 +15,18 @@ import {
   // Button,
 } from "react-native";
 import { navigate } from "react-navigation";
-import { WebBrowser } from "expo";
-import { MonoText } from "../components/StyledText";
 import { connect } from "react-redux";
 import { watchUserData, watchActivityData } from "../redux/app-redux";
-import { Button, Container, Form, Icon, Input, Item } from "native-base";
-import * as firebase from "firebase";
+import {
+  Button,
+  Container,
+  Content,
+  Form,
+  Icon,
+  Input,
+  Item
+} from "native-base";
 import { loginUser, signUpUser } from "../components/UserEntryFunctions";
-import { writeUserData } from "../firebase/firebaseConfig";
-import Layout from "../constants/Layout";
 
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -65,9 +69,7 @@ class HomeScreen extends React.Component {
                 onPress={() => {
                   console.log("left button pressed");
                   LayoutAnimation.easeInEaseOut();
-                  this.setState({
-                    logInForm: true
-                  });
+                  this.setState({ logInForm: true });
                 }}
               >
                 <Text style={styles.toggleButtons}>Log In</Text>
@@ -76,9 +78,7 @@ class HomeScreen extends React.Component {
                 onPress={() => {
                   console.log("right button pressed");
                   LayoutAnimation.easeInEaseOut();
-                  this.setState({
-                    logInForm: false
-                  });
+                  this.setState({ logInForm: false });
                 }}
               >
                 <Text style={styles.toggleButtons}>Sign Up</Text>
@@ -100,6 +100,7 @@ class HomeScreen extends React.Component {
                     <Input
                       placeholder="E-Mail"
                       style={styles.inputText}
+                      autoSugges
                       autoCorrect={false}
                       autoCapitalize="none"
                       onChangeText={email => this.setState({ email })}
@@ -228,35 +229,17 @@ const styles = StyleSheet.create({
     fontFamily: "Abril-FatFace",
     fontSize: 36,
     textShadowColor: "black",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5
+    textShadowOffset: { width: 3, height: 3 },
+    textShadowRadius: 3
   },
   formBGColor: {
-    paddingVertical: 15,
+    paddingTop: 5,
+    paddingBottom: 15,
+    paddingRight: 25,
     backgroundColor: "white",
     borderRadius: 10
   },
   inputText: {
     color: "black"
-  },
-  tabBarInfoContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: "black",
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3
-      },
-      android: {
-        elevation: 20
-      }
-    }),
-    alignItems: "center",
-    backgroundColor: "#fbfbfb",
-    paddingVertical: 20
   }
 });
