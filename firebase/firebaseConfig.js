@@ -13,15 +13,8 @@ export function writeUserData(userId, userObj) {
     .database()
     .ref('/users/' + userId)
     .set({
-      username: userObj.username,
-      firstName: userObj.firstName,
-      lastName: userObj.lastName,
+      name: userObj.name,
       email: userObj.email,
-      streetAddress: userObj.streetAddress,
-      city: userObj.city,
-      state: userObj.state,
-      zipCode: userObj.zipCode,
-      isAdult: userObj.isAdult,
       activities: userObj.activities,
       latitude: userObj.latitude,
       longitude: userObj.longitude,
@@ -35,15 +28,8 @@ export function updateUserData(userId, userObj) {
     .database()
     .ref('/users/' + userId)
     .update({
-      username: userObj.username,
-      firstName: userObj.firstName,
-      lastName: userObj.lastName,
+      name: userObj.name,
       email: userObj.email,
-      streetAddress: userObj.streetAddress,
-      city: userObj.city,
-      state: userObj.state,
-      zipCode: userObj.zipCode,
-      isAdult: userObj.isAdult,
       activities: userObj.activities,
       latitude: userObj.latitude,
       longitude: userObj.longitude,

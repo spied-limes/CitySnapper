@@ -199,7 +199,7 @@ class HomeScreen extends React.Component {
             >
               <Text style={{ color: 'white' }}>Sign Up</Text>
             </Button>
-            <Button
+            {/* <Button
               style={{ marginTop: 15 }}
               full
               rounded
@@ -207,7 +207,7 @@ class HomeScreen extends React.Component {
               onPress={() => this.props.navigation.navigate('IntroSlider')}
             >
               <Text style={{ color: 'white' }}>Proceed as Guest</Text>
-            </Button>
+            </Button> */}
             {/* <Button
               style={{ marginTop: 15 }}
               full
