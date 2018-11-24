@@ -6,14 +6,11 @@ import {
   Image,
   LayoutAnimation,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   UIManager,
-  View,
-  TextInput,
-  Alert
+  View
   // Button,
 } from "react-native";
 import { navigate } from "react-navigation";
@@ -21,19 +18,7 @@ import { WebBrowser } from "expo";
 import { MonoText } from "../components/StyledText";
 import { connect } from "react-redux";
 import { watchUserData, watchActivityData } from "../redux/app-redux";
-import {
-  Button,
-  Container,
-  Content,
-  Form,
-  Icon,
-  Input,
-  Item,
-  Header,
-  Label,
-  Tab,
-  Tabs
-} from "native-base";
+import { Button, Container, Form, Icon, Input, Item } from "native-base";
 import * as firebase from "firebase";
 import { loginUser, signUpUser } from "../components/UserEntryFunctions";
 import { writeUserData } from "../firebase/firebaseConfig";
@@ -70,6 +55,11 @@ class HomeScreen extends React.Component {
           style={styles.welcomeImage}
         >
           <View style={styles.formBox}>
+            <Image
+              source={require("../assets/images/fake_logo.png")}
+              width="50"
+              height="50"
+            />
             <View style={styles.toggleInputView}>
               <TouchableOpacity
                 onPress={() => {
