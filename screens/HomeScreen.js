@@ -16,7 +16,11 @@ import { navigate } from 'react-navigation';
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 import { connect } from 'react-redux';
-import { watchUserData, watchActivityData } from '../redux/app-redux';
+import {
+  watchUserData,
+  watchActivityData,
+  watchPlaceData,
+} from '../redux/app-redux';
 import {
   Button,
   Container,
@@ -148,6 +152,7 @@ class HomeScreen extends React.Component {
     // const userId = firebase.auth().currentUser
     // ? firebase.auth().currentUser.uid
     // : undefined;
+    console.log('this.props.places[0]: ', this.props.places[0]);
     return (
       <Container style={styles.container}>
         <ImageBackground
@@ -230,6 +235,7 @@ const mapStateToProps = state => {
   return {
     userData: state.userData,
     activities: state.activities,
+    places: state.places,
   };
 };
 
@@ -237,6 +243,7 @@ const mapDispatchToProps = dispatch => {
   return {
     watchUser: () => dispatch(watchUserData()),
     watchActivities: () => dispatch(watchUserData()),
+    watchPlaces: () => dispatch(watchPlaceData()),
   };
 };
 

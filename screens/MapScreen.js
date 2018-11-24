@@ -31,7 +31,7 @@ export default class HomeScreen extends React.Component {
       latitude: -73.9851,
       latitudeDelta: 0.005596,
       longitudeDelta: 0.00475,
-
+      permittedLocationUse: false,
       errorMessage: null,
       text: 'Current Location',
       // for current storage
@@ -53,30 +53,33 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    Alert.alert(
-      'Set Homebase',
-      'Use current location as homeBase?',
-      [
-        {
-          text: 'NO',
-          onPress: () => {
-            console.log('NO Pressed');
-            this.setState({
-              errorMessage: 'Permission to access location was denied',
-            });
+    console.log('permittedLocationUse: ', this.state.permittedLocationUse);
+    !this.state.permittedLocationUse &&
+      Alert.alert(
+        'Set Homebase',
+        'Use current location as homeBase?',
+        [
+          {
+            text: 'NO',
+            onPress: () => {
+              console.log('NO Pressed');
+              this.setState({
+                errorMessage: 'Permission to access location was denied',
+              });
+            },
           },
-        },
-        {
-          text: 'OK',
-          onPress: () => {
-            console.log('OK Pressed');
+          {
+            text: 'OK',
+            onPress: () => {
+              this.setState({ permittedLocationUse: true });
+              console.log('OK Pressed');
+            },
           },
-        },
-      ],
-      {
-        cancelable: false,
-      }
-    );
+        ],
+        {
+          cancelable: false,
+        }
+      );
   }
 
   _getLocationAsync = async () => {

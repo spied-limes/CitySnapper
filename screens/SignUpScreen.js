@@ -40,6 +40,7 @@ class SignUpScreen extends React.Component {
       email: '',
       password: '',
       name: '',
+      activities: null,
       latitude: null /*want this to be current location*/,
       longitude: null /*want this to be current location*/,
     };
@@ -97,7 +98,7 @@ class SignUpScreen extends React.Component {
           // },
           {
             text: 'OK',
-            onPress: () => this.props.navigation.navigate('Map'),
+            onPress: () => this.props.navigation.navigate('IntroSlider'),
           },
         ],
         {
@@ -118,8 +119,9 @@ class SignUpScreen extends React.Component {
   render() {
     // console.log('\nthis.props', this.props);
     // console.log('this.state: ', this.state);
-    console.log('this.props.userData: ', this.props.userData);
-    console.log('this.props.activities: ', this.props.activities);
+    this.props.userData.name &&
+      console.log('this.props.userData: ', this.props.userData.name);
+    // console.log('this.props.activities: ', this.props.activities);
 
     return (
       <ScrollView
