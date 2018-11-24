@@ -1,5 +1,6 @@
-import React from 'react';
+import React from "react";
 import {
+  ImageBackground,
   Image,
   Platform,
   ScrollView,
@@ -8,38 +9,42 @@ import {
   TouchableOpacity,
   View,
   TextInput,
-  Alert,
+  Alert
   // Button,
-} from 'react-native';
-import { navigate } from 'react-navigation';
-import { WebBrowser } from 'expo';
-import { MonoText } from '../components/StyledText';
-import { connect } from 'react-redux';
-import { watchUserData, watchActivityData } from '../redux/app-redux';
+} from "react-native";
+import { navigate } from "react-navigation";
+import { WebBrowser } from "expo";
+import { MonoText } from "../components/StyledText";
+import { connect } from "react-redux";
+import { watchUserData, watchActivityData } from "../redux/app-redux";
 import {
+  Button,
   Container,
   Content,
-  Header,
   Form,
   Input,
   Item,
-  Button,
+  Header,
   Label,
-} from 'native-base';
-import * as firebase from 'firebase';
-import { writeUserData } from '../firebase/firebaseConfig';
+  Tab,
+  Tabs
+} from "native-base";
+import * as firebase from "firebase";
+import { writeUserData } from "../firebase/firebaseConfig";
+import Layout from "../constants/Layout";
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    header: null,
+    header: null
   };
 
   constructor(props) {
     super(props);
     this.state = {
       // userData: {},
-      email: '',
-      password: '',
+      email: "",
+      password: "",
+      logInForm: true
     };
     // this.props.watchUser();
     this.loginUser = this.loginUser.bind(this);
@@ -61,25 +66,36 @@ class HomeScreen extends React.Component {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(function(user) {
-          console.log('userLoggedIn: ', user);
+          console.log("userLoggedIn: ", user);
         });
 
       // alert box to user---------
 
       Alert.alert(
-        'Login Status',
-        'Login Successful',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        "Login Status",
+        "Login Successful",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+              this.setState({
+                email: "",
+                password: ""
+              });
+            }
+          }
+        ],
         {
-          cancelable: false,
+          cancelable: false
         }
       );
     } catch (error) {
       console.log(error.toString());
       Alert.alert(
-        'Login Status',
-        'Login Failed',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        "Login Status",
+        "Login Failed",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
         { cancelable: false }
       );
     }
@@ -88,17 +104,29 @@ class HomeScreen extends React.Component {
   signOutUser = async () => {
     try {
       await firebase.auth().signOut();
-      console.log('currentUser: ', firebase.auth().currentUser.uid);
+      firebase.auth().currentUser &&
+        console.log("currentUser: ", firebase.auth().currentUser.uid);
       // navigate('Auth');
 
       // alert box to user---------
 
       Alert.alert(
-        'Logout Status',
-        'Logout Successful',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        "Logout Status",
+        "Logout Successful",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+              this.setState({
+                email: "",
+                password: ""
+              });
+            }
+          }
+        ],
         {
-          cancelable: false,
+          cancelable: false
         }
       );
     } catch (error) {
@@ -107,24 +135,17 @@ class HomeScreen extends React.Component {
   };
 
   render() {
-    // console.log('\nthis.props', this.props);
-    // console.log('this.state: ', this.state);
-    console.log('this.props.userData: ', this.props.userData);
-    console.log('this.props.activities: ', this.props.activities);
-    console.log(
-      'this.props.navigation.navigate',
-      this.props.navigation.navigate
-    );
     return (
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-      >
-        <Container>
-          <Form>
+      <Container style={styles.container}>
+        <ImageBackground
+          source={require("../assets/images/BridgeToManhattan.jpg")}
+          style={styles.welcomeImage}
+        >
+          <Form style={styles.formContainer}>
             <Item floatingLabel>
-              <Label>Email</Label>
+              <Label style={styles.inputText}>Email</Label>
               <Input
+                style={styles.inputText}
                 autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={email => this.setState({ email })}
@@ -132,8 +153,9 @@ class HomeScreen extends React.Component {
             </Item>
 
             <Item floatingLabel>
-              <Label>Password</Label>
+              <Label style={styles.inputText}>Password</Label>
               <Input
+                style={styles.inputText}
                 secureTextEntry={true}
                 autoCorrect={false}
                 autoCapitalize="none"
@@ -150,7 +172,7 @@ class HomeScreen extends React.Component {
                 this.loginUser(this.state.email, this.state.password)
               }
             >
-              <Text style={{ color: 'white' }}>Login</Text>
+              <Text style={{ color: "white" }}>Login</Text>
             </Button>
             <Button
               style={{ marginTop: 15 }}
@@ -158,24 +180,35 @@ class HomeScreen extends React.Component {
               rounded
               primary
               onPress={() => {
-                console.log('signUp pressed');
-                this.props.navigation.navigate('SignUp');
+                console.log("signUp pressed");
+                this.props.navigation.navigate("SignUp");
               }}
             >
-              <Text style={{ color: 'white' }}>Sign Up</Text>
+              <Text style={{ color: "white" }}>Sign Up</Text>
             </Button>
+            {/* <Button
+              style={{ marginTop: 15 }}
+              full
+              rounded
+              disabled
+              primary
+              onPress={() => this.signOutUser()}
+            >
+              <Text style={{ color: "white" }}>Log Out</Text>
+            </Button> */}
             <Button
               style={{ marginTop: 15 }}
               full
               rounded
-              primary
-              onPress={() => this.signOutUser()}
+              info
+              onPress={() => this.props.navigation.navigate("IntroSlider")}
             >
-              <Text style={{ color: 'white' }}>Log Out</Text>
+              <Text style={{ color: "white" }}>Proceed as Guest</Text>
             </Button>
           </Form>
-        </Container>
-      </ScrollView>
+          {/* ##### Navigate to Map Screen for Auto-location */}
+        </ImageBackground>
+      </Container>
     );
   }
 }
@@ -183,14 +216,14 @@ class HomeScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     userData: state.userData,
-    activities: state.activities,
+    activities: state.activities
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     watchUser: () => dispatch(watchUserData()),
-    watchActivities: () => dispatch(watchUserData()),
+    watchActivities: () => dispatch(watchUserData())
   };
 };
 
@@ -202,95 +235,45 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    // justifyContent: 'center',
+    backgroundColor: "pink"
+  },
+  welcomeImage: {
+    width: undefined,
+    height: "100%",
+    resizeMode: "cover"
+  },
+  formContainer: {
+    flex: 1,
+    paddingHorizontal: 100,
+    justifyContent: "center",
+    alignContent: "flex-end"
   },
   loginFields: {
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    justifyContent: "center"
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    paddingTop: 30,
-    justifyContent: 'center',
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
+  inputText: {
+    color: "white"
   },
   tabBarInfoContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     ...Platform.select({
       ios: {
-        shadowColor: 'black',
+        shadowColor: "black",
         shadowOffset: { height: -3 },
         shadowOpacity: 0.1,
-        shadowRadius: 3,
+        shadowRadius: 3
       },
       android: {
-        elevation: 20,
-      },
+        elevation: 20
+      }
     }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
+    alignItems: "center",
+    backgroundColor: "#fbfbfb",
+    paddingVertical: 20
+  }
 });

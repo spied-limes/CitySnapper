@@ -1,69 +1,69 @@
-import React from 'react';
-import { Platform } from 'react-native';
+import React from "react";
+import { Platform } from "react-native";
 import {
   createStackNavigator,
-  createBottomTabNavigator,
-} from 'react-navigation';
+  createBottomTabNavigator
+} from "react-navigation";
 
-import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import MapScreen from '../screens/MapScreen';
-import SignUpScreen from '../screens/SignUpScreen';
+import TabBarIcon from "../components/TabBarIcon";
+import HomeScreen from "../screens/HomeScreen";
+import LinksScreen from "../screens/LinksScreen";
+import SettingsScreen from "../screens/SettingsScreen";
+import MapScreen from "../screens/MapScreen";
+import SignUpScreen from "../screens/SignUpScreen";
 
-const HomeStack = createStackNavigator({
-  Home: HomeScreen,
-});
+// const HomeStack = createStackNavigator({
+//   Home: HomeScreen,
+// });
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
-};
+// HomeStack.navigationOptions = {
+//   tabBarLabel: 'Home',
+//   tabBarIcon: ({ focused }) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={
+//         Platform.OS === 'ios'
+//           ? `ios-information-circle${focused ? '' : '-outline'}`
+//           : 'md-information-circle'
+//       }
+//     />
+//   ),
+// };
 
 const MapStack = createStackNavigator({
-  Map: MapScreen,
+  Map: MapScreen
 });
 
 MapStack.navigationOptions = {
-  tabBarLabel: 'Map',
+  tabBarLabel: "Map",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+        Platform.OS === "ios"
+          ? `ios-information-circle${focused ? "" : "-outline"}`
+          : "md-information-circle"
       }
     />
-  ),
+  )
 };
 
 const SignUpStack = createStackNavigator({
-  SignUp: SignUpScreen,
+  SignUp: SignUpScreen
 });
 
 SignUpStack.navigationOptions = {
-  tabBarLabel: 'SignUp',
+  tabBarLabel: "SignUp",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+        Platform.OS === "ios"
+          ? `ios-information-circle${focused ? "" : "-outline"}`
+          : "md-information-circle"
       }
     />
-  ),
+  )
 };
 
 // const LinksStack = createStackNavigator({
@@ -95,9 +95,9 @@ SignUpStack.navigationOptions = {
 // };
 
 export default createBottomTabNavigator({
-  HomeStack,
+  // HomeStack,
   // LinksStack,
   // SettingsStack,
   MapStack,
-  SignUpStack,
+  SignUpStack
 });
