@@ -1,5 +1,5 @@
 /* eslint-disable react/no-deprecated */
-import React from "react";
+import React from 'react';
 import {
   Image,
   Platform,
@@ -9,18 +9,19 @@ import {
   TouchableOpacity,
   View,
   Button,
-  TextInput
-} from "react-native";
-import { createStackNavigator } from "react-navigation";
-import MapViewDirections from "react-native-maps-directions";
-import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
-import DropdownMenu from "react-native-dropdown-menu";
-import { Constants, Location, Permissions } from "expo";
-import CheckinScreen from "./CheckInScreen";
+  TextInput,
+  Alert,
+} from 'react-native';
+import { createStackNavigator } from 'react-navigation';
+import MapViewDirections from 'react-native-maps-directions';
+import MapView, { Marker, AnimatedRegion, Animated } from 'react-native-maps';
+import DropdownMenu from 'react-native-dropdown-menu';
+import { Constants, Location, Permissions } from 'expo';
+import CheckinScreen from './CheckInScreen';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    header: null
+    header: null,
   };
 
   constructor() {
@@ -32,30 +33,57 @@ export default class HomeScreen extends React.Component {
       longitudeDelta: 0.00475,
 
       errorMessage: null,
-      text: "Current Location",
+      text: 'Current Location',
       // for current storage
       currentLat: null,
-      currentLong: null
+      currentLong: null,
     };
   }
 
   // This componentWillMount does the work of getInitialState() in setting up the region
   componentWillMount() {
-    if (Platform.OS === "android" && !Constants.isDevice) {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage:
-          "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
       });
     } else {
       this._getLocationAsync();
     }
   }
 
+  componentDidMount() {
+    Alert.alert(
+      'Set Homebase',
+      'Use current location as homeBase?',
+      [
+        {
+          text: 'NO',
+          onPress: () => {
+            console.log('NO Pressed');
+            this.setState({
+              errorMessage: 'Permission to access location was denied',
+            });
+          },
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            console.log('OK Pressed');
+          },
+        },
+      ],
+      {
+        cancelable: false,
+      }
+    );
+  }
+
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
+    if (status !== 'granted') {
       this.setState({
-        errorMessage: "Permission to access location was denied"
+        errorMessage: 'Permission to access location was denied',
       });
     }
 
@@ -65,7 +93,7 @@ export default class HomeScreen extends React.Component {
       longitude: location.coords.longitude,
       latitude: location.coords.latitude,
       currentLong: location.coords.longitude,
-      currentLat: location.coords.latitude
+      currentLat: location.coords.latitude,
     });
   };
 
@@ -75,43 +103,43 @@ export default class HomeScreen extends React.Component {
     // DROPDOWN DATA
     const data = [
       [
-        "Current Location",
-        "Times Square",
-        "Fullstack Academy",
-        "World Trade Center",
-        "Museum of Sex"
-      ]
+        'Current Location',
+        'Times Square',
+        'Fullstack Academy',
+        'World Trade Center',
+        'Museum of Sex',
+      ],
     ]; //will have to be data
     const coordinates = [
       {
         latitude: this.state.currentLat,
-        longitude: this.state.currentLong
+        longitude: this.state.currentLong,
       },
       {
         //times square
         latitude: 40.7589,
         longitude: -73.9851,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
       },
       {
         latitude: 40.7051,
         longitude: -74.0092,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
       },
       {
         latitude: 40.7118,
         longitude: -74.0131,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
       },
       {
         latitude: 40.7441,
         longitude: -73.9874,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
-      }
+        longitudeDelta: 0.0421,
+      },
     ];
 
     return (
@@ -136,17 +164,17 @@ export default class HomeScreen extends React.Component {
           <View style={styles.topButtons}>
             <DropdownMenu
               style={{ flex: 1 }}
-              bgColor={"white"}
-              tintColor={"#000000"}
-              optionTextStyle={{ color: "red" }}
-              activityTintColor={"green"} // checkImage={} // arrowImg={}
-              titleStyle={{ color: "#333333" }}
+              bgColor={'white'}
+              tintColor={'#000000'}
+              optionTextStyle={{ color: 'red' }}
+              activityTintColor={'green'} // checkImage={} // arrowImg={}
+              titleStyle={{ color: '#333333' }}
               // maxHeight={300}
               handler={(selection, row) =>
                 this.setState({
                   text: data[selection][row],
                   latitude: coordinates[row].latitude,
-                  longitude: coordinates[row].longitude
+                  longitude: coordinates[row].longitude,
                 })
               }
               data={data}
@@ -175,19 +203,19 @@ export default class HomeScreen extends React.Component {
             this.state.longitude === this.state.currentLong ? (
               <Button
                 style={{ flex: 1 }}
-                onPress={() => navigate("Screen", { name: this.state.text })}
+                onPress={() => navigate('Screen', { name: this.state.text })}
                 title="Check In"
                 color="#841584"
               />
             ) : (
               <Button
-                style={{ flex: 1, alignItems: "center" }}
+                style={{ flex: 1, alignItems: 'center' }}
                 onPress={() =>
-                  navigate("Directions", {
+                  navigate('Directions', {
                     destLat: this.state.latitude,
                     destLong: this.state.longitude,
                     currentLong: this.state.currentLong,
-                    currentLat: this.state.currentLat
+                    currentLat: this.state.currentLat,
                   })
                 }
                 title="Get Directions"
@@ -211,19 +239,19 @@ export default class HomeScreen extends React.Component {
               latitude: this.state.latitude,
               longitude: this.state.longitude,
               latitudeDelta: 0.0075,
-              longitudeDelta: 0.003
+              longitudeDelta: 0.003,
             }}
             showsUserLocation={true}
             style={styles.map}
           >
             <Marker
               coordinate={{ latitude: 40.6, longitude: -74 }}
-              title={"first marker"}
-              description={"jkh"}
+              title={'first marker'}
+              description={'jkh'}
               onPress={() =>
                 this.state.latitude === 40.6 && longitude === -74
-                  ? console.log("success")
-                  : console.log("failure")
+                  ? console.log('success')
+                  : console.log('failure')
               }
             />
           </MapView>
@@ -237,33 +265,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 27,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   topButtons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingHorizontal: 25
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 25,
   },
   mapFlexContainer: {
-    flex: 4
+    flex: 4,
   },
   map: {
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
-    position: "absolute"
+    position: 'absolute',
   },
   mapCommentContainer: {
     flex: 2,
     padding: 15,
-    backgroundColor: "beige",
-    zIndex: 10
+    backgroundColor: 'beige',
+    zIndex: 10,
   },
   mapComment: {
     fontSize: 18,
-    textAlign: "center",
-    justifyContent: "center",
-    color: "white"
-  }
+    textAlign: 'center',
+    justifyContent: 'center',
+    color: 'white',
+  },
 });
