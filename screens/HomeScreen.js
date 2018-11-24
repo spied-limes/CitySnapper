@@ -51,7 +51,7 @@ class HomeScreen extends React.Component {
     return (
       <Container style={styles.container}>
         <ImageBackground
-          source={require("../assets/images/BridgeToManhattan.jpg")}
+          source={require("../assets/images/nyc.gif")}
           style={styles.welcomeImage}
         >
           <View style={styles.formBox}>
@@ -225,7 +225,11 @@ const styles = StyleSheet.create({
   },
   toggleButtons: {
     color: "white",
-    fontSize: 30
+    fontFamily: "Abril-FatFace",
+    fontSize: 36,
+    textShadowColor: "black",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 5
   },
   formBGColor: {
     paddingVertical: 15,
