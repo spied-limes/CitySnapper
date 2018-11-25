@@ -30,10 +30,6 @@ import * as firebase from "firebase";
 import { writeUserData } from "../firebase/firebaseConfig";
 
 class SignUpScreen extends React.Component {
-  static navigationOptions = {
-    header: null
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -52,80 +48,6 @@ class SignUpScreen extends React.Component {
     };
 
     this.signUpUser = this.signUpUser.bind(this);
-  }
-
-  async signUpUser(email, password) {
-    try {
-      if (this.state.password.length < 6) {
-        Alert.alert(
-          "Sign Up Failed",
-          "Password must be longer than 6 characters",
-          [
-            // {
-            //   text: 'Cancel',
-            //   onPress: () => console.log('Cancel Pressed'),
-            //   style: 'cancel',
-            // },
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-          ],
-          {
-            cancelable: false
-          }
-        );
-        console.log("Password must be longer than 6 characters");
-        return;
-      }
-      // create user in firebase auth page (email, pass, userId)
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
-      // capture current userID directly after creation
-      const userId = firebase.auth().currentUser.uid;
-      console.log("HomeScreen auth() userId: ", userId);
-
-      // custom func that (hopefully) writes a user entry in database matched by userId
-      await writeUserData(userId, {
-        username: this.state.username,
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        email: this.state.email,
-        streetAddress: this.state.streetAddress,
-        city: this.state.city,
-        state: this.state.state,
-        zipCode: this.state.zipCode,
-        isAdult: this.state.isAdult,
-        activities: {} /*will be additional func to ad activiy IDs to user entry*/,
-        // current location should be these below
-        latitude: "",
-        longitude: ""
-      });
-
-      // alert box to user---------
-      Alert.alert(
-        "Sign Up Status",
-        "Sign Up Successful",
-        [
-          // {
-          //   text: 'Cancel',
-          //   onPress: () => console.log('Cancel Pressed'),
-          //   style: 'cancel',
-          // },
-          {
-            text: "OK",
-            onPress: () => this.props.navigation.navigate("Map")
-          }
-        ],
-        {
-          cancelable: false
-        }
-      );
-    } catch (error) {
-      console.log(error.toString());
-      Alert.alert(
-        "Sign Up Status",
-        "Sign Up Failed",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-        { cancelable: false }
-      );
-    }
   }
 
   render() {
