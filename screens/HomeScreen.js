@@ -66,22 +66,39 @@ class HomeScreen extends React.Component {
             />
             <View style={styles.toggleInputView}>
               <TouchableOpacity
+                active={true}
+                underlayColor="black"
                 onPress={() => {
                   console.log("left button pressed");
                   LayoutAnimation.easeInEaseOut();
                   this.setState({ logInForm: true });
                 }}
               >
-                <Text style={styles.toggleButtons}>Log In</Text>
+                <Text
+                  style={[
+                    styles.toggleButtons,
+                    this.state.logInForm && styles.toggleInputSelected
+                  ]}
+                >
+                  Log In
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                underlayColor="black"
                 onPress={() => {
                   console.log("right button pressed");
                   LayoutAnimation.easeInEaseOut();
                   this.setState({ logInForm: false });
                 }}
               >
-                <Text style={styles.toggleButtons}>Sign Up</Text>
+                <Text
+                  style={[
+                    styles.toggleButtons,
+                    !this.state.logInForm && styles.toggleInputSelected
+                  ]}
+                >
+                  Sign Up
+                </Text>
               </TouchableOpacity>
             </View>
             {/*
@@ -129,6 +146,15 @@ class HomeScreen extends React.Component {
                 >
                   <Text style={{ color: "white" }}>Login</Text>
                 </Button>
+                <Button
+                  style={{ marginTop: 15 }}
+                  full
+                  rounded
+                  warning
+                  onPress={() => this.props.navigation.navigate("IntroSlider")}
+                >
+                  <Text style={{ color: "black" }}>Go to IntroSlider</Text>
+                </Button>
               </View>
             ) : (
               <View>
@@ -164,6 +190,13 @@ class HomeScreen extends React.Component {
                     />
                   </Item>
                 </Form>
+                {/*
+    ____        __  __
+   / __ )__  __/ /_/ /_____  ____  _____
+  / __  / / / / __/ __/ __ \/ __ \/ ___/
+ / /_/ / /_/ / /_/ /_/ /_/ / / / (__  )
+/_____/\__,_/\__/\__/\____/_/ /_/____/
+                */}
                 <Button
                   style={{ marginTop: 15 }}
                   full
@@ -174,6 +207,15 @@ class HomeScreen extends React.Component {
                   }
                 >
                   <Text style={{ color: "white" }}>Sign Up</Text>
+                </Button>
+                <Button
+                  style={{ marginTop: 15 }}
+                  full
+                  rounded
+                  warning
+                  onPress={() => this.props.navigation.navigate("IntroSlider")}
+                >
+                  <Text style={{ color: "black" }}>Go to IntroSlider</Text>
                 </Button>
               </View>
             )}
@@ -224,8 +266,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingBottom: 20
   },
+  toggleInputSelected: {
+    color: "white"
+  },
   toggleButtons: {
-    color: "white",
+    color: "rgba(255,255,255,0.5)",
     fontFamily: "Abril-FatFace",
     fontSize: 36,
     textShadowColor: "black",
