@@ -1,15 +1,16 @@
 /* eslint-disable react/no-deprecated */
 import React from "react";
 import {
+  Button,
+  Dimensions,
   Image,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
-  View,
-  Button,
-  TextInput
+  View
 } from "react-native";
 
 import { GOOGLE_MAPS_APIKEY } from "../secrets";
@@ -17,17 +18,29 @@ import MapViewDirections from "react-native-maps-directions";
 import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import { Constants, Location, Permissions } from "expo";
 
-export default class HomeScreen extends React.Component {
+const { width, height } = Dimensions.get("window");
+const aspectRatio = width / height;
+const mapPadding = { top: 75, right: 75, bottom: 75, left: 75 };
+
+export default class GetDirections extends React.Component {
   static navigationOptions = {
     title: "Directions"
   };
   constructor() {
     super();
     this.state = {
-      latitudeDelta: 0.005596,
+      latitudeDelta: 0.00559,
       longitudeDelta: 0.00475
     };
   }
+
+  fitAllMarkers(markers) {
+    this.map.fitToCoordinates(markers, {
+      edgePadding: mapPadding,
+      animated: true
+    });
+  }
+
   render() {
     const { push, navigate } = this.props.navigation;
     const { params } = this.props.navigation.state;
@@ -41,10 +54,15 @@ export default class HomeScreen extends React.Component {
       longitude: params.destLong
     };
 
+    const markers = [origin, destination];
+
     return (
       <View style={styles.container}>
         <View style={styles.mapFlexContainer}>
           <MapView
+            ref={ref => {
+              this.map = ref;
+            }}
             region={{
               // This is hardcoded in the snapping dropdown version
               latitude: params.currentLat,
@@ -60,13 +78,18 @@ export default class HomeScreen extends React.Component {
               destination={destination}
               apikey={GOOGLE_MAPS_APIKEY}
               mode={"walking"}
-              strokeWidth={4}
+              strokeWidth={8}
               strokeColor="hotpink"
             />
           </MapView>
         </View>
-        <View style={styles.tabBarInfoContainer}>
+        <View style={styles.buttonContainer}>
           <Button title="Go back" onPress={() => navigate("Map")} />
+          <Button title="Go back" onPress={() => navigate("Map")} />
+          <Button
+            title="Fit Both Markers"
+            onPress={() => this.fitAllMarkers(markers)}
+          />
         </View>
       </View>
     );
@@ -89,8 +112,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: "absolute"
   },
-  tabBarInfoContainer: {
+  buttonContainer: {
     flex: 1,
+    flexDirection: "row",
     // ...Platform.select({
     //   ios: {
     //     shadowColor: "black",
@@ -102,8 +126,8 @@ const styles = StyleSheet.create({
     //     elevation: 20
     //   }
     // }),
-    alignItems: "center",
-    justifyContent: "center",
+    // alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: "beige"
   }
 });

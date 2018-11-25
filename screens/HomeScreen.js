@@ -40,7 +40,7 @@ class HomeScreen extends React.Component {
       email: "",
       password: "",
       name: "",
-      logInForm: true
+      logInForm: false
     };
   }
 
@@ -66,6 +66,23 @@ class HomeScreen extends React.Component {
             />
             <View style={styles.toggleInputView}>
               <TouchableOpacity
+                underlayColor="black"
+                onPress={() => {
+                  console.log("right button pressed");
+                  LayoutAnimation.easeInEaseOut();
+                  this.setState({ logInForm: false });
+                }}
+              >
+                <Text
+                  style={[
+                    styles.toggleButtons,
+                    !this.state.logInForm && styles.toggleInputSelected
+                  ]}
+                >
+                  Sign Up
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 active={true}
                 underlayColor="black"
                 onPress={() => {
@@ -81,23 +98,6 @@ class HomeScreen extends React.Component {
                   ]}
                 >
                   Log In
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                underlayColor="black"
-                onPress={() => {
-                  console.log("right button pressed");
-                  LayoutAnimation.easeInEaseOut();
-                  this.setState({ logInForm: false });
-                }}
-              >
-                <Text
-                  style={[
-                    styles.toggleButtons,
-                    !this.state.logInForm && styles.toggleInputSelected
-                  ]}
-                >
-                  Sign Up
                 </Text>
               </TouchableOpacity>
             </View>
@@ -117,7 +117,6 @@ class HomeScreen extends React.Component {
                     <Input
                       placeholder="E-Mail"
                       style={styles.inputText}
-                      autoSugges
                       autoCorrect={false}
                       autoCapitalize="none"
                       onChangeText={email => this.setState({ email })}
@@ -213,9 +212,9 @@ class HomeScreen extends React.Component {
                   full
                   rounded
                   warning
-                  onPress={() => this.props.navigation.navigate("IntroSlider")}
+                  onPress={() => this.props.navigation.navigate("Map")}
                 >
-                  <Text style={{ color: "black" }}>Go to IntroSlider</Text>
+                  <Text style={{ color: "black" }}>Go to Map</Text>
                 </Button>
               </View>
             )}
@@ -285,6 +284,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   inputText: {
-    color: "black"
+    color: "black",
+    fontFamily: "Roboto"
   }
 });
