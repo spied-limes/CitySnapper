@@ -6,6 +6,7 @@ import HomeScreen from "../screens/HomeScreen";
 import IntroSlider from "../screens/IntroSliderScreens";
 import CheckinScreen from "../screens/CheckInScreen";
 import GetDirections from "../screens/GetDirections";
+import QuizScreen from "../screens/QuizScreen";
 
 export default createSwitchNavigator({
   // You could add another route here for authentication.
@@ -14,5 +15,6 @@ export default createSwitchNavigator({
   IntroSlider: IntroSlider,
   Main: MainTabNavigator,
   Screen: CheckinScreen,
-  Directions: GetDirections
+  Directions: GetDirections,
+  Quiz: QuizScreen
 });

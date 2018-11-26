@@ -11,12 +11,10 @@ import {
   Button,
   TextInput
 } from "react-native";
-import { createStackNavigator } from "react-navigation";
 import MapViewDirections from "react-native-maps-directions";
 import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
-import CheckinScreen from "./CheckInScreen";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {

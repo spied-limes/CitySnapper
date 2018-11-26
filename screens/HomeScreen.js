@@ -14,7 +14,7 @@ import {
   View
   // Button,
 } from "react-native";
-import { navigate } from "react-navigation";
+//import { navigate } from "react-navigation";
 import { connect } from "react-redux";
 import { watchUserData, watchActivityData } from "../redux/app-redux";
 import {
@@ -52,6 +52,8 @@ class HomeScreen extends React.Component {
 /_/ |_|\___/_/ /_/\__,_/\___/_/
 */
   render() {
+    const { push, navigate } = this.props.navigation;
+
     return (
       <Container style={styles.container}>
         <ImageBackground
@@ -59,11 +61,11 @@ class HomeScreen extends React.Component {
           style={styles.welcomeImage}
         >
           <View style={styles.formBox}>
-            <Image
+            {/* <Image
               source={require("../assets/images/fake_logo.png")}
               width="50"
               height="50"
-            />
+            /> */}
             <View style={styles.toggleInputView}>
               <TouchableOpacity
                 onPress={() => {
@@ -128,6 +130,15 @@ class HomeScreen extends React.Component {
                   }
                 >
                   <Text style={{ color: "white" }}>Login</Text>
+                </Button>
+                <Button
+                  style={{ marginTop: 15 }}
+                  full
+                  rounded
+                  success
+                  onPress={() => navigate("Quiz")}
+                >
+                  <Text style={{ color: "white" }}> Trivia Quiz</Text>
                 </Button>
               </View>
             ) : (
