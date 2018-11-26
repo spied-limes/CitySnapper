@@ -9,8 +9,8 @@ import { db } from '../firebase/firebaseConfig';
 
 const initialState = {
   userData: {},
-  activities: [],
-  places: [],
+  activities: {},
+  places: {},
 };
 
 // -----------------------

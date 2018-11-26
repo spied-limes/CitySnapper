@@ -34,7 +34,10 @@ import {
   Tabs,
 } from 'native-base';
 import * as firebase from 'firebase';
-import { writeUserData } from '../firebase/firebaseConfig';
+import {
+  writeUserData,
+  updateUserActivityData,
+} from '../firebase/firebaseConfig';
 import Layout from '../constants/Layout';
 
 class HomeScreen extends React.Component {
@@ -48,7 +51,7 @@ class HomeScreen extends React.Component {
       // userData: {},
       email: '',
       password: '',
-      logInForm: true,
+      // logInForm: true,
     };
     // this.props.watchUser();
     this.loginUser = this.loginUser.bind(this);
@@ -73,8 +76,20 @@ class HomeScreen extends React.Component {
           console.log('userLoggedIn: ', user);
         });
 
-      // alert box to user---------
+      //below is prototype of activity object key =activityId in DB
+      let userId = await firebase.auth().currentUser.uid;
+      await updateUserActivityData(userId, {
+        activities: {
+          1: {
+            active: true,
+            complete: false,
+            points: 2 /* anarbitrary number of points to give activities */,
+          },
+        },
+      });
+      // end of activity object prototype
 
+      // alert box to user---------
       Alert.alert(
         'Login Status',
         'Login Successful',

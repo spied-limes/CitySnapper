@@ -1,5 +1,7 @@
 import * as firebase from 'firebase';
 import { firebaseSecrets } from '../secrets';
+import { watchActivityData } from '../redux/app-redux';
+
 // initialize firebase
 const firebaseConfig = firebaseSecrets;
 
@@ -33,12 +35,39 @@ export function updateUserLocationData(userId, userObj) {
     });
 }
 
-export function updateUserActivityData(userId, userObj) {
-  firebase
+async function userActivityUpdateHelper() {
+  const userId = firebase.auth().currentUser.uid;
+
+  let activityData;
+
+  await db.ref('/users/' + userId + '/activities/').on(
+    'value',
+    function(snapshot) {
+      activityData = snapshot.val();
+    },
+    function(error) {
+      console.log(error);
+    }
+  );
+  console.log('helper func userActivityData: ', activityData);
+  return activityData;
+}
+
+export async function updateUserActivityData(userId, userObj) {
+  let activityData = userActivityUpdateHelper();
+  let newUserActivities = userObj.activities;
+  console.log(
+    '\nupdate func activityData: ',
+    activityData,
+    '\nupdate func newUserActivities',
+    newUserActivities
+  );
+
+  await firebase
     .database()
     .ref('/users/' + userId)
     .update({
-      activities: userObj.activities,
+      activities: { ...activityData, newUserActivities },
     });
 }
 // CRUD funcs for users in firebase db

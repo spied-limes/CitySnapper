@@ -40,7 +40,11 @@ class SignUpScreen extends React.Component {
       email: '',
       password: '',
       name: '',
-      activities: null,
+      activities: {
+        1: {
+          activityComplete: false,
+        },
+      },
       latitude: null /*want this to be current location*/,
       longitude: null /*want this to be current location*/,
     };
