@@ -12,6 +12,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   UIManager,
   View
@@ -19,7 +20,11 @@ import {
 } from "react-native";
 import { navigate } from "react-navigation";
 import { connect } from "react-redux";
-import { watchUserData, watchActivityData } from "../redux/app-redux";
+import {
+  watchUserData,
+  watchPlaceData,
+  watchActivityData
+} from "../redux/app-redux";
 import {
   Button,
   Container,
@@ -30,7 +35,10 @@ import {
   Item
 } from "native-base";
 import * as firebase from "firebase";
-import { writeUserData } from "../firebase/firebaseConfig";
+import {
+  writeUserData,
+  updateUserActivityData
+} from "../firebase/firebaseConfig";
 
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -40,7 +48,6 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // userData: {},
       email: "",
       password: "",
       name: "",
@@ -106,8 +113,25 @@ class HomeScreen extends React.Component {
           console.log("userLoggedIn: ", user);
         });
 
-      // alert box to user---------
+      //below is prototype of activity object key =activityId in DB
+      let userId = await firebase.auth().currentUser.uid;
+      await updateUserActivityData(userId, {
+        activities: {
+          1: {
+            active: true,
+            complete: false,
+            points: 2 /* an arbitrary number of points to give activities */
+          }
+        }
+      });
+      // end of activity object prototype
 
+      // ##### Send off the redux thunks BASED OFF THE MAPPED DISPATCH
+      this.props.watchUser();
+      this.props.watchPlaces();
+      this.props.watchActivities();
+
+      // alert box to user---------
       Alert.alert(
         "Login Status",
         "Login Successful",
@@ -127,9 +151,20 @@ class HomeScreen extends React.Component {
     } catch (error) {
       console.log(error.toString());
       Alert.alert(
-        "Login Status",
         "Login Failed",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        "Your info doesn't match our records. Please try again.",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("FAILURE: Wrong info");
+              this.setState({
+                password: ""
+              });
+              console.log("OK Pressed, Password field cleared.");
+            }
+          }
+        ],
         { cancelable: false }
       );
     }
@@ -238,7 +273,7 @@ class HomeScreen extends React.Component {
                 <TouchableOpacity
                   underlayColor="black"
                   onPress={() => {
-                    console.log("right button pressed");
+                    console.log("SIGN UP pressed");
                     LayoutAnimation.easeInEaseOut();
                     this.setState({ logInForm: false });
                   }}
@@ -256,7 +291,7 @@ class HomeScreen extends React.Component {
                   active={true}
                   underlayColor="black"
                   onPress={() => {
-                    console.log("left button pressed");
+                    console.log("LOG IN pressed");
                     LayoutAnimation.easeInEaseOut();
                     this.setState({ logInForm: true });
                   }}
@@ -405,14 +440,16 @@ class HomeScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     userData: state.userData,
-    activities: state.activities
+    activities: state.activities,
+    places: state.places
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     watchUser: () => dispatch(watchUserData()),
-    watchActivities: () => dispatch(watchUserData())
+    watchActivities: () => dispatch(watchActivityData()),
+    watchPlaces: () => dispatch(watchPlaceData())
   };
 };
 

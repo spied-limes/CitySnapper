@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   View,
   Button,
-  TextInput
+  TextInput,
+  Alert
 } from "react-native";
 import { createStackNavigator } from "react-navigation";
 import MapViewDirections from "react-native-maps-directions";
@@ -17,6 +18,8 @@ import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
+import { updateUserLocationData } from "../firebase/firebaseConfig";
+import * as firebase from "firebase";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -48,6 +51,49 @@ export default class HomeScreen extends React.Component {
     } else {
       this._getLocationAsync();
     }
+  }
+
+  componentDidMount() {
+    const userId = firebase.auth().currentUser.uid;
+
+    console.log("permittedLocationUse: ", this.state.permittedLocationUse);
+    !this.state.permittedLocationUse &&
+      Alert.alert(
+        "Set Homebase",
+        "Use current location as homeBase?",
+        [
+          {
+            text: "NO",
+            onPress: () => {
+              console.log("NO Pressed");
+              this.setState({
+                errorMessage: "Permission to access location was denied"
+              });
+            }
+          },
+          {
+            text: "OK",
+            onPress: async () => {
+              this.setState({ permittedLocationUse: true });
+              await this._getLocationAsync();
+              await updateUserLocationData(userId, {
+                latitude: this.state.currentLat,
+                longitude: this.state.currentLong
+              });
+              console.log(
+                "this.state.currentLat: ",
+                this.state.currentLat,
+                "this.state.currentLong: ",
+                this.state.currentLong
+              );
+              console.log("OK Pressed");
+            }
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
   }
 
   _getLocationAsync = async () => {

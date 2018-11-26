@@ -219,8 +219,14 @@ export default class HomeScreen extends React.Component {
  / /_/ / /_/ / /_/ /_/ /_/ / / / / / /  / /_/ / /_/ />  <
 /_____/\____/\__/\__/\____/_/ /_/ /_/  /_____/\____/_/|_|
 */}
-            <View style={{ flex: 1 }}>
-              <Text>Location: {this.state.text}</Text>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Text>Current Location: {this.state.text}</Text>
               <Text>Lat: {this.state.latitude}</Text>
               <Text>Lng: {this.state.longitude}</Text>
             </View>
