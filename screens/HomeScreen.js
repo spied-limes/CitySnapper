@@ -2,8 +2,10 @@
 /* eslint-disable quotes */
 import React from "react";
 import {
+  Animated,
   ImageBackground,
   Image,
+  Keyboard,
   KeyboardAvoidingView,
   LayoutAnimation,
   Platform,
@@ -60,9 +62,8 @@ class HomeScreen extends React.Component {
         >
           <View style={styles.formBox}>
             <Image
+              style={styles.logoImage}
               source={require("../assets/images/fake_logo.png")}
-              width="50"
-              height="50"
             />
             <View style={styles.toggleInputView}>
               <TouchableOpacity
@@ -214,6 +215,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center"
   },
+  logoImage: {
+    alignItems: "center",
+    width: 250,
+    height: 250
+  },
   formBox: {
     marginHorizontal: 50,
     paddingBottom: 50,
@@ -229,7 +235,7 @@ const styles = StyleSheet.create({
     fontFamily: "Abril-FatFace",
     fontSize: 36,
     textShadowColor: "black",
-    textShadowOffset: { width: 3, height: 3 },
+    textShadowOffset: { width: 3, height: 1 },
     textShadowRadius: 3
   },
   formBGColor: {
