@@ -117,16 +117,12 @@ class HomeScreen extends React.Component {
           console.log('userLoggedIn: ', user);
         });
 
-      //below is prototype of activity object key =activityId in DB
+      //below is prototype of activity object key = activityId in DB
       let userId = await firebase.auth().currentUser.uid;
-      await updateUserActivityData(userId, {
-        activities: {
-          1: {
-            active: true,
-            complete: false,
-            points: 2 /* an arbitrary number of points to give activities */,
-          },
-        },
+      await updateUserActivityData('timesSquare', 1, {
+        active: true,
+        complete: false,
+        points: 2 /* an arbitrary number of points to give activities */,
       });
       // end of activity object prototype
 
