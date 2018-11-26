@@ -17,7 +17,7 @@ export function writeUserData(userId, userObj) {
     .set({
       name: userObj.name,
       email: userObj.email,
-      activities: userObj.activities,
+      places: userObj.places,
       latitude: userObj.latitude,
       longitude: userObj.longitude,
     });
@@ -35,39 +35,46 @@ export function updateUserLocationData(userId, userObj) {
     });
 }
 
-async function userActivityUpdateHelper() {
-  const userId = firebase.auth().currentUser.uid;
-
+async function userActivityUpdateHelper(userId, placeId, activityId) {
   let activityData;
 
-  await db.ref('/users/' + userId + '/activities/').on(
-    'value',
-    function(snapshot) {
-      activityData = snapshot.val();
-    },
-    function(error) {
-      console.log(error);
-    }
-  );
+  await db
+    .ref('/users/' + userId + '/places/' + placeId + '/actvities/' + activityId)
+    .on(
+      'value',
+      function(snapshot) {
+        activityData = snapshot.val();
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
   console.log('helper func userActivityData: ', activityData);
   return activityData;
 }
 
-export async function updateUserActivityData(userId, userObj) {
-  let activityData = userActivityUpdateHelper();
-  let newUserActivities = userObj.activities;
+export async function updateUserActivityData(placeId, activityId, activityObj) {
+  const userId = await firebase.auth().currentUser.uid;
+
+  let prevActivityData = await userActivityUpdateHelper(
+    userId,
+    placeId,
+    activityId
+  );
+  let newUserActivity = activityObj;
+
   console.log(
     '\nupdate func activityData: ',
-    activityData,
+    prevActivityData,
     '\nupdate func newUserActivities',
-    newUserActivities
+    newUserActivity
   );
 
   await firebase
     .database()
-    .ref('/users/' + userId)
+    .ref('/users/' + userId + '/places/' + placeId + '/actvities/' + activityId)
     .update({
-      activities: { ...activityData, newUserActivities },
+      activityId: { ...prevActivityData, newUserActivity },
     });
 }
 // CRUD funcs for users in firebase db

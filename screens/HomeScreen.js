@@ -34,10 +34,7 @@ import {
   Tabs,
 } from 'native-base';
 import * as firebase from 'firebase';
-import {
-  writeUserData,
-  updateUserActivityData,
-} from '../firebase/firebaseConfig';
+import { updateUserActivityData } from '../firebase/firebaseConfig';
 import Layout from '../constants/Layout';
 
 class HomeScreen extends React.Component {
@@ -78,14 +75,10 @@ class HomeScreen extends React.Component {
 
       //below is prototype of activity object key =activityId in DB
       let userId = await firebase.auth().currentUser.uid;
-      await updateUserActivityData(userId, {
-        activities: {
-          1: {
-            active: true,
-            complete: false,
-            points: 2 /* anarbitrary number of points to give activities */,
-          },
-        },
+      await updateUserActivityData('timesSquare', 1, {
+        complete: false,
+        active: true,
+        points: 1,
       });
       // end of activity object prototype
 
