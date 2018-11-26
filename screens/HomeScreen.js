@@ -2,6 +2,7 @@
 /* eslint-disable quotes */
 import React from "react";
 import {
+  Alert,
   Animated,
   ImageBackground,
   Image,
@@ -28,7 +29,8 @@ import {
   Input,
   Item
 } from "native-base";
-import { loginUser, signUpUser } from "../components/UserEntryFunctions";
+import * as firebase from "firebase";
+import { writeUserData } from "../firebase/firebaseConfig";
 
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -45,6 +47,170 @@ class HomeScreen extends React.Component {
       logInForm: false
     };
   }
+
+  /*
+   _____ _             ____        __
+  / ___/(_)___ _____  / __ \__  __/ /_
+  \__ \/ / __ `/ __ \/ / / / / / / __/
+ ___/ / / /_/ / / / / /_/ / /_/ / /_
+/____/_/\__, /_/ /_/\____/\__,_/\__/
+       /____/
+*/
+  signOutUser = async () => {
+    try {
+      await firebase.auth().signOut();
+      firebase.auth().currentUser &&
+        console.log("currentUser: ", firebase.auth().currentUser.uid);
+      // navigate('Auth');
+
+      // alert box to user---------
+
+      Alert.alert(
+        "Logout Status",
+        "Logout Successful",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+              this.setState({
+                email: "",
+                password: ""
+              });
+            }
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  /*
+      __                ____
+     / /   ____  ____ _/  _/___
+    / /   / __ \/ __ `// // __ \
+   / /___/ /_/ / /_/ // // / / /
+  /_____/\____/\__, /___/_/ /_/
+              /____/
+  */
+  loginUser = async (email, password) => {
+    try {
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(function(user) {
+          console.log("userLoggedIn: ", user);
+        });
+
+      // alert box to user---------
+
+      Alert.alert(
+        "Login Status",
+        "Login Successful",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("About to move pages");
+              this.props.navigation.navigate("IntroSlider");
+            }
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+    } catch (error) {
+      console.log(error.toString());
+      Alert.alert(
+        "Login Status",
+        "Login Failed",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
+    }
+  };
+
+  /*
+     _____ _             __  __
+    / ___/(_)___ _____  / / / /___
+    \__ \/ / __ `/ __ \/ / / / __ \
+   ___/ / / /_/ / / / / /_/ / /_/ /
+  /____/_/\__, /_/ /_/\____/ .___/
+         /____/           /_/
+  */
+
+  signUpUser = async (name, email, password) => {
+    try {
+      // ###### Ensure password > 6 chars; else show Alert
+      if (this.state.password.length < 6) {
+        Alert.alert(
+          "Sign Up Failed",
+          "Password must be longer than 6 characters",
+          [
+            // {
+            //   text: 'Cancel',
+            //   onPress: () => console.log('Cancel Pressed'),
+            //   style: 'cancel',
+            // },
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ],
+          {
+            cancelable: false
+          }
+        );
+        console.log("Password must be longer than 6 characters");
+        return;
+      }
+
+      // ##### Create user in firebase auth page (email, pass, userId)
+      await firebase.auth().createUserWithEmailAndPassword(email, password);
+
+      // ##### Capture current userID directly after creation
+      const userId = firebase.auth().currentUser.uid;
+      console.log("HomeScreen auth() userId: ", userId);
+
+      // ##### Function that writes a user entry in database matched by userId
+      await writeUserData(userId, {
+        name: this.state.name,
+        email: this.state.email,
+        latitude: "",
+        longitude: ""
+      });
+
+      // ##### Alert box to user---------
+      Alert.alert(
+        "Sign Up Status",
+        "Sign Up Successful",
+        [
+          // {
+          //   text: 'Cancel',
+          //   onPress: () => console.log('Cancel Pressed'),
+          //   style: 'cancel',
+          // },
+          {
+            text: "OK",
+            onPress: () => this.props.navigation.navigate("IntroSlider")
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+    } catch (error) {
+      console.log(error.toString());
+      Alert.alert(
+        "Sign Up Status",
+        "Sign Up Failed",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
+    }
+  };
 
   /*
     ____                 __
@@ -144,7 +310,7 @@ class HomeScreen extends React.Component {
                     rounded
                     success
                     onPress={() =>
-                      loginUser(this.state.email, this.state.password)
+                      this.loginUser(this.state.email, this.state.password)
                     }
                   >
                     <Text style={{ color: "white" }}>Login</Text>
@@ -208,7 +374,11 @@ class HomeScreen extends React.Component {
                     rounded
                     primary
                     onPress={() =>
-                      signUpUser(this.state.email, this.state.password)
+                      this.signUpUser(
+                        this.state.name,
+                        this.state.email,
+                        this.state.password
+                      )
                     }
                   >
                     <Text style={{ color: "white" }}>Sign Up</Text>
