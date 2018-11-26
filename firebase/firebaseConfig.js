@@ -37,8 +37,7 @@ export function writeAndCompareImage(image) {
     .child('user1/testing123');
 
   //Upload file
-  console.log('about to create TASK');
-  console.log(typeof image);
+  // console.log('about to create TASK', image.base64.slice(0, 23));
   storageRef.putString(image, 'base64').then(function(snapshot) {
     console.log('uploaded a base64 string!');
   });
