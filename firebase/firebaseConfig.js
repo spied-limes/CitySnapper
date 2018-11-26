@@ -72,7 +72,7 @@ export async function updateUserActivityData(placeId, activityId, activityObj) {
 
   await firebase
     .database()
-    .ref('/users/' + userId + '/places/' + placeId + '/actvities/' + activityId)
+    .ref('/users/' + userId + '/places/' + placeId + '/actvities/')
     .update({
       activityId: { ...prevActivityData, newUserActivity },
     });

@@ -83,17 +83,7 @@ class SignUpScreen extends React.Component {
       await writeUserData(userId, {
         name: this.state.name,
         email: this.state.email,
-        places: {
-          placeId: {
-            activities: {
-              activiyId: {
-                complete: false,
-                active: false,
-                points: 1,
-              },
-            },
-          },
-        },
+        places: 'object',
         latitude: '',
         longitude: '',
       });
