@@ -1,6 +1,5 @@
 import * as firebase from "firebase";
 import { firebaseSecrets } from "../secrets";
-import { watchActivityData } from "../redux/app-redux";
 
 // initialize firebase
 const firebaseConfig = firebaseSecrets;

@@ -40,6 +40,10 @@ import {
   updateUserActivityData
 } from "../firebase/firebaseConfig";
 
+// ###################################
+// Prep for Monday 26 Nov code review.
+// ###################################
+
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
