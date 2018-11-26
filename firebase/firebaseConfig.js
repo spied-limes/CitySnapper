@@ -38,28 +38,6 @@ export function writeAndCompareImage(image) {
   storageRef.putString(image.base64).then(function(snapshot) {
     console.log('uploaded a base64 string!');
   });
-
-  // request.post(
-  //   {
-  //     url: 'https://api.deepai.org/api/image-similarity',
-  //     headers: {
-  //       'Api-Key': 'dee9c22b-8f05-443e-8cfb-f8c4d48f53a7',
-  //     },
-  //     formData: {
-  //       image1: image.uri,
-  //       image2: image.uri,
-  //     },
-  //   },
-  //   function callback(err, httpResponse, body) {
-  //     console.log('got in here');
-  //     if (err) {
-  //       console.error('request failed:', err);
-  //       return;
-  //     }
-  //     var response = JSON.parse(body);
-  //     console.log(response);
-  //   }
-  // );
 }
 
 // CRUD funcs for users in firebase db
