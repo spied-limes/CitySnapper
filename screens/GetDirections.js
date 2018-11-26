@@ -19,8 +19,7 @@ import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import { Constants, Location, Permissions } from "expo";
 
 const { width, height } = Dimensions.get("window");
-const aspectRatio = width / height;
-const mapPadding = { top: 75, right: 75, bottom: 75, left: 75 };
+const mapPadding = { top: 100, right: 100, bottom: 100, left: 100 };
 
 export default class GetDirections extends React.Component {
   static navigationOptions = {
@@ -29,13 +28,14 @@ export default class GetDirections extends React.Component {
   constructor() {
     super();
     this.state = {
-      latitudeDelta: 0.0075,
-      longitudeDelta: 0.003
+      latitudeDelta: 0.003,
+      longitudeDelta: 0.0015
     };
   }
 
+  // Both of these functions use `this.map`, a ref created INSIDE the <MapView /> component
   currentLocationRefocus(region) {
-    this.map.animateToRegion(region, 1000);
+    this.map.animateToRegion(region, 1500);
   }
 
   fitAllMarkers(markers) {
@@ -58,7 +58,7 @@ export default class GetDirections extends React.Component {
       longitude: params.destLong
     };
 
-    // Args passed into class methods activated by button onPress
+    // Both const below are args passed into class methods for button onPress
     const markers = [origin, destination];
     const region = {
       latitude: params.currentLat,
