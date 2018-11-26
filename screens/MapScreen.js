@@ -205,7 +205,7 @@ export default class HomeScreen extends React.Component {
             {coordinates.map(marker => (
               // eslint-disable-next-line react/jsx-key
               <Marker
-                key={marker.latitude}
+                key={marker.longitude}
                 coordinate={marker}
                 title={"hi"}
                 description={"lol"}

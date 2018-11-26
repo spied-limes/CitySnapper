@@ -20,7 +20,7 @@ import { Constants, Location, Permissions } from "expo";
 
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
+const LATITUDE_DELTA = 0.0522;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default class HomeScreen extends React.Component {
@@ -48,16 +48,19 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.mapFlexContainer}>
           <MapView
+            ref={ref => (this.mapRef = ref)}
             region={{
-              latitude: (params.currentLat + destination.latitude) / 2,
-              longitude: (params.currentLong + destination.longitude) / 2,
+              latitude: params.currentLat,
+              longitude: params.currentLong,
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA
             }}
             showsUserLocation={true}
             style={styles.map}
             followUserLocation={true}
-            showsMyLocationButton={true}
+            onLayout={() => {
+              this.mapRef.getNode().fitToCoordinates([origin, destination]);
+            }}
           >
             <MapViewDirections
               origin={origin}
@@ -67,14 +70,19 @@ export default class HomeScreen extends React.Component {
               strokeWidth={4}
               strokeColor="hotpink"
             />
+
             <Marker
               coordinate={destination}
-              title={"finish"}
+              title={"finish line"}
               description={"get here asap!!"}
             />
           </MapView>
         </View>
         <View style={styles.tabBarInfoContainer}>
+          <Button
+            title="Start"
+            onPress={() => console.log("should focus on current position")}
+          />
           <Button title="Go back" onPress={() => navigate("Map")} />
         </View>
       </View>
@@ -92,10 +100,10 @@ const styles = StyleSheet.create({
     flex: 9
   },
   map: {
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
+    left: 10,
+    right: 10,
+    top: 10,
+    bottom: 10,
     position: "absolute"
   },
   tabBarInfoContainer: {
