@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   View,
   Button,
-  TextInput
+  TextInput,
+  Alert
 } from "react-native";
 import { createStackNavigator } from "react-navigation";
 import MapViewDirections from "react-native-maps-directions";
@@ -17,6 +18,8 @@ import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
+import { updateUserLocationData } from "../firebase/firebaseConfig";
+import * as firebase from "firebase";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -26,11 +29,10 @@ export default class HomeScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      longitude: 40.7589,
-      latitude: -73.9851,
-      latitudeDelta: 0.005596,
-      longitudeDelta: 0.00475,
-
+      latitude: 40.7589,
+      longitude: -73.9851,
+      latitudeDelta: 0.003,
+      longitudeDelta: 0.0015,
       errorMessage: null,
       text: "Current Location",
       // for current storage
@@ -49,6 +51,49 @@ export default class HomeScreen extends React.Component {
     } else {
       this._getLocationAsync();
     }
+  }
+
+  componentDidMount() {
+    const userId = firebase.auth().currentUser.uid;
+
+    console.log("permittedLocationUse: ", this.state.permittedLocationUse);
+    !this.state.permittedLocationUse &&
+      Alert.alert(
+        "Set Homebase",
+        "Use current location as homeBase?",
+        [
+          {
+            text: "NO",
+            onPress: () => {
+              console.log("NO Pressed");
+              this.setState({
+                errorMessage: "Permission to access location was denied"
+              });
+            }
+          },
+          {
+            text: "OK",
+            onPress: async () => {
+              this.setState({ permittedLocationUse: true });
+              await this._getLocationAsync();
+              await updateUserLocationData(userId, {
+                latitude: this.state.currentLat,
+                longitude: this.state.currentLong
+              });
+              console.log(
+                "this.state.currentLat: ",
+                this.state.currentLat,
+                "this.state.currentLong: ",
+                this.state.currentLong
+              );
+              console.log("OK Pressed");
+            }
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
   }
 
   _getLocationAsync = async () => {
@@ -83,34 +128,31 @@ export default class HomeScreen extends React.Component {
       ]
     ]; //will have to be data
     const coordinates = [
-      {
-        latitude: this.state.currentLat,
-        longitude: this.state.currentLong
-      },
+      { latitude: this.state.currentLat, longitude: this.state.currentLong },
       {
         //times square
         latitude: 40.7589,
         longitude: -73.9851,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        latitudeDelta: 0.003,
+        longitudeDelta: 0.0015
       },
       {
         latitude: 40.7051,
         longitude: -74.0092,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        latitudeDelta: 0.003,
+        longitudeDelta: 0.0015
       },
       {
         latitude: 40.7118,
         longitude: -74.0131,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        latitudeDelta: 0.003,
+        longitudeDelta: 0.0015
       },
       {
         latitude: 40.7441,
         longitude: -73.9874,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        latitudeDelta: 0.003,
+        longitudeDelta: 0.0015
       }
     ];
 
@@ -152,12 +194,12 @@ export default class HomeScreen extends React.Component {
               data={data}
             >
               {/*
-        ____        __  __                     ____
-        / __ )____  / /_/ /_____  ____ ___     / __ )____  _  __
-        / __  / __ \/ __/ __/ __ \/ __ `__ \   / __  / __ \| |/_/
-        / /_/ / /_/ / /_/ /_/ /_/ / / / / / /  / /_/ / /_/ />  <
-        /_____/\____/\__/\__/\____/_/ /_/ /_/  /_____/\____/_/|_|
-      */}
+    ____        __  __                     ____
+   / __ )____  / /_/ /_____  ____ ___     / __ )____  _  __
+  / __  / __ \/ __/ __/ __ \/ __ `__ \   / __  / __ \| |/_/
+ / /_/ / /_/ / /_/ /_/ /_/ / / / / / /  / /_/ / /_/ />  <
+/_____/\____/\__/\__/\____/_/ /_/ /_/  /_____/\____/_/|_|
+*/}
               <View style={{ flex: 1 }}>
                 <Text>Location: {this.state.text}</Text>
                 <Text>Lat: {this.state.latitude}</Text>
@@ -210,8 +252,8 @@ export default class HomeScreen extends React.Component {
               // This is hardcoded in the snapping dropdown version
               latitude: this.state.latitude,
               longitude: this.state.longitude,
-              latitudeDelta: 0.0075,
-              longitudeDelta: 0.003
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.00155
             }}
             showsUserLocation={true}
             style={styles.map}

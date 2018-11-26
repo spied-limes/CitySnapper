@@ -1,5 +1,6 @@
-import * as firebase from 'firebase';
-import { firebaseSecrets } from '../secrets';
+import * as firebase from "firebase";
+import { firebaseSecrets } from "../secrets";
+
 // initialize firebase
 const firebaseConfig = firebaseSecrets;
 
@@ -11,43 +12,60 @@ export const db = firebase.database();
 export function writeUserData(userId, userObj) {
   firebase
     .database()
-    .ref('/users/' + userId)
+    .ref("/users/" + userId)
     .set({
-      username: userObj.username,
-      firstName: userObj.firstName,
-      lastName: userObj.lastName,
+      name: userObj.name,
       email: userObj.email,
-      streetAddress: userObj.streetAddress,
-      city: userObj.city,
-      state: userObj.state,
-      zipCode: userObj.zipCode,
-      isAdult: userObj.isAdult,
-      activities: userObj.activities,
       latitude: userObj.latitude,
-      longitude: userObj.longitude,
+      longitude: userObj.longitude
     });
 }
 
 // Func to update user info (completed activities, etc)**in progress**
 
-// export function updateUserData(userId, userObj) {
-//   firebase
-//     .database()
-//     .ref("/users/" + userId)
-//     .update({
-//       username: userObj.username,
-//       firstName: userObj.firstName,
-//       lastName: userObj.lastName,
-//       email: userObj.email,
-//       streetAddress: userObj.streetAddress,
-//       city: userObj.city,
-//       state: userObj.state,
-//       zipCode: userObj.zipCode,
-//       isAdult: userObj.isAdult,
-//       activities: userObj.activities,
-//       latitude: userObj.latitude,
-//       longitude: userObj.longitude
-//     });
-// }
+export function updateUserLocationData(userId, userObj) {
+  firebase
+    .database()
+    .ref("/users/" + userId)
+    .update({
+      latitude: userObj.latitude,
+      longitude: userObj.longitude
+    });
+}
 
+async function userActivityUpdateHelper() {
+  const userId = firebase.auth().currentUser.uid;
+
+  let activityData;
+
+  await db.ref("/users/" + userId + "/activities/").on(
+    "value",
+    function(snapshot) {
+      activityData = snapshot.val();
+    },
+    function(error) {
+      console.log(error);
+    }
+  );
+  // console.log("helper func userActivityData: ", activityData);
+  return activityData;
+}
+
+export async function updateUserActivityData(userId, userObj) {
+  let activityData = userActivityUpdateHelper();
+  let newUserActivities = userObj.activities;
+  // console.log(
+  //   "\nupdate func activityData: ",
+  //   activityData,
+  //   "\nupdate func newUserActivities",
+  //   newUserActivities
+  // );
+
+  await firebase
+    .database()
+    .ref("/users/" + userId)
+    .update({
+      activities: { ...activityData, newUserActivities }
+    });
+}
 // CRUD funcs for users in firebase db
