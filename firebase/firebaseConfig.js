@@ -31,11 +31,15 @@ export function writeUserData(userId, userObj) {
 export function writeAndCompareImage(image) {
   //Create a storage ref
 
-  const storageRef = firebase.storage().ref('user1/' + 'testing');
+  const storageRef = firebase
+    .storage()
+    .ref()
+    .child('user1/testing123');
 
   //Upload file
   console.log('about to create TASK');
-  storageRef.putString(image.base64).then(function(snapshot) {
+  console.log(typeof image);
+  storageRef.putString(image, 'base64').then(function(snapshot) {
     console.log('uploaded a base64 string!');
   });
 }

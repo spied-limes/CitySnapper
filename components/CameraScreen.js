@@ -156,7 +156,7 @@ export default class CameraScreen extends React.Component {
         });
         console.log('this is taken picture obj\n\n\n');
         console.log(takenPicture.base64.slice(0, 100));
-        writeAndCompareImage(takenPicture);
+        writeAndCompareImage(takenPicture.base64);
       }
     } catch (error) {
       console.log('i have an error', error);
@@ -287,6 +287,7 @@ export default class CameraScreen extends React.Component {
           <Ionicons name="md-images" size={40} color="white" />
           {this.state.newPhotos && <View style={styles.newPhotosDot} />}
         </View>
+        ≈
       </TouchableOpacity>
     </View>
   );

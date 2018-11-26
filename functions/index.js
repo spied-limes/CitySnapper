@@ -21,12 +21,10 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 //     return snapshot.ref.parent.child('uppercase').set(uppercase);
 //   });
 
-exports.compareImages = functions.storage
-  .bucket('user1')
-  .object()
-  .onFinalize(object => {
-    console.log(object);
-  });
+exports.compareImages = functions.storage.object().onFinalize(object => {
+  console.log('12345', object);
+  return object.metadata;
+});
 
 // => {
 //   request.post(
