@@ -53,55 +53,56 @@ class HomeScreen extends React.Component {
 */
   render() {
     return (
-      <Container style={styles.container}>
-        <ImageBackground
-          source={require("../assets/images/nyc.gif")}
-          style={styles.welcomeImage}
-        >
-          <View style={styles.formBox}>
-            <Image
-              source={require("../assets/images/fake_logo.png")}
-              width="50"
-              height="50"
-            />
-            <View style={styles.toggleInputView}>
-              <TouchableOpacity
-                underlayColor="black"
-                onPress={() => {
-                  console.log("right button pressed");
-                  LayoutAnimation.easeInEaseOut();
-                  this.setState({ logInForm: false });
-                }}
-              >
-                <Text
-                  style={[
-                    styles.toggleButtons,
-                    !this.state.logInForm && styles.toggleInputSelected
-                  ]}
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <Container style={styles.container}>
+          <ImageBackground
+            source={require("../assets/images/nyc.gif")}
+            style={styles.welcomeImage}
+          >
+            <View style={styles.formBox}>
+              <Image
+                source={require("../assets/images/fake_logo.png")}
+                width="50"
+                height="50"
+              />
+              <View style={styles.toggleInputView}>
+                <TouchableOpacity
+                  underlayColor="black"
+                  onPress={() => {
+                    console.log("right button pressed");
+                    LayoutAnimation.easeInEaseOut();
+                    this.setState({ logInForm: false });
+                  }}
                 >
-                  Sign Up
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                active={true}
-                underlayColor="black"
-                onPress={() => {
-                  console.log("left button pressed");
-                  LayoutAnimation.easeInEaseOut();
-                  this.setState({ logInForm: true });
-                }}
-              >
-                <Text
-                  style={[
-                    styles.toggleButtons,
-                    this.state.logInForm && styles.toggleInputSelected
-                  ]}
+                  <Text
+                    style={[
+                      styles.toggleButtons,
+                      !this.state.logInForm && styles.toggleInputSelected
+                    ]}
+                  >
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  active={true}
+                  underlayColor="black"
+                  onPress={() => {
+                    console.log("left button pressed");
+                    LayoutAnimation.easeInEaseOut();
+                    this.setState({ logInForm: true });
+                  }}
                 >
-                  Log In
-                </Text>
-              </TouchableOpacity>
-            </View>
-            {/*
+                  <Text
+                    style={[
+                      styles.toggleButtons,
+                      this.state.logInForm && styles.toggleInputSelected
+                    ]}
+                  >
+                    Log In
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {/*
     ______                   ______
    / ____/___  _________ ___/_  __/__  _________  ____ ________  __
   / /_  / __ \/ ___/ __ `__ \/ / / _ \/ ___/ __ \/ __ `/ ___/ / / /
@@ -109,118 +110,121 @@ class HomeScreen extends React.Component {
 /_/    \____/_/  /_/ /_/ /_/_/  \___/_/  /_/ /_/\__,_/_/   \__, /
                                                           /____/
             */}
-            {this.state.logInForm ? (
-              <View>
-                <Form style={styles.formBGColor}>
-                  <Item>
-                    <Icon active name="at" />
-                    <Input
-                      placeholder="E-Mail"
-                      style={styles.inputText}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={email => this.setState({ email })}
-                    />
-                  </Item>
-                  <Item>
-                    <Icon active name="lock" />
-                    <Input
-                      placeholder="Password"
-                      style={styles.inputText}
-                      secureTextEntry={true}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={password => this.setState({ password })}
-                    />
-                  </Item>
-                </Form>
-                <Button
-                  style={{ marginTop: 15 }}
-                  full
-                  rounded
-                  success
-                  onPress={() =>
-                    loginUser(this.state.email, this.state.password)
-                  }
-                >
-                  <Text style={{ color: "white" }}>Login</Text>
-                </Button>
-                <Button
-                  style={{ marginTop: 15 }}
-                  full
-                  rounded
-                  warning
-                  onPress={() => this.props.navigation.navigate("IntroSlider")}
-                >
-                  <Text style={{ color: "black" }}>Go to IntroSlider</Text>
-                </Button>
-              </View>
-            ) : (
-              <View>
-                <Form style={styles.formBGColor}>
-                  <Item>
-                    <Icon active name="person" />
-                    <Input
-                      placeholder="Name"
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={name => this.setState({ name })}
-                    />
-                  </Item>
+              {this.state.logInForm ? (
+                <View>
+                  <Form style={styles.formBGColor}>
+                    <Item>
+                      <Icon active name="at" />
+                      <Input
+                        placeholder="E-Mail"
+                        style={styles.inputText}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={email => this.setState({ email })}
+                      />
+                    </Item>
+                    <Item>
+                      <Icon active name="lock" />
+                      <Input
+                        placeholder="Password"
+                        style={styles.inputText}
+                        secureTextEntry={true}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={password => this.setState({ password })}
+                      />
+                    </Item>
+                  </Form>
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    success
+                    onPress={() =>
+                      loginUser(this.state.email, this.state.password)
+                    }
+                  >
+                    <Text style={{ color: "white" }}>Login</Text>
+                  </Button>
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    warning
+                    onPress={() =>
+                      this.props.navigation.navigate("IntroSlider")
+                    }
+                  >
+                    <Text style={{ color: "black" }}>Go to IntroSlider</Text>
+                  </Button>
+                </View>
+              ) : (
+                <View>
+                  <Form style={styles.formBGColor}>
+                    <Item>
+                      <Icon active name="person" />
+                      <Input
+                        placeholder="Name"
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={name => this.setState({ name })}
+                      />
+                    </Item>
 
-                  <Item>
-                    <Icon active name="at" />
-                    <Input
-                      placeholder="E-Mail"
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={email => this.setState({ email })}
-                    />
-                  </Item>
+                    <Item>
+                      <Icon active name="at" />
+                      <Input
+                        placeholder="E-Mail"
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={email => this.setState({ email })}
+                      />
+                    </Item>
 
-                  <Item>
-                    <Icon active name="lock" />
-                    <Input
-                      placeholder="Password"
-                      secureTextEntry={true}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={password => this.setState({ password })}
-                    />
-                  </Item>
-                </Form>
-                {/*
+                    <Item>
+                      <Icon active name="lock" />
+                      <Input
+                        placeholder="Password"
+                        secureTextEntry={true}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={password => this.setState({ password })}
+                      />
+                    </Item>
+                  </Form>
+                  {/*
     ____        __  __
    / __ )__  __/ /_/ /_____  ____  _____
   / __  / / / / __/ __/ __ \/ __ \/ ___/
  / /_/ / /_/ / /_/ /_/ /_/ / / / (__  )
 /_____/\__,_/\__/\__/\____/_/ /_/____/
                 */}
-                <Button
-                  style={{ marginTop: 15 }}
-                  full
-                  rounded
-                  primary
-                  onPress={() =>
-                    signUpUser(this.state.email, this.state.password)
-                  }
-                >
-                  <Text style={{ color: "white" }}>Sign Up</Text>
-                </Button>
-                <Button
-                  style={{ marginTop: 15 }}
-                  full
-                  rounded
-                  warning
-                  onPress={() => this.props.navigation.navigate("Map")}
-                >
-                  <Text style={{ color: "black" }}>Go to Map</Text>
-                </Button>
-              </View>
-            )}
-          </View>
-        </ImageBackground>
-      </Container>
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    primary
+                    onPress={() =>
+                      signUpUser(this.state.email, this.state.password)
+                    }
+                  >
+                    <Text style={{ color: "white" }}>Sign Up</Text>
+                  </Button>
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    warning
+                    onPress={() => this.props.navigation.navigate("Map")}
+                  >
+                    <Text style={{ color: "black" }}>Go to Map</Text>
+                  </Button>
+                </View>
+              )}
+            </View>
+          </ImageBackground>
+        </Container>
+      </KeyboardAvoidingView>
     );
   }
 }

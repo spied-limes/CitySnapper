@@ -15,7 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { createStackNavigator } from "react-navigation";
 import MapViewDirections from "react-native-maps-directions";
 import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
-// import DropdownMenu from "react-native-dropdown-menu";
+import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
 
@@ -105,15 +105,15 @@ export default class HomeScreen extends React.Component {
     const { push, navigate } = this.props.navigation;
 
     // OLD DROPDOWN DATA
-    // const data = [
-    //   [
-    //     "Current Location",
-    //     "Times Square",
-    //     "Fullstack Academy",
-    //     "World Trade Center",
-    //     "Museum of Sex"
-    //   ]
-    // ];
+    const data = [
+      [
+        "Current Location",
+        "Times Square",
+        "Fullstack Academy",
+        "World Trade Center",
+        "Museum of Sex"
+      ]
+    ];
     //will have to be data
     const coordinates = [
       {
@@ -192,6 +192,68 @@ export default class HomeScreen extends React.Component {
               }
             /> */}
           </MapView>
+        </View>
+        <View style={styles.oldDropDown}>
+          <DropdownMenu
+            style={{ flex: 1 }}
+            bgColor={"white"}
+            tintColor={"#000000"}
+            optionTextStyle={{ color: "red" }}
+            activityTintColor={"green"} // checkImage={} // arrowImg={}
+            titleStyle={{ color: "#333333" }}
+            // maxHeight={300}
+            handler={(selection, row) =>
+              this.setState({
+                text: data[selection][row],
+                latitude: coordinates[row].latitude,
+                longitude: coordinates[row].longitude
+              })
+            }
+            data={data}
+          >
+            {/*
+    ____        __  __                     ____
+   / __ )____  / /_/ /_____  ____ ___     / __ )____  _  __
+  / __  / __ \/ __/ __/ __ \/ __ `__ \   / __  / __ \| |/_/
+ / /_/ / /_/ / /_/ /_/ /_/ / / / / / /  / /_/ / /_/ />  <
+/_____/\____/\__/\__/\____/_/ /_/ /_/  /_____/\____/_/|_|
+*/}
+            <View style={{ flex: 1 }}>
+              <Text>Location: {this.state.text}</Text>
+              <Text>Lat: {this.state.latitude}</Text>
+              <Text>Lng: {this.state.longitude}</Text>
+            </View>
+          </DropdownMenu>
+          {/*
+   ________              __         ____         ____        __  __
+  / ____/ /_  ___  _____/ /__      /  _/___     / __ )__  __/ /_/ /_____  ____
+ / /   / __ \/ _ \/ ___/ //_/_____ / // __ \   / __  / / / / __/ __/ __ \/ __ \
+/ /___/ / / /  __/ /__/ ,< /_____// // / / /  / /_/ / /_/ / /_/ /_/ /_/ / / / /
+\____/_/ /_/\___/\___/_/|_|     /___/_/ /_/  /_____/\__,_/\__/\__/\____/_/ /_/
+        */}
+          {this.state.latitude === this.state.currentLat &&
+          this.state.longitude === this.state.currentLong ? (
+            <Button
+              style={{ flex: 1 }}
+              onPress={() => navigate("Screen", { name: this.state.text })}
+              title="Check In"
+              color="#841584"
+            />
+          ) : (
+            <Button
+              style={{ flex: 1, alignItems: "center" }}
+              onPress={() =>
+                navigate("Directions", {
+                  destLat: this.state.latitude,
+                  destLong: this.state.longitude,
+                  currentLong: this.state.currentLong,
+                  currentLat: this.state.currentLat
+                })
+              }
+              title="Get Directions"
+              color="#841584"
+            />
+          )}
         </View>
         <View style={styles.placeSelectBox}>
           <View style={styles.prevPlaceSelect}>
@@ -274,10 +336,13 @@ const styles = StyleSheet.create({
     color: "white"
   },
   mapFlexContainer: {
-    flex: 8
+    flex: 2
+  },
+  oldDropDown: {
+    flex: 2
   },
   placeSelectBox: {
-    flex: 2,
+    flex: 1,
     flexDirection: "row",
     backgroundColor: "black"
   },
