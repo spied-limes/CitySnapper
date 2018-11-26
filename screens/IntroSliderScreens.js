@@ -87,11 +87,11 @@ export default class IntroSlider extends React.Component {
         // hideDoneButton
         onSkip={() => {
           console.log("\n\nSkip button pressed");
-          this.props.navigation.navigate("Main");
+          this.props.navigation.navigate("Map");
         }}
         onDone={() => {
           console.log("\nDone button pressed");
-          this.props.navigation.navigate("Main");
+          this.props.navigation.navigate("Map");
         }}
       />
     );
