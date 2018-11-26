@@ -2,13 +2,17 @@
 /* eslint-disable quotes */
 import React from "react";
 import {
+  Alert,
+  Animated,
   ImageBackground,
   Image,
+  Keyboard,
   KeyboardAvoidingView,
   LayoutAnimation,
   Platform,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   UIManager,
   View
@@ -16,7 +20,11 @@ import {
 } from "react-native";
 import { navigate } from "react-navigation";
 import { connect } from "react-redux";
-import { watchUserData, watchActivityData } from "../redux/app-redux";
+import {
+  watchUserData,
+  watchPlaceData,
+  watchActivityData
+} from "../redux/app-redux";
 import {
   Button,
   Container,
@@ -26,7 +34,15 @@ import {
   Input,
   Item
 } from "native-base";
-import { loginUser, signUpUser } from "../components/UserEntryFunctions";
+import * as firebase from "firebase";
+import {
+  writeUserData,
+  updateUserActivityData
+} from "../firebase/firebaseConfig";
+
+// ###################################
+// Prep for Monday 26 Nov code review.
+// ###################################
 
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -36,13 +52,204 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // userData: {},
       email: "",
       password: "",
       name: "",
-      logInForm: true
+      logInForm: false
     };
   }
+
+  /*
+   _____ _             ____        __
+  / ___/(_)___ _____  / __ \__  __/ /_
+  \__ \/ / __ `/ __ \/ / / / / / / __/
+ ___/ / / /_/ / / / / /_/ / /_/ / /_
+/____/_/\__, /_/ /_/\____/\__,_/\__/
+       /____/
+*/
+  signOutUser = async () => {
+    try {
+      await firebase.auth().signOut();
+      firebase.auth().currentUser &&
+        console.log("currentUser: ", firebase.auth().currentUser.uid);
+      // navigate('Auth');
+
+      // alert box to user---------
+
+      Alert.alert(
+        "Logout Status",
+        "Logout Successful",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+              this.setState({
+                email: "",
+                password: ""
+              });
+            }
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  /*
+      __                ____
+     / /   ____  ____ _/  _/___
+    / /   / __ \/ __ `// // __ \
+   / /___/ /_/ / /_/ // // / / /
+  /_____/\____/\__, /___/_/ /_/
+              /____/
+  */
+  loginUser = async (email, password) => {
+    try {
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(function(user) {
+          console.log("userLoggedIn: ", user);
+        });
+
+      //below is prototype of activity object key =activityId in DB
+      let userId = await firebase.auth().currentUser.uid;
+      await updateUserActivityData(userId, {
+        activities: {
+          1: {
+            active: true,
+            complete: false,
+            points: 2 /* an arbitrary number of points to give activities */
+          }
+        }
+      });
+      // end of activity object prototype
+
+      // ##### Send off the redux thunks BASED OFF THE MAPPED DISPATCH
+      this.props.watchUser();
+      this.props.watchPlaces();
+      this.props.watchActivities();
+
+      // alert box to user---------
+      Alert.alert(
+        "Login Status",
+        "Login Successful",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("About to move pages");
+              this.props.navigation.navigate("IntroSlider");
+            }
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+    } catch (error) {
+      console.log(error.toString());
+      Alert.alert(
+        "Login Failed",
+        "Your info doesn't match our records. Please try again.",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("FAILURE: Wrong info");
+              this.setState({
+                password: ""
+              });
+              console.log("OK Pressed, Password field cleared.");
+            }
+          }
+        ],
+        { cancelable: false }
+      );
+    }
+  };
+
+  /*
+     _____ _             __  __
+    / ___/(_)___ _____  / / / /___
+    \__ \/ / __ `/ __ \/ / / / __ \
+   ___/ / / /_/ / / / / /_/ / /_/ /
+  /____/_/\__, /_/ /_/\____/ .___/
+         /____/           /_/
+  */
+
+  signUpUser = async (name, email, password) => {
+    try {
+      // ###### Ensure password > 6 chars; else show Alert
+      if (this.state.password.length < 6) {
+        Alert.alert(
+          "Sign Up Failed",
+          "Password must be longer than 6 characters",
+          [
+            // {
+            //   text: 'Cancel',
+            //   onPress: () => console.log('Cancel Pressed'),
+            //   style: 'cancel',
+            // },
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ],
+          {
+            cancelable: false
+          }
+        );
+        console.log("Password must be longer than 6 characters");
+        return;
+      }
+
+      // ##### Create user in firebase auth page (email, pass, userId)
+      await firebase.auth().createUserWithEmailAndPassword(email, password);
+
+      // ##### Capture current userID directly after creation
+      const userId = firebase.auth().currentUser.uid;
+      console.log("HomeScreen auth() userId: ", userId);
+
+      // ##### Function that writes a user entry in database matched by userId
+      await writeUserData(userId, {
+        name: this.state.name,
+        email: this.state.email,
+        latitude: "",
+        longitude: ""
+      });
+
+      // ##### Alert box to user---------
+      Alert.alert(
+        "Sign Up Status",
+        "Sign Up Successful",
+        [
+          // {
+          //   text: 'Cancel',
+          //   onPress: () => console.log('Cancel Pressed'),
+          //   style: 'cancel',
+          // },
+          {
+            text: "OK",
+            onPress: () => this.props.navigation.navigate("IntroSlider")
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+    } catch (error) {
+      console.log(error.toString());
+      Alert.alert(
+        "Sign Up Status",
+        "Sign Up Failed",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
+    }
+  };
 
   /*
     ____                 __
@@ -53,38 +260,57 @@ class HomeScreen extends React.Component {
 */
   render() {
     return (
-      <Container style={styles.container}>
-        <ImageBackground
-          source={require("../assets/images/nyc.gif")}
-          style={styles.welcomeImage}
-        >
-          <View style={styles.formBox}>
-            <Image
-              source={require("../assets/images/fake_logo.png")}
-              width="50"
-              height="50"
-            />
-            <View style={styles.toggleInputView}>
-              <TouchableOpacity
-                onPress={() => {
-                  console.log("left button pressed");
-                  LayoutAnimation.easeInEaseOut();
-                  this.setState({ logInForm: true });
-                }}
-              >
-                <Text style={styles.toggleButtons}>Log In</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  console.log("right button pressed");
-                  LayoutAnimation.easeInEaseOut();
-                  this.setState({ logInForm: false });
-                }}
-              >
-                <Text style={styles.toggleButtons}>Sign Up</Text>
-              </TouchableOpacity>
-            </View>
-            {/*
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <Container style={styles.container}>
+          <ImageBackground
+            source={require("../assets/images/nyc.gif")}
+            style={styles.welcomeImage}
+          >
+            <View style={styles.formBox}>
+              <View style={styles.logoBox}>
+                <Image
+                  style={styles.logoSize}
+                  source={require("../assets/images/fake_logo.png")}
+                />
+              </View>
+              <View style={styles.toggleInputView}>
+                <TouchableOpacity
+                  underlayColor="black"
+                  onPress={() => {
+                    console.log("SIGN UP pressed");
+                    LayoutAnimation.easeInEaseOut();
+                    this.setState({ logInForm: false });
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.toggleButtons,
+                      !this.state.logInForm && styles.toggleInputSelected
+                    ]}
+                  >
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  active={true}
+                  underlayColor="black"
+                  onPress={() => {
+                    console.log("LOG IN pressed");
+                    LayoutAnimation.easeInEaseOut();
+                    this.setState({ logInForm: true });
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.toggleButtons,
+                      this.state.logInForm && styles.toggleInputSelected
+                    ]}
+                  >
+                    Log In
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {/*
     ______                   ______
    / ____/___  _________ ___/_  __/__  _________  ____ ________  __
   / /_  / __ \/ ___/ __ `__ \/ / / _ \/ ___/ __ \/ __ `/ ___/ / / /
@@ -92,94 +318,125 @@ class HomeScreen extends React.Component {
 /_/    \____/_/  /_/ /_/ /_/_/  \___/_/  /_/ /_/\__,_/_/   \__, /
                                                           /____/
             */}
-            {this.state.logInForm ? (
-              <View>
-                <Form style={styles.formBGColor}>
-                  <Item>
-                    <Icon active name="at" />
-                    <Input
-                      placeholder="E-Mail"
-                      style={styles.inputText}
-                      autoSugges
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={email => this.setState({ email })}
-                    />
-                  </Item>
-                  <Item>
-                    <Icon active name="lock" />
-                    <Input
-                      placeholder="Password"
-                      style={styles.inputText}
-                      secureTextEntry={true}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={password => this.setState({ password })}
-                    />
-                  </Item>
-                </Form>
-                <Button
-                  style={{ marginTop: 15 }}
-                  full
-                  rounded
-                  success
-                  onPress={() =>
-                    loginUser(this.state.email, this.state.password)
-                  }
-                >
-                  <Text style={{ color: "white" }}>Login</Text>
-                </Button>
-              </View>
-            ) : (
-              <View>
-                <Form style={styles.formBGColor}>
-                  <Item>
-                    <Icon active name="person" />
-                    <Input
-                      placeholder="Name"
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={name => this.setState({ name })}
-                    />
-                  </Item>
+              {this.state.logInForm ? (
+                <View>
+                  <Form style={styles.formBGColor}>
+                    <Item>
+                      <Icon active name="at" />
+                      <Input
+                        placeholder="E-Mail"
+                        style={styles.inputText}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={email => this.setState({ email })}
+                      />
+                    </Item>
+                    <Item>
+                      <Icon active name="lock" />
+                      <Input
+                        placeholder="Password"
+                        style={styles.inputText}
+                        secureTextEntry={true}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={password => this.setState({ password })}
+                      />
+                    </Item>
+                  </Form>
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    success
+                    onPress={() =>
+                      this.loginUser(this.state.email, this.state.password)
+                    }
+                  >
+                    <Text style={{ color: "white" }}>Login</Text>
+                  </Button>
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    warning
+                    onPress={() =>
+                      this.props.navigation.navigate("IntroSlider")
+                    }
+                  >
+                    <Text style={{ color: "black" }}>Go to IntroSlider</Text>
+                  </Button>
+                </View>
+              ) : (
+                <View>
+                  <Form style={styles.formBGColor}>
+                    <Item>
+                      <Icon active name="person" />
+                      <Input
+                        placeholder="Name"
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={name => this.setState({ name })}
+                      />
+                    </Item>
 
-                  <Item>
-                    <Icon active name="at" />
-                    <Input
-                      placeholder="E-Mail"
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={email => this.setState({ email })}
-                    />
-                  </Item>
+                    <Item>
+                      <Icon active name="at" />
+                      <Input
+                        placeholder="E-Mail"
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={email => this.setState({ email })}
+                      />
+                    </Item>
 
-                  <Item>
-                    <Icon active name="lock" />
-                    <Input
-                      placeholder="Password"
-                      secureTextEntry={true}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      onChangeText={password => this.setState({ password })}
-                    />
-                  </Item>
-                </Form>
-                <Button
-                  style={{ marginTop: 15 }}
-                  full
-                  rounded
-                  primary
-                  onPress={() =>
-                    signUpUser(this.state.email, this.state.password)
-                  }
-                >
-                  <Text style={{ color: "white" }}>Sign Up</Text>
-                </Button>
-              </View>
-            )}
-          </View>
-        </ImageBackground>
-      </Container>
+                    <Item>
+                      <Icon active name="lock" />
+                      <Input
+                        placeholder="Password"
+                        secureTextEntry={true}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={password => this.setState({ password })}
+                      />
+                    </Item>
+                  </Form>
+                  {/*
+    ____        __  __
+   / __ )__  __/ /_/ /_____  ____  _____
+  / __  / / / / __/ __/ __ \/ __ \/ ___/
+ / /_/ / /_/ / /_/ /_/ /_/ / / / (__  )
+/_____/\__,_/\__/\__/\____/_/ /_/____/
+                */}
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    primary
+                    onPress={() =>
+                      this.signUpUser(
+                        this.state.name,
+                        this.state.email,
+                        this.state.password
+                      )
+                    }
+                  >
+                    <Text style={{ color: "white" }}>Sign Up</Text>
+                  </Button>
+                  <Button
+                    style={{ marginTop: 15 }}
+                    full
+                    rounded
+                    warning
+                    onPress={() => this.props.navigation.navigate("Map")}
+                  >
+                    <Text style={{ color: "black" }}>Go to Map</Text>
+                  </Button>
+                </View>
+              )}
+            </View>
+          </ImageBackground>
+        </Container>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -187,14 +444,16 @@ class HomeScreen extends React.Component {
 const mapStateToProps = state => {
   return {
     userData: state.userData,
-    activities: state.activities
+    activities: state.activities,
+    places: state.places
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     watchUser: () => dispatch(watchUserData()),
-    watchActivities: () => dispatch(watchUserData())
+    watchActivities: () => dispatch(watchActivityData()),
+    watchPlaces: () => dispatch(watchPlaceData())
   };
 };
 
@@ -214,6 +473,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center"
   },
+  logoBox: {
+    alignItems: "center"
+  },
+  logoSize: {
+    width: 150,
+    height: 150
+  },
   formBox: {
     marginHorizontal: 50,
     paddingBottom: 50,
@@ -224,12 +490,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingBottom: 20
   },
+  toggleInputSelected: {
+    color: "white"
+  },
   toggleButtons: {
-    color: "white",
+    color: "rgba(255,255,255,0.5)",
     fontFamily: "Abril-FatFace",
     fontSize: 36,
     textShadowColor: "black",
-    textShadowOffset: { width: 3, height: 3 },
+    textShadowOffset: { width: 3, height: 1 },
     textShadowRadius: 3
   },
   formBGColor: {
@@ -240,6 +509,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   inputText: {
-    color: "black"
+    color: "black",
+    fontFamily: "Roboto"
   }
 });

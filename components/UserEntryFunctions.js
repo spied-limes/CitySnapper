@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import * as firebase from "firebase";
 import { writeUserData } from "../firebase/firebaseConfig";
 
