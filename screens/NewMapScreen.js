@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable react/no-deprecated */
 import React from "react";
 import {
@@ -259,14 +260,16 @@ export default class HomeScreen extends React.Component {
           <View style={styles.prevPlaceSelect}>
             <TouchableHighlight
               onPress={() => {
-                this.setNextRegionCoord(-1, coordsMaxIndex, coordinates);
+                console.log("Previous arrow touched.");
+                console.log("Will scroll to previous location.\n");
+                // this.setNextRegionCoord(-1, coordsMaxIndex, coordinates);
               }}
             >
               <Ionicons
                 name={
                   Platform.OS === "ios" ? `ios-arrow-back` : "md-arrow-back"
                 }
-                size={40}
+                size={50}
                 color="white"
               />
             </TouchableHighlight>
@@ -285,7 +288,9 @@ export default class HomeScreen extends React.Component {
           <View style={styles.nextPlaceSelect}>
             <TouchableHighlight
               onPress={() => {
-                this.setNextRegionCoord(1, coordsMaxIndex, coordinates);
+                console.log("Next arrow hit.");
+                console.log("Will scroll to next location.\n");
+                // this.setNextRegionCoord(1, coordsMaxIndex, coordinates);
               }}
             >
               <Ionicons
@@ -294,7 +299,7 @@ export default class HomeScreen extends React.Component {
                     ? `ios-arrow-forward`
                     : "md-arrow-forward"
                 }
-                size={40}
+                size={50}
                 color="white"
               />
             </TouchableHighlight>
