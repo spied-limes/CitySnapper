@@ -2,7 +2,7 @@ import React from "react";
 import { createSwitchNavigator } from "react-navigation";
 
 import HomeScreen from "../screens/HomeScreen";
-import MapScreen from "../screens/MapScreen";
+import MapScreen from "../screens/OldMapScreen";
 import IntroSlider from "../screens/IntroSliderScreens";
 import CheckinScreen from "../screens/CheckInScreen";
 import GetDirections from "../screens/GetDirections";
