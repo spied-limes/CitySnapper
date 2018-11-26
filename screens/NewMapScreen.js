@@ -18,7 +18,7 @@ import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
 
-export default class HomeScreen extends React.Component {
+export default class NewMapScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
