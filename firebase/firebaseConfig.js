@@ -21,39 +21,34 @@ export async function writeUserData(userId, userObj) {
       places: 'object',
     });
 }
+// CRUD funcs for users in firebase db
+// -------------------------------------
 
-// Func to update user info (completed activities, etc)**in progress**
+// Func to update user current location
 
-export async function updateUserLocationData(userId, userObj) {
+export async function updateUserCurrentLocation(userId, userObj) {
   await firebase
     .database()
     .ref('/users/' + userId)
     .update({
-      latitude: userObj.latitude,
-      longitude: userObj.longitude,
+      currentLatitude: userObj.latitude,
+      currentLongitude: userObj.longitude,
     });
 }
 
-// CRUD funcs for users in firebase db
+// Func to update user HOMEBASE (where they're staying) location
 
-async function userActivityUpdateHelper(userId, placeId, activityId) {
-  let activityData;
-
-  await db
-    .ref('/users/' + userId + '/places/' + placeId + '/actvities/' + activityId)
-    .on(
-      'value',
-      function(snapshot) {
-        activityData = snapshot.val();
-      },
-      function(error) {
-        console.log(error);
-      }
-    );
-  console.log('helper func userActivityData: ', activityData);
-  return activityData;
+export async function setUserHomebaseLocation(userId, userObj) {
+  await firebase
+    .database()
+    .ref('/users/' + userId)
+    .update({
+      homebaseLatitude: userObj.latitude,
+      homebaseLongitude: userObj.longitude,
+    });
 }
 
+// activityObj should have { active: boolean, complete:boolean}
 export async function updateUserActivityData(placeId, activityId, activityObj) {
   const userId = await firebase.auth().currentUser.uid;
 
@@ -77,4 +72,23 @@ export async function updateUserActivityData(placeId, activityId, activityObj) {
       ...prevActivityData,
       ...activityObj,
     });
+}
+
+//helper for above func updateUserActivityData
+async function userActivityUpdateHelper(userId, placeId, activityId) {
+  let activityData;
+
+  await db
+    .ref('/users/' + userId + '/places/' + placeId + '/actvities/' + activityId)
+    .on(
+      'value',
+      function(snapshot) {
+        activityData = snapshot.val();
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
+  console.log('helper func userActivityData: ', activityData);
+  return activityData;
 }

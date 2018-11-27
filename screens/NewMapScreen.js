@@ -21,7 +21,10 @@ import DropdownMenu from 'react-native-dropdown-menu';
 import { Constants, Location, Permissions } from 'expo';
 import CheckinScreen from './CheckInScreen';
 import * as firebase from 'firebase';
-import { updateUserLocationData } from '../firebase/firebaseConfig';
+import {
+  updateUserCurrentLocation,
+  setUserHomebaseLocation,
+} from '../firebase/firebaseConfig';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -41,6 +44,7 @@ export default class HomeScreen extends React.Component {
       currentLat: null,
       currentLong: null,
       currCoordIndex: 0,
+      permittedLocationUse: false,
     };
   }
 
@@ -79,9 +83,9 @@ export default class HomeScreen extends React.Component {
             onPress: async () => {
               this.setState({ permittedLocationUse: true });
               await this._getLocationAsync();
-              await updateUserLocationData(userId, {
-                latitude: this.state.currentLat,
-                longitude: this.state.currentLong,
+              await setUserHomebaseLocation(userId, {
+                homebaseLatitude: this.state.currentLat,
+                homebaseLongitude: this.state.currentLong,
               });
               console.log(
                 'this.state.currentLat: ',

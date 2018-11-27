@@ -204,8 +204,10 @@ class HomeScreen extends React.Component {
       await writeUserData(userId, {
         name: this.state.name,
         email: this.state.email,
-        latitude: '',
-        longitude: '',
+        homebaseLatitude: '',
+        homebaseLongitude: '',
+        currentLatitude: '',
+        currentLongitude: '',
       });
       //below is prototype of how to add places (with associated activities) to User's entry on the DB
       await updateUserActivityData('timesSquare', 1, {
