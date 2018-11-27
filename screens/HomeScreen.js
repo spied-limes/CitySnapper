@@ -117,6 +117,7 @@ class HomeScreen extends React.Component {
           console.log("userLoggedIn: ", user);
         });
 
+<<<<<<< HEAD
       //below is prototype of activity object key =activityId in DB
       let userId = await firebase.auth().currentUser.uid;
       await updateUserActivityData(userId, {
@@ -130,6 +131,8 @@ class HomeScreen extends React.Component {
       });
       // end of activity object prototype
 
+=======
+>>>>>>> origin/improvingFirebaseRedux
       // ##### Send off the redux thunks BASED OFF THE MAPPED DISPATCH
       this.props.watchUser();
       this.props.watchPlaces();
@@ -217,9 +220,23 @@ class HomeScreen extends React.Component {
       await writeUserData(userId, {
         name: this.state.name,
         email: this.state.email,
+<<<<<<< HEAD
         latitude: "",
         longitude: ""
+=======
+        homebaseLatitude: '',
+        homebaseLongitude: '',
+        currentLatitude: '',
+        currentLongitude: '',
       });
+      //below is prototype of how to add places (with associated activities) to User's entry on the DB
+      await updateUserActivityData('timesSquare', 1, {
+        active: true,
+        complete: false,
+        points: 2 /* an arbitrary number of points to give activities */,
+>>>>>>> origin/improvingFirebaseRedux
+      });
+      // end of activity object prototype
 
       // ##### Send off the redux thunks BASED OFF THE MAPPED DISPATCH
       this.props.watchUser();

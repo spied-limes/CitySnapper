@@ -3,6 +3,7 @@
 import React from "react";
 import {
   Image,
+  Alert,
   Platform,
   ScrollView,
   StyleSheet,
@@ -19,6 +20,11 @@ import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
+import * as firebase from "firebase";
+import {
+  updateUserCurrentLocation,
+  setUserHomebaseLocation
+} from "../firebase/firebaseConfig";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -37,7 +43,8 @@ export default class HomeScreen extends React.Component {
       // for current storage
       currentLat: null,
       currentLong: null,
-      currCoordIndex: 0
+      currCoordIndex: 0,
+      permittedLocationUse: false
     };
   }
 
@@ -51,6 +58,49 @@ export default class HomeScreen extends React.Component {
     } else {
       this._getLocationAsync();
     }
+  }
+
+  componentDidMount() {
+    const userId = firebase.auth().currentUser.uid;
+
+    console.log("permittedLocationUse: ", this.state.permittedLocationUse);
+    !this.state.permittedLocationUse &&
+      Alert.alert(
+        "Set Homebase",
+        "Use current location as homeBase?",
+        [
+          {
+            text: "NO",
+            onPress: () => {
+              console.log("NO Pressed");
+              this.setState({
+                errorMessage: "Permission to access location was denied"
+              });
+            }
+          },
+          {
+            text: "OK",
+            onPress: async () => {
+              this.setState({ permittedLocationUse: true });
+              await this._getLocationAsync();
+              await setUserHomebaseLocation(userId, {
+                homebaseLatitude: this.state.currentLat,
+                homebaseLongitude: this.state.currentLong
+              });
+              console.log(
+                "this.state.currentLat: ",
+                this.state.currentLat,
+                "this.state.currentLong: ",
+                this.state.currentLong
+              );
+              console.log("OK Pressed");
+            }
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
   }
 
   _getLocationAsync = async () => {
