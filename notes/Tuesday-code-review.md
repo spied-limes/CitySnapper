@@ -20,7 +20,7 @@
 
 - **AR MISSION IDEA:** Wikipage on AR Plane (high WOW, but time consuming)
 
-<!-- # Friday 16 Nov 2018 6PM Standup
+# Friday 16 Nov 2018 6PM Standup
 
 ## Reminder: Check in when you start working, check out with us when you gotta go!
 
@@ -56,4 +56,4 @@
 - Getting camera functionality working
 - Test image comparison API
 - Put comparison results on a page
-- Looking into sending images to buckets -->
+- Looking into sending images to buckets

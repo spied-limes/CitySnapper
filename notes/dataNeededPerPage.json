@@ -1,0 +1,62 @@
+[
+  {
+    "HomeScreen": {
+      "ImageBackground": "someLocalRequireStringinBundle"
+    },
+    "IntroSlider": {
+      "Username": "string"
+    },
+    "MapScreen": {
+      "StartingPoint": {
+        "Location": "Starting Point",
+        "StartingLat": "number",
+        "StartingLng": "number"
+      },
+      "CurrentLocation": {
+        "DefaultImage?": "string",
+        "Location": "Current Location",
+        "CurrentLat": "number",
+        "CurrentLng": "number"
+      },
+      "Locations": [
+        {
+          "LocationName": "Times Square",
+          "LocationSelectorImage": "someStringPointingToDB",
+          "Latitude": 40.7589,
+          "Longitude": -73.9851,
+          "LatitudeDelta": 0.003,
+          "LongitudeDelta": 0.0015
+        },
+        {
+          "LocationName": "World Trade Center",
+          "LocationSelectorImage": "someStringPointingToDB",
+          "Latitude": 40.7118,
+          "Longitude": -74.0131,
+          "LatitudeDelta": 0.003,
+          "LongitudeDelta": 0.0015
+        },
+        {
+          "LocationName": "Empire State Building",
+          "LocationSelectorImage": "someStringPointingToDB",
+          "Latitude": 40.7441,
+          "Longitude": -73.9874,
+          "LatitudeDelta": 0.003,
+          "LongitudeDelta": 0.0015
+        }
+      ]
+    },
+    "CheckInScreen": {
+      "ImageBackground": "someLocalRequireStringFromDB",
+      "Borough": "string",
+      "LocationName": "string",
+      "Tagline": "string",
+      "BlurbText": "string",
+      "ExternalWikiLink": "string",
+      "PerLocationActivities": { "activity": "description" }
+    },
+    "CameraScreen": {
+      "HistoricBGImage": "someStringPointingToDB",
+      "PreprocessedBase64Image?": "stupidLongString"
+    }
+  }
+]

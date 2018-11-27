@@ -8,6 +8,8 @@ import {
 import React from "react";
 import {
   Alert,
+  Button,
+  ImageBackground,
   StyleSheet,
   Text,
   View,
@@ -15,8 +17,8 @@ import {
   Slider,
   Platform
 } from "react-native";
-import GalleryScreen from "../components/Gallery";
-// import isIPhoneX from "react-native-is-iphonex";
+// import GalleryScreen from "../components/Gallery";
+import { navigate } from "react-navigation";
 
 import {
   Ionicons,
@@ -212,7 +214,7 @@ export default class CameraScreen extends React.Component {
   */
   renderGallery() {
     // return <GalleryScreen onPress={this.toggleView.bind(this)} />;
-    console.log("this is where the ca");
+    console.log("this is where the gallery would go");
   }
 
   renderNoPermissions = () => (
@@ -261,7 +263,9 @@ export default class CameraScreen extends React.Component {
     <View style={styles.bottomBar}>
       <TouchableOpacity
         style={styles.bottomButton}
-        onPress={this.toggleMoreOptions}
+        onPress={() => {
+          this.props.navigation.navigate("Map");
+        }}
       >
         <MaterialIcons name="photo-size-select-large" size={40} color="white" />
       </TouchableOpacity>
@@ -270,7 +274,12 @@ export default class CameraScreen extends React.Component {
           onPress={this.takePicture}
           style={{ alignSelf: "center" }}
         >
-          <Ionicons name="ios-radio-button-on" size={85} color="white" />
+          <Ionicons
+            name="ios-radio-button-on"
+            size={80}
+            color="white"
+            opacity="1"
+          />
         </TouchableOpacity>
       </View>
       {/*
@@ -313,37 +322,42 @@ export default class CameraScreen extends React.Component {
 
   renderCamera = () => (
     <View style={{ flex: 1 }}>
-      <Camera
-        ref={ref => {
-          this.camera = ref;
-        }}
-        style={styles.camera}
-        onCameraReady={this.collectPictureSizes}
-        type={this.state.type}
-        flashMode={this.state.flash}
-        autoFocus={this.state.autoFocus}
-        zoom={this.state.zoom}
-        whiteBalance={this.state.whiteBalance}
-        ratio={this.state.ratio}
-        pictureSize={this.state.pictureSize}
-        onMountError={this.handleMountError}
-        onFacesDetected={
-          this.state.faceDetecting ? this.onFacesDetected : undefined
-        }
-        onFaceDetectionError={this.onFaceDetectionError}
-        barCodeScannerSettings={{
-          barCodeTypes: [
-            BarCodeScanner.Constants.BarCodeType.qr,
-            BarCodeScanner.Constants.BarCodeType.pdf417
-          ]
-        }}
-        onBarCodeScanned={
-          this.state.barcodeScanning ? this.onBarCodeScanned : undefined
-        }
+      <ImageBackground
+        source={require("../assets/images/ESB2-BW.jpg")}
+        style={styles.overlayImage}
       >
-        {this.renderTopBar()}
-        {this.renderBottomBar()}
-      </Camera>
+        <Camera
+          ref={ref => {
+            this.camera = ref;
+          }}
+          style={styles.camera}
+          onCameraReady={this.collectPictureSizes}
+          type={this.state.type}
+          flashMode={this.state.flash}
+          autoFocus={this.state.autoFocus}
+          zoom={this.state.zoom}
+          whiteBalance={this.state.whiteBalance}
+          ratio={this.state.ratio}
+          pictureSize={this.state.pictureSize}
+          onMountError={this.handleMountError}
+          onFacesDetected={
+            this.state.faceDetecting ? this.onFacesDetected : undefined
+          }
+          onFaceDetectionError={this.onFaceDetectionError}
+          barCodeScannerSettings={{
+            barCodeTypes: [
+              BarCodeScanner.Constants.BarCodeType.qr,
+              BarCodeScanner.Constants.BarCodeType.pdf417
+            ]
+          }}
+          onBarCodeScanned={
+            this.state.barcodeScanning ? this.onBarCodeScanned : undefined
+          }
+        >
+          {this.renderTopBar()}
+          {this.renderBottomBar()}
+        </Camera>
+      </ImageBackground>
       {this.state.faceDetecting && this.renderFaces()}
       {this.state.faceDetecting && this.renderLandmarks()}
       {this.state.showMoreOptions && this.renderMoreOptions()}
@@ -365,6 +379,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000"
+  },
+  overlayImage: {
+    width: undefined,
+    height: "100%",
+    resizeMode: "cover",
+    opacity: 0.5
   },
   camera: {
     flex: 1,

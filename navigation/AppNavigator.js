@@ -4,8 +4,9 @@ import { createSwitchNavigator } from "react-navigation";
 import HomeScreen from "../screens/HomeScreen";
 import MapScreen from "../screens/NewMapScreen";
 import IntroSlider from "../screens/IntroSliderScreens";
-import CheckinScreen from "../screens/CheckInScreen";
+import CheckInScreen from "../screens/CheckInScreen";
 import GetDirections from "../screens/GetDirections";
+import CameraScreen from "../components/CameraScreen";
 
 export default createSwitchNavigator({
   // You could add another route here for authentication.
@@ -13,6 +14,7 @@ export default createSwitchNavigator({
   Home: HomeScreen,
   IntroSlider: IntroSlider,
   Map: MapScreen,
-  Screen: CheckinScreen,
-  Directions: GetDirections
+  CheckIn: CheckInScreen,
+  Directions: GetDirections,
+  Camera: CameraScreen
 });

@@ -242,7 +242,7 @@ export default class HomeScreen extends React.Component {
           this.state.longitude === this.state.currentLong ? (
             <Button
               style={{ flex: 1 }}
-              onPress={() => navigate("Screen", { name: this.state.text })}
+              onPress={() => navigate("CheckIn", { name: this.state.text })}
               title="Check In"
               color="#841584"
             />
