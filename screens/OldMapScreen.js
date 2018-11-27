@@ -20,8 +20,14 @@ import { Constants, Location, Permissions } from 'expo';
 import CheckinScreen from './CheckInScreen';
 import { updateUserCurrentLocation } from '../firebase/firebaseConfig';
 import * as firebase from 'firebase';
+import {
+  watchUserData,
+  watchPlaceData,
+  watchActivityData,
+} from '../redux/app-redux';
+import { connect } from 'react-redux';
 
-export default class HomeScreen extends React.Component {
+class MapScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -54,6 +60,13 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
+    // populate props with latest redux info
+    this.props.watchUser();
+    this.props.watchPlaces();
+    this.props.watchActivities();
+
+    // if user hasn't set homebase yet:
+
     const userId = firebase.auth().currentUser.uid;
 
     console.log('permittedLocationUse: ', this.state.permittedLocationUse);
@@ -274,6 +287,27 @@ export default class HomeScreen extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    userData: state.userData,
+    activities: state.activities,
+    places: state.places,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    watchUser: () => dispatch(watchUserData()),
+    watchActivities: () => dispatch(watchActivityData()),
+    watchPlaces: () => dispatch(watchPlaceData()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MapScreen);
 
 const styles = StyleSheet.create({
   container: {

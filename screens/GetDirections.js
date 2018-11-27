@@ -1,5 +1,5 @@
 /* eslint-disable react/no-deprecated */
-import React from "react";
+import React from 'react';
 import {
   Button,
   Dimensions,
@@ -10,27 +10,40 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
-} from "react-native";
+  View,
+} from 'react-native';
 
-import { GOOGLE_MAPS_APIKEY } from "../secrets";
-import MapViewDirections from "react-native-maps-directions";
-import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
-import { Constants, Location, Permissions } from "expo";
+import { GOOGLE_MAPS_APIKEY } from '../secrets';
+import MapViewDirections from 'react-native-maps-directions';
+import MapView, { Marker, AnimatedRegion, Animated } from 'react-native-maps';
+import { Constants, Location, Permissions } from 'expo';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 const mapPadding = { top: 100, right: 100, bottom: 100, left: 100 };
+import {
+  watchUserData,
+  watchPlaceData,
+  watchActivityData,
+} from '../redux/app-redux';
+import { connect } from 'react-redux';
 
-export default class GetDirections extends React.Component {
+class GetDirections extends React.Component {
   static navigationOptions = {
-    title: "Directions"
+    title: 'Directions',
   };
   constructor() {
     super();
     this.state = {
       latitudeDelta: 0.003,
-      longitudeDelta: 0.0015
+      longitudeDelta: 0.0015,
     };
+  }
+
+  componentDidMount() {
+    // populate props with latest redux info
+    this.props.watchUser();
+    this.props.watchPlaces();
+    this.props.watchActivities();
   }
 
   // Both of these functions use `this.map`, a ref created INSIDE the <MapView /> component
@@ -41,7 +54,7 @@ export default class GetDirections extends React.Component {
   fitAllMarkers(markers) {
     this.map.fitToCoordinates(markers, {
       edgePadding: mapPadding,
-      animated: true
+      animated: true,
     });
   }
 
@@ -51,11 +64,11 @@ export default class GetDirections extends React.Component {
 
     const origin = {
       latitude: params.currentLat,
-      longitude: params.currentLong
+      longitude: params.currentLong,
     };
     const destination = {
       latitude: params.destLat,
-      longitude: params.destLong
+      longitude: params.destLong,
     };
 
     // Both const below are args passed into class methods for button onPress
@@ -64,7 +77,7 @@ export default class GetDirections extends React.Component {
       latitude: params.currentLat,
       longitude: params.currentLong,
       latitudeDelta: this.state.latitudeDelta,
-      longitudeDelta: this.state.longitudeDelta
+      longitudeDelta: this.state.longitudeDelta,
     };
 
     return (
@@ -79,7 +92,7 @@ export default class GetDirections extends React.Component {
               latitude: params.currentLat,
               longitude: params.currentLong,
               latitudeDelta: this.state.latitudeDelta,
-              longitudeDelta: this.state.longitudeDelta
+              longitudeDelta: this.state.longitudeDelta,
             }}
             showsUserLocation={true}
             followsUserLocation={true}
@@ -89,14 +102,14 @@ export default class GetDirections extends React.Component {
               origin={origin}
               destination={destination}
               apikey={GOOGLE_MAPS_APIKEY}
-              mode={"walking"}
+              mode={'walking'}
               strokeWidth={8}
               strokeColor="hotpink"
             />
           </MapView>
         </View>
         <View style={styles.buttonContainer}>
-          <Button title="Go back" onPress={() => navigate("Map")} />
+          <Button title="Go back" onPress={() => navigate('Map')} />
           <Button
             title="Focus on Current Location"
             onPress={() => this.currentLocationRefocus(region)}
@@ -111,25 +124,46 @@ export default class GetDirections extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    userData: state.userData,
+    activities: state.activities,
+    places: state.places,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    watchUser: () => dispatch(watchUserData()),
+    watchActivities: () => dispatch(watchActivityData()),
+    watchPlaces: () => dispatch(watchPlaceData()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(GetDirections);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 27,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   mapFlexContainer: {
-    flex: 9
+    flex: 9,
   },
   map: {
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
-    position: "absolute"
+    position: 'absolute',
   },
   buttonContainer: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
     // ...Platform.select({
     //   ios: {
     //     shadowColor: "black",
@@ -142,7 +176,7 @@ const styles = StyleSheet.create({
     //   }
     // }),
     // alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "beige"
-  }
+    justifyContent: 'space-between',
+    backgroundColor: 'beige',
+  },
 });
