@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable quotes */
 
-import React from "react";
+import React from 'react';
 import {
   Button,
   ImageBackground,
@@ -11,40 +11,46 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import Layout from "../constants/Layout";
-import { navigate } from "react-navigation";
-import * as firebase from "firebase";
+  View,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Layout from '../constants/Layout';
+import { navigate } from 'react-navigation';
+import * as firebase from 'firebase';
 import {
   writeUserData,
-  updateUserActivityData
-} from "../firebase/firebaseConfig";
-import { connect } from "react-redux";
+  updateUserActivityData,
+} from '../firebase/firebaseConfig';
+import { connect } from 'react-redux';
 import {
   watchUserData,
   watchPlaceData,
-  watchActivityData
-} from "../redux/app-redux";
+  watchActivityData,
+} from '../redux/app-redux';
 
 class CheckInScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      borough: "",
-      content: "",
-      latitude: "",
-      latitudeDelta: "",
-      longitude: "",
-      longitudeDelta: "",
-      name: "",
-      spectralImage: "",
-      splashImage: "",
-      streetAddress: "",
-      tagline: "",
-      wikipediaLink: ""
+      borough: '',
+      content: '',
+      latitude: '',
+      latitudeDelta: '',
+      longitude: '',
+      longitudeDelta: '',
+      name: '',
+      spectralImage: '',
+      splashImage: '',
+      streetAddress: '',
+      tagline: '',
+      wikipediaLink: '',
     };
+  }
+  componentDidMount() {
+    // populate props with latest redux info
+    this.props.watchUser();
+    this.props.watchPlaces();
+    this.props.watchActivities();
   }
 
   render() {
@@ -55,7 +61,7 @@ class CheckInScreen extends React.Component {
         <ScrollView>
           {/* ########## BG IMAGE ########## */}
           <ImageBackground
-            source={require("../assets/images/timesSquare.jpg")}
+            source={require('../assets/images/timesSquare.jpg')}
             style={{ width: undefined, height: Layout.checkInImageHeight }}
           >
             {/* ########## BG OVERLAY BOX ########## */}
@@ -64,13 +70,13 @@ class CheckInScreen extends React.Component {
               <View style={styles.navBox}>
                 <View>
                   <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate("Map")}
+                    onPress={() => this.props.navigation.navigate('Map')}
                   >
                     <Ionicons
                       name={
-                        Platform.OS === "ios"
+                        Platform.OS === 'ios'
                           ? `ios-arrow-back`
-                          : "md-arrow-back"
+                          : 'md-arrow-back'
                       }
                       size={40}
                       color="white"
@@ -103,8 +109,8 @@ class CheckInScreen extends React.Component {
           <View style={styles.activityBox}>
             <Text style={styles.activityHeadline}>ACTIVITIES GO HERE</Text>
             <Button
-              style={{ flex: 1, alignItems: "center" }}
-              onPress={() => this.props.navigation.navigate("Camera")}
+              style={{ flex: 1, alignItems: 'center' }}
+              onPress={() => this.props.navigation.navigate('Camera')}
               title="Open Camera"
               color="#841584"
             />
@@ -119,7 +125,7 @@ const mapStateToProps = state => {
   return {
     userData: state.userData,
     activities: state.activities,
-    places: state.places
+    places: state.places,
   };
 };
 
@@ -127,7 +133,7 @@ const mapDispatchToProps = dispatch => {
   return {
     watchUser: () => dispatch(watchUserData()),
     watchActivities: () => dispatch(watchActivityData()),
-    watchPlaces: () => dispatch(watchPlaceData())
+    watchPlaces: () => dispatch(watchPlaceData()),
   };
 };
 
@@ -139,68 +145,68 @@ export default connect(
 const styles = StyleSheet.create({
   bgOverlayBox: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)"
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   navBox: {
     marginTop: 28,
     paddingHorizontal: 20,
     flex: 1.5,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   borough: {
-    color: "white",
-    fontFamily: "Abril-FatFace",
+    color: 'white',
+    fontFamily: 'Abril-FatFace',
     fontSize: 24,
-    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    textShadowColor: 'rgba(0, 0, 0, 0.95)',
     textShadowOffset: { width: -2, height: 2 },
-    textShadowRadius: 2
+    textShadowRadius: 2,
   },
   infoBox: {
     flex: 9,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingBottom: 30,
-    color: "white"
+    color: 'white',
     // backgroundColor: "rgba(0,0,0,0.5)"
   },
   locationName: {
-    color: "white",
-    fontFamily: "Abril-FatFace",
+    color: 'white',
+    fontFamily: 'Abril-FatFace',
     fontSize: 48,
     lineHeight: 52,
-    flexWrap: "wrap",
-    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    flexWrap: 'wrap',
+    textShadowColor: 'rgba(0, 0, 0, 0.95)',
     textShadowOffset: { width: -1, height: 2 },
-    textShadowRadius: 10
+    textShadowRadius: 10,
   },
   locationTagline: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
     paddingBottom: 5,
-    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    textShadowColor: 'rgba(0, 0, 0, 0.95)',
     textShadowOffset: { width: -1, height: 2 },
-    textShadowRadius: 2
+    textShadowRadius: 2,
   },
   infoBoxText: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
     paddingTop: 10,
-    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    textShadowColor: 'rgba(0, 0, 0, 0.95)',
     textShadowOffset: { width: -1, height: 2 },
-    textShadowRadius: 2
+    textShadowRadius: 2,
   },
   activityBox: {
     flex: 1,
     paddingHorizontal: 20,
     height: Layout.activityBoxHeight,
-    backgroundColor: "black"
+    backgroundColor: 'black',
   },
   activityHeadline: {
-    color: "white",
+    color: 'white',
     flex: 1,
     fontSize: 24,
-    fontFamily: "Abril-FatFace"
-  }
+    fontFamily: 'Abril-FatFace',
+  },
 });

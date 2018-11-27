@@ -24,6 +24,7 @@ import * as firebase from 'firebase';
 import {
   updateUserCurrentLocation,
   setUserHomebaseLocation,
+  setUserLocationPermissionTrue,
 } from '../firebase/firebaseConfig';
 import {
   watchUserData,
@@ -50,7 +51,7 @@ class MapScreen extends React.Component {
       currentLat: null,
       currentLong: null,
       currCoordIndex: 0,
-      permittedLocationUse: false,
+      // permittedLocationUse: false,
     };
   }
 
@@ -66,17 +67,21 @@ class MapScreen extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const userId = await firebase.auth().currentUser.uid;
+
     // populate props with latest redux info
-    this.props.watchUser();
-    this.props.watchPlaces();
-    this.props.watchActivities();
+    await this.props.watchUser();
+    await this.props.watchPlaces();
+    await this.props.watchActivities();
 
     // if user hasn't set homebase yet:
-    const userId = firebase.auth().currentUser.uid;
 
-    console.log('permittedLocationUse: ', this.state.permittedLocationUse);
-    !this.state.permittedLocationUse &&
+    console.log(
+      'permittedLocationUse: ',
+      this.props.userData.permittedLocationUse
+    );
+    !this.props.userData.permittedLocationUse &&
       Alert.alert(
         'Set Homebase',
         'Use current location as homeBase?',
@@ -93,7 +98,8 @@ class MapScreen extends React.Component {
           {
             text: 'OK',
             onPress: async () => {
-              this.setState({ permittedLocationUse: true });
+              // this.setState({ permittedLocationUse: true });
+              setUserLocationPermissionTrue(userId);
               await this._getLocationAsync();
               await setUserHomebaseLocation(userId, {
                 homebaseLatitude: this.state.currentLat,
@@ -218,7 +224,7 @@ class MapScreen extends React.Component {
     ];
 
     const coordsMaxIndex = coordinates.length - 1;
-    console.log('NewMapScreen this.props.places: ', this.props.places);
+    console.log('NewMapScreen this.props.userData: ', this.props.userData);
 
     return (
       <View style={styles.container}>

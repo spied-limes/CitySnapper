@@ -20,6 +20,7 @@ export async function writeUserData(userId, userObj) {
         homebaseLatitude: '',
         homebaseLongitude: '',
         places: 'object',
+        permittedLocationUse: false,
       });
   } catch (error) {
     console.error(error);
@@ -54,6 +55,20 @@ export async function setUserHomebaseLocation(userId, userObj) {
       .update({
         homebaseLatitude: userObj.homebaseLatitude,
         homebaseLongitude: userObj.homebaseLongitude,
+      });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Func to update user location permission. userPermission should  be a boolean.
+export async function setUserLocationPermissionTrue(userId) {
+  try {
+    await firebase
+      .database()
+      .ref('/users/' + userId)
+      .update({
+        permittedLocationUse: true,
       });
   } catch (error) {
     console.error(error);
