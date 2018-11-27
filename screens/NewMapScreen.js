@@ -2,6 +2,7 @@
 /* eslint-disable react/no-deprecated */
 import React from "react";
 import {
+  Dimensions,
   Image,
   Alert,
   Platform,
@@ -25,6 +26,9 @@ import {
   updateUserCurrentLocation,
   setUserHomebaseLocation
 } from "../firebase/firebaseConfig";
+import Carousel from "react-native-looped-carousel";
+
+const { width, height } = Dimensions.get("window");
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -34,6 +38,7 @@ export default class HomeScreen extends React.Component {
   constructor() {
     super();
     this.state = {
+      size: { width, height },
       latitude: 40.7589,
       longitude: -73.9851,
       latitudeDelta: 0.003,
@@ -63,7 +68,7 @@ export default class HomeScreen extends React.Component {
   componentDidMount() {
     const userId = firebase.auth().currentUser
       ? firebase.auth().currentUser.uid
-      : "ashgmnadoporgarg";
+      : "RichIveGivenUpOnTheArrowsGoodbyeArrows";
 
     console.log("permittedLocationUse: ", this.state.permittedLocationUse);
     !this.state.permittedLocationUse &&
@@ -90,9 +95,9 @@ export default class HomeScreen extends React.Component {
                 homebaseLongitude: this.state.currentLong
               });
               console.log(
-                "this.state.currentLat: ",
+                "this.state.currentLat:",
                 this.state.currentLat,
-                "this.state.currentLong: ",
+                "this.state.currentLong:",
                 this.state.currentLong
               );
               console.log("OK Pressed");
@@ -104,6 +109,11 @@ export default class HomeScreen extends React.Component {
         }
       );
   }
+
+  _onLayoutDidChange = e => {
+    const layout = e.nativeEvent.layout;
+    this.setState({ size: { width: layout.width, height: layout.height } });
+  };
 
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -122,6 +132,7 @@ export default class HomeScreen extends React.Component {
       currentLat: location.coords.latitude
     });
   };
+
   setNextRegionCoord(number, maxIndex, coordsArray) {
     let index = this.state.currCoordIndex;
     if (index + number < 0) {
@@ -314,8 +325,34 @@ export default class HomeScreen extends React.Component {
             />
           )}
         </View>
-        <View style={styles.placeSelectBox}>
-          <View style={styles.prevPlaceSelect}>
+        <View style={styles.placeSelectBox} _onLayout={this._onLayoutDidChange}>
+          <Carousel
+            style={this.state.size}
+            arrows
+            leftArrowText={"＜"}
+            leftArrowStyle={{ color: "white", fontSize: 22, margin: 20 }}
+            rightArrowText={"＞"}
+            rightArrowStyle={{ color: "white", fontSize: 22, margin: 20 }}
+            pageInfo
+            autoplay={false}
+            onAnimateNextPage={p => console.log(p)}
+          >
+            <View style={[{ backgroundColor: "#BADA55" }, this.state.size]}>
+              <Button
+                style={{ flex: 1, alignItems: "center" }}
+                onPress={() => this.props.navigation.navigate("Camera")}
+                title="Open Camera"
+                color="#841584"
+              />
+            </View>
+            <View style={[{ backgroundColor: "red" }, this.state.size]}>
+              <Text>2</Text>
+            </View>
+            <View style={[{ backgroundColor: "blue" }, this.state.size]}>
+              <Text>3</Text>
+            </View>
+          </Carousel>
+          {/* <View style={styles.prevPlaceSelect}>
             <TouchableHighlight
               onPress={() => {
                 console.log("Previous arrow touched.");
@@ -361,7 +398,7 @@ export default class HomeScreen extends React.Component {
                 color="white"
               />
             </TouchableHighlight>
-          </View>
+          </View> */}
         </View>
       </View>
     );
@@ -406,7 +443,6 @@ const styles = StyleSheet.create({
   },
   placeSelectBox: {
     flex: 1,
-    flexDirection: "row",
     backgroundColor: "black"
   },
   prevPlaceSelect: {

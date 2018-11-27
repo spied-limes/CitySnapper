@@ -60,9 +60,6 @@ class CheckInScreen extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
 
-    const slides = [];
-    // For carousel
-
     return (
       <SafeAreaView style={{ flex: 1 }}>
         {/* ########## BG IMAGE ########## */}
@@ -107,12 +104,6 @@ class CheckInScreen extends React.Component {
               <Text style={styles.infoBoxText}>
                 you have checked in to {params.name}
               </Text>
-              <Button
-                style={{ flex: 1, alignItems: "center" }}
-                onPress={() => this.props.navigation.navigate("Camera")}
-                title="Open Camera"
-                color="#841584"
-              />
             </View>
           </View>
         </ImageBackground>
@@ -124,13 +115,17 @@ class CheckInScreen extends React.Component {
             rightArrowText={"＞"}
             rightArrowStyle={{ color: "white", fontSize: 50, marginRight: 20 }}
             arrows
-            pageInfo
             autoplay={false}
-            currentPage={0}
-            onAnimateNextPage={p => console.log(p)}
+            currentPage={3}
+            onAnimateNextPage={p => console.log(p, "is current page")}
           >
             <View style={[{ backgroundColor: "#BADA55" }, this.state.size]}>
-              <Text>1</Text>
+              <Button
+                style={{ flex: 1, alignItems: "center" }}
+                onPress={() => this.props.navigation.navigate("Camera")}
+                title="Open Camera"
+                color="#841584"
+              />
             </View>
             <View style={[{ backgroundColor: "red" }, this.state.size]}>
               <Text>2</Text>
