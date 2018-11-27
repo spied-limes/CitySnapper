@@ -16,8 +16,37 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../constants/Layout";
 import { navigate } from "react-navigation";
+import * as firebase from "firebase";
+import {
+  writeUserData,
+  updateUserActivityData
+} from "../firebase/firebaseConfig";
+import { connect } from "react-redux";
+import {
+  watchUserData,
+  watchPlaceData,
+  watchActivityData
+} from "../redux/app-redux";
 
-export default class CheckInScreen extends React.Component {
+class CheckInScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      borough: "",
+      content: "",
+      latitude: "",
+      latitudeDelta: "",
+      longitude: "",
+      longitudeDelta: "",
+      name: "",
+      spectralImage: "",
+      splashImage: "",
+      streetAddress: "",
+      tagline: "",
+      wikipediaLink: ""
+    };
+  }
+
   render() {
     const { params } = this.props.navigation.state;
 
@@ -85,6 +114,27 @@ export default class CheckInScreen extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    userData: state.userData,
+    activities: state.activities,
+    places: state.places
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    watchUser: () => dispatch(watchUserData()),
+    watchActivities: () => dispatch(watchActivityData()),
+    watchPlaces: () => dispatch(watchPlaceData())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CheckInScreen);
 
 const styles = StyleSheet.create({
   bgOverlayBox: {
