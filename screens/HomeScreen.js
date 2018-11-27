@@ -426,15 +426,20 @@ class HomeScreen extends React.Component {
                   >
                     <Text style={{ color: "white" }}>Sign Up</Text>
                   </Button>
-                  {/* <Button
+                  <Button
                     style={{ marginTop: 15 }}
                     full
                     rounded
                     warning
-                    onPress={() => this.props.navigation.navigate("Camera")}
+                    onPress={
+                      () => this.props.navigation.navigate("Map")
+                      // this.props.navigation.navigate("CheckIn", {
+                      //   name: "Times Square"
+                      // })
+                    }
                   >
-                    <Text style={{ color: "black" }}>Go to Camera</Text>
-                  </Button> */}
+                    <Text style={{ color: "black" }}>Go to Map</Text>
+                  </Button>
                 </View>
               )}
             </View>

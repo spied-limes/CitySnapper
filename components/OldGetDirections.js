@@ -2,10 +2,6 @@
 import React from "react";
 import {
   Button,
-  Dimensions,
-  Image,
-  Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -16,9 +12,7 @@ import {
 import { GOOGLE_MAPS_APIKEY } from "../secrets";
 import MapViewDirections from "react-native-maps-directions";
 import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
-import { Constants, Location, Permissions } from "expo";
 
-const { width, height } = Dimensions.get("window");
 const mapPadding = { top: 100, right: 100, bottom: 100, left: 100 };
 
 export default class GetDirections extends React.Component {
@@ -91,7 +85,7 @@ export default class GetDirections extends React.Component {
               apikey={GOOGLE_MAPS_APIKEY}
               mode={"walking"}
               strokeWidth={8}
-              strokeColor="hotpink"
+              strokeColor="green"
             />
           </MapView>
         </View>
