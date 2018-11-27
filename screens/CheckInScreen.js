@@ -4,6 +4,7 @@
 import React from "react";
 import {
   Button,
+  Dimensions,
   ImageBackground,
   Platform,
   SafeAreaView,
@@ -27,11 +28,15 @@ import {
   watchPlaceData,
   watchActivityData
 } from "../redux/app-redux";
+import Carousel from "react-native-looped-carousel";
+
+const { width, height } = Dimensions.get("window");
 
 class CheckInScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      size: { width, height },
       borough: "",
       content: "",
       latitude: "",
@@ -47,69 +52,94 @@ class CheckInScreen extends React.Component {
     };
   }
 
+  _onLayoutDidChange = e => {
+    const layout = e.nativeEvent.layout;
+    this.setState({ size: { width: layout.width, height: layout.height } });
+  };
+
   render() {
     const { params } = this.props.navigation.state;
 
+    const slides = [];
+    // For carousel
+
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
-          {/* ########## BG IMAGE ########## */}
-          <ImageBackground
-            source={require("../assets/images/timesSquare.jpg")}
-            style={{ width: undefined, height: Layout.checkInImageHeight }}
-          >
-            {/* ########## BG OVERLAY BOX ########## */}
-            <View style={styles.bgOverlayBox}>
-              {/* ########## NAV BOX ########## */}
-              <View style={styles.navBox}>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate("Map")}
-                  >
-                    <Ionicons
-                      name={
-                        Platform.OS === "ios"
-                          ? `ios-arrow-back`
-                          : "md-arrow-back"
-                      }
-                      size={40}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <Text style={styles.borough}>Manhattan</Text>
-                </View>
+        {/* ########## BG IMAGE ########## */}
+        <ImageBackground
+          source={require("../assets/images/timesSquare.jpg")}
+          style={{ width: undefined, height: Layout.checkInImageHeight }}
+        >
+          {/* ########## BG OVERLAY BOX ########## */}
+          <View style={styles.bgOverlayBox}>
+            {/* ########## NAV BOX ########## */}
+            <View style={styles.navBox}>
+              <View>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate("Map")}
+                >
+                  <Ionicons
+                    name={
+                      Platform.OS === "ios" ? `ios-arrow-back` : "md-arrow-back"
+                    }
+                    size={40}
+                    color="white"
+                  />
+                </TouchableOpacity>
               </View>
-              {/* ########## INFO BOX ########## */}
-              <View style={styles.infoBox}>
-                <Text style={styles.locationName}>Times Square</Text>
-                <Text style={styles.locationTagline}>
-                  Crossroads of the World
-                </Text>
-                <Text style={styles.infoBoxText}>
-                  One of the world's busiest pedestrian areas, it is also the
-                  hub of the Broadway Theater District and a major center of the
-                  world's entertainment industry. Times Square is one of the
-                  world's most visited tourist attractions, drawing an estimated
-                  50 million visitors annually.
-                </Text>
-                <Text style={styles.infoBoxText}>
-                  you have checked in to {params.name}
-                </Text>
+              <View>
+                <Text style={styles.borough}>Manhattan</Text>
               </View>
             </View>
-          </ImageBackground>
-          <View style={styles.activityBox}>
-            <Text style={styles.activityHeadline}>ACTIVITIES GO HERE</Text>
-            <Button
-              style={{ flex: 1, alignItems: "center" }}
-              onPress={() => this.props.navigation.navigate("Camera")}
-              title="Open Camera"
-              color="#841584"
-            />
+            {/* ########## INFO BOX ########## */}
+            <View style={styles.infoBox}>
+              <Text style={styles.locationName}>Times Square</Text>
+              <Text style={styles.locationTagline}>
+                Crossroads of the World
+              </Text>
+              <Text style={styles.infoBoxText}>
+                One of the world's busiest pedestrian areas, it is also the hub
+                of the Broadway Theater District and a major center of the
+                world's entertainment industry. Times Square is one of the
+                world's most visited tourist attractions, drawing an estimated
+                50 million visitors annually.
+              </Text>
+              <Text style={styles.infoBoxText}>
+                you have checked in to {params.name}
+              </Text>
+              <Button
+                style={{ flex: 1, alignItems: "center" }}
+                onPress={() => this.props.navigation.navigate("Camera")}
+                title="Open Camera"
+                color="#841584"
+              />
+            </View>
           </View>
-        </ScrollView>
+        </ImageBackground>
+        <View style={styles.activityBox} onLayout={this._onLayoutDidChange}>
+          <Carousel
+            style={this.state.size}
+            leftArrowText={"＜"}
+            leftArrowStyle={{ color: "white", fontSize: 50, marginLeft: 20 }}
+            rightArrowText={"＞"}
+            rightArrowStyle={{ color: "white", fontSize: 50, marginRight: 20 }}
+            arrows
+            pageInfo
+            autoplay={false}
+            currentPage={0}
+            onAnimateNextPage={p => console.log(p)}
+          >
+            <View style={[{ backgroundColor: "#BADA55" }, this.state.size]}>
+              <Text>1</Text>
+            </View>
+            <View style={[{ backgroundColor: "red" }, this.state.size]}>
+              <Text>2</Text>
+            </View>
+            <View style={[{ backgroundColor: "blue" }, this.state.size]}>
+              <Text>3</Text>
+            </View>
+          </Carousel>
+        </View>
       </SafeAreaView>
     );
   }
@@ -193,7 +223,6 @@ const styles = StyleSheet.create({
   },
   activityBox: {
     flex: 1,
-    paddingHorizontal: 20,
     height: Layout.activityBoxHeight,
     backgroundColor: "black"
   },

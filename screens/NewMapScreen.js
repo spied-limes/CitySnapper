@@ -61,7 +61,9 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    const userId = firebase.auth().currentUser.uid;
+    const userId = firebase.auth().currentUser
+      ? firebase.auth().currentUser.uid
+      : "ashgmnadoporgarg";
 
     console.log("permittedLocationUse: ", this.state.permittedLocationUse);
     !this.state.permittedLocationUse &&
