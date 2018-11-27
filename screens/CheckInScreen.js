@@ -3,6 +3,7 @@
 
 import React from "react";
 import {
+  Button,
   ImageBackground,
   Platform,
   SafeAreaView,
@@ -14,8 +15,38 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Layout from "../constants/Layout";
+import { navigate } from "react-navigation";
+import * as firebase from "firebase";
+import {
+  writeUserData,
+  updateUserActivityData
+} from "../firebase/firebaseConfig";
+import { connect } from "react-redux";
+import {
+  watchUserData,
+  watchPlaceData,
+  watchActivityData
+} from "../redux/app-redux";
 
-export default class CheckInScreen extends React.Component {
+class CheckInScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      borough: "",
+      content: "",
+      latitude: "",
+      latitudeDelta: "",
+      longitude: "",
+      longitudeDelta: "",
+      name: "",
+      spectralImage: "",
+      splashImage: "",
+      streetAddress: "",
+      tagline: "",
+      wikipediaLink: ""
+    };
+  }
+
   render() {
     const { params } = this.props.navigation.state;
 
@@ -25,10 +56,7 @@ export default class CheckInScreen extends React.Component {
           {/* ########## BG IMAGE ########## */}
           <ImageBackground
             source={require("../assets/images/timesSquare.jpg")}
-            style={{
-              width: undefined,
-              height: Layout.checkInImageHeight
-            }}
+            style={{ width: undefined, height: Layout.checkInImageHeight }}
           >
             {/* ########## BG OVERLAY BOX ########## */}
             <View style={styles.bgOverlayBox}>
@@ -74,12 +102,39 @@ export default class CheckInScreen extends React.Component {
           </ImageBackground>
           <View style={styles.activityBox}>
             <Text style={styles.activityHeadline}>ACTIVITIES GO HERE</Text>
+            <Button
+              style={{ flex: 1, alignItems: "center" }}
+              onPress={() => this.props.navigation.navigate("Camera")}
+              title="Open Camera"
+              color="#841584"
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    userData: state.userData,
+    activities: state.activities,
+    places: state.places
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    watchUser: () => dispatch(watchUserData()),
+    watchActivities: () => dispatch(watchActivityData()),
+    watchPlaces: () => dispatch(watchPlaceData())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CheckInScreen);
 
 const styles = StyleSheet.create({
   bgOverlayBox: {

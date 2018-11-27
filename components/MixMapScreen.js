@@ -2,31 +2,28 @@
 /* eslint-disable react/no-deprecated */
 import React from "react";
 import {
+  Button,
   Image,
-  Alert,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableHighlight,
   View,
-  Button,
   TextInput
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { GOOGLE_MAPS_APIKEY } from "../secrets";
 import { createStackNavigator } from "react-navigation";
 import MapViewDirections from "react-native-maps-directions";
 import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
 import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
-import CheckinScreen from "./CheckInScreen";
-import * as firebase from "firebase";
-import {
-  updateUserCurrentLocation,
-  setUserHomebaseLocation
-} from "../firebase/firebaseConfig";
+import CheckinScreen from "../screens/CheckInScreen";
 
-export default class HomeScreen extends React.Component {
+const mapPadding = { top: 100, right: 100, bottom: 100, left: 100 };
+
+export default class MapScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
@@ -44,7 +41,7 @@ export default class HomeScreen extends React.Component {
       currentLat: null,
       currentLong: null,
       currCoordIndex: 0,
-      permittedLocationUse: false
+      isNavigating: false
     };
   }
 
@@ -58,49 +55,6 @@ export default class HomeScreen extends React.Component {
     } else {
       this._getLocationAsync();
     }
-  }
-
-  componentDidMount() {
-    const userId = firebase.auth().currentUser.uid;
-
-    console.log("permittedLocationUse: ", this.state.permittedLocationUse);
-    !this.state.permittedLocationUse &&
-      Alert.alert(
-        "Set Homebase",
-        "Use current location as homeBase?",
-        [
-          {
-            text: "NO",
-            onPress: () => {
-              console.log("NO Pressed");
-              this.setState({
-                errorMessage: "Permission to access location was denied"
-              });
-            }
-          },
-          {
-            text: "OK",
-            onPress: async () => {
-              this.setState({ permittedLocationUse: true });
-              await this._getLocationAsync();
-              await setUserHomebaseLocation(userId, {
-                homebaseLatitude: this.state.currentLat,
-                homebaseLongitude: this.state.currentLong
-              });
-              console.log(
-                "this.state.currentLat: ",
-                this.state.currentLat,
-                "this.state.currentLong: ",
-                this.state.currentLong
-              );
-              console.log("OK Pressed");
-            }
-          }
-        ],
-        {
-          cancelable: false
-        }
-      );
   }
 
   _getLocationAsync = async () => {
@@ -120,6 +74,9 @@ export default class HomeScreen extends React.Component {
       currentLat: location.coords.latitude
     });
   };
+
+  // The THREE functions below use `this.map`, a ref created INSIDE the <MapView /> component
+
   setNextRegionCoord(number, maxIndex, coordsArray) {
     let index = this.state.currCoordIndex;
     if (index + number < 0) {
@@ -150,6 +107,17 @@ export default class HomeScreen extends React.Component {
 
     this.map.animateToRegion(newRegion, 750);
     this.setState({ text: nextLocation.locationName });
+  }
+
+  currentLocationRefocus(region) {
+    this.map.animateToRegion(region, 1500);
+  }
+
+  fitAllMarkers(markers) {
+    this.map.fitToCoordinates(markers, {
+      edgePadding: mapPadding,
+      animated: true
+    });
   }
 
   render() {
@@ -205,7 +173,26 @@ export default class HomeScreen extends React.Component {
       }
     ];
 
-    const coordsMaxIndex = coordinates.length - 1;
+    // const coordsMaxIndex = coordinates.length - 1;
+
+    const origin = {
+      latitude: this.state.currentLat,
+      longitude: this.state.currentLong
+    };
+
+    const destination = {
+      latitude: this.state.latitude,
+      longitude: this.state.longitude
+    };
+
+    // Both const below are args passed into class methods for button onPress
+    const markers = [origin, destination];
+    const region = {
+      latitude: this.state.currentLat,
+      longitude: this.state.currentLong,
+      latitudeDelta: this.state.latitudeDelta,
+      longitudeDelta: this.state.longitudeDelta
+    };
 
     return (
       <View style={styles.container}>
@@ -214,7 +201,7 @@ export default class HomeScreen extends React.Component {
    /  |/  /___ _____     | |  / (_)__ _      __
   / /|_/ / __ `/ __ \    | | / / / _ \ | /| / /
  / /  / / /_/ / /_/ /    | |/ / /  __/ |/ |/ /
-/_/  /_/\__,_/ .___/     |___/_/\___/|__/|__/
+/_/  /_/\__,_/ .___/     |___/_/\___/|__/|__////
             /_/
         */}
         <View style={styles.mapFlexContainer}>
@@ -232,16 +219,16 @@ export default class HomeScreen extends React.Component {
             showsUserLocation={true}
             style={styles.map}
           >
-            {/* <Marker
-              coordinate={{ latitude: 40.6, longitude: -74 }}
-              title={"first marker"}
-              description={"jkh"}
-              onPress={() =>
-                this.state.latitude === 40.6 && longitude === -74
-                  ? console.log("success")
-                  : console.log("failure")
-              }
-            /> */}
+            {this.state.isNavigating ? (
+              <MapViewDirections
+                origin={origin}
+                destination={destination}
+                apikey={GOOGLE_MAPS_APIKEY}
+                mode={"walking"}
+                strokeWidth={8}
+                strokeColor="green"
+              />
+            ) : null}
           </MapView>
         </View>
         <View style={styles.oldDropDown}>
@@ -269,24 +256,33 @@ export default class HomeScreen extends React.Component {
  / /_/ / /_/ / /_/ /_/ /_/ / / / / / /  / /_/ / /_/ />  <
 /_____/\____/\__/\__/\____/_/ /_/ /_/  /_____/\____/_/|_|
 */}
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Text>Current Location: {this.state.text}</Text>
-              <Text>Lat: {this.state.latitude}</Text>
-              <Text>Lng: {this.state.longitude}</Text>
-            </View>
+            {this.state.isNavigating ? (
+              <View style={styles.navButtonContainer}>
+                <Button
+                  title="Go back"
+                  onPress={() => {
+                    this.setState({
+                      isNavigating: false
+                    });
+                  }}
+                />
+                <Button
+                  title="Focus on Current Location"
+                  onPress={() => this.currentLocationRefocus(region)}
+                />
+                <Button
+                  title="Fit Both Markers"
+                  onPress={() => this.fitAllMarkers(markers)}
+                />
+              </View>
+            ) : null}
           </DropdownMenu>
           {/*
    ________              __         ____         ____        __  __
   / ____/ /_  ___  _____/ /__      /  _/___     / __ )__  __/ /_/ /_____  ____
  / /   / __ \/ _ \/ ___/ //_/_____ / // __ \   / __  / / / / __/ __/ __ \/ __ \
 / /___/ / / /  __/ /__/ ,< /_____// // / / /  / /_/ / /_/ / /_/ /_/ /_/ / / / /
-\____/_/ /_/\___/\___/_/|_|     /___/_/ /_/  /_____/\__,_/\__/\__/\____/_/ /_/
+\____/_/ /_/\___/\___/_/|_|     /___/_/ /_/  /_____/\__,_/\__/\__/\____/_/ /_////
         */}
           {this.state.latitude === this.state.currentLat &&
           this.state.longitude === this.state.currentLong ? (
@@ -300,11 +296,8 @@ export default class HomeScreen extends React.Component {
             <Button
               style={{ flex: 1, alignItems: "center" }}
               onPress={() =>
-                navigate("Directions", {
-                  destLat: this.state.latitude,
-                  destLong: this.state.longitude,
-                  currentLong: this.state.currentLong,
-                  currentLat: this.state.currentLat
+                this.setState({
+                  isNavigating: true
                 })
               }
               title="Get Directions"
@@ -401,6 +394,12 @@ const styles = StyleSheet.create({
   },
   oldDropDown: {
     flex: 2
+  },
+  navButtonContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "beige"
   },
   placeSelectBox: {
     flex: 1,

@@ -62,13 +62,11 @@ class IntroSlider extends React.Component {
   );
 
   render() {
-    console.log("this.props.userData BELOW\n\n\n\n");
-    console.log(this.props.userData);
     /*
-_____ ___     __
-/ ___// (_)___/ /__  _____
-\__ \/ / / __  / _ \/ ___/
-___/ / / / /_/ /  __(__  )
+   _____ ___     __
+  / ___// (_)___/ /__  _____
+  \__ \/ / / __  / _ \/ ___/
+ ___/ / / / /_/ /  __(__  )
 /____/_/_/\__,_/\___/____/
 */
 
