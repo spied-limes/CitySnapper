@@ -2,6 +2,7 @@ import * as firebase from 'firebase';
 import { firebaseSecrets } from '../secrets';
 // initialize firebase
 const firebaseConfig = firebaseSecrets;
+// const b64toBlob = require('b64-to-blob');
 
 firebase.initializeApp(firebaseConfig);
 
@@ -30,16 +31,15 @@ export function writeUserData(userId, userObj) {
 
 export function writeAndCompareImage(image) {
   //Create a storage ref
-
+  image._data.type = 'image/jpg';
   const storageRef = firebase
     .storage()
     .ref()
-    .child('user1/testing123');
+    .child('user1/testing123456');
+  console.log('this is the image', image);
 
-  //Upload file
-  // console.log('about to create TASK', image.base64.slice(0, 23));
-  storageRef.putString(image, 'base64').then(function(snapshot) {
-    console.log('uploaded a base64 string!');
+  return storageRef.put(image).then(function(snapshot) {
+    console.log('uploaded a raw string!');
   });
 }
 

@@ -151,17 +151,22 @@ export default class CameraScreen extends React.Component {
     try {
       if (this.camera) {
         const takenPicture = await this.camera.takePictureAsync({
-          // onPictureSaved: this.onPictureSaved,
-          base64: true,
+          // base64: true,
         });
-        console.log('this is taken picture obj\n\n\n');
-        let base64Image = takenPicture.base64;
-        console.log(takenPicture.base64.slice(0, 100));
-        writeAndCompareImage(base64Image);
+        console.log('this is taken picture', takenPicture);
+        this.handleUpload(takenPicture.uri);
       }
     } catch (error) {
       console.log('i have an error', error);
     }
+  };
+
+  handleUpload = async uri => {
+    const response = await fetch(uri);
+    console.log('hello', response);
+    const blobbedPicture = await response.blob();
+
+    writeAndCompareImage(blobbedPicture);
   };
 
   handleMountError = ({ message }) => console.error(message);

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
+    "b64-to-blob": "^1.2.19",
     "expo": "^31.0.2",
     "firebase": "^5.5.8",
     "native-base": "^2.8.1",
