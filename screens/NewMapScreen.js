@@ -77,10 +77,11 @@ class MapScreen extends React.Component {
 
     // if user hasn't set homebase yet:
 
-    console.log(
-      'permittedLocationUse: ',
-      this.props.userData.permittedLocationUse
-    );
+    this.props.userData &&
+      console.log(
+        'permittedLocationUse: ',
+        this.props.userData.permittedLocationUse
+      );
     !this.props.userData.permittedLocationUse &&
       Alert.alert(
         'Set Homebase',
@@ -224,7 +225,7 @@ class MapScreen extends React.Component {
     ];
 
     const coordsMaxIndex = coordinates.length - 1;
-    console.log('NewMapScreen this.props.userData: ', this.props.userData);
+    console.log('NewMapScreen this.props: ', this.props);
 
     return (
       <View style={styles.container}>

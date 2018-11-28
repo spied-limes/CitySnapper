@@ -55,7 +55,7 @@ class CheckInScreen extends React.Component {
 
   render() {
     const { params } = this.props.navigation.state;
-
+    console.log('this.props: ', this.props);
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
