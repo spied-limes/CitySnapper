@@ -120,12 +120,12 @@ class CheckInScreen extends React.Component {
             onAnimateNextPage={p => console.log(p, "is current page")}
           >
             <View style={[{ backgroundColor: "#BADA55" }, this.state.size]}>
-              <Button
-                style={{ flex: 1, alignItems: "center" }}
-                onPress={() => this.props.navigation.navigate("Camera")}
-                title="Open Camera"
-                color="#841584"
-              />
+              <ImageBackground
+                source={require("../assets/images/ESB2-BW.jpg")}
+                style={styles.overlayImage}
+              >
+                <Text style={styles.activityHeadline}>{params.name}></Text>
+              </ImageBackground>
             </View>
             <View style={[{ backgroundColor: "red" }, this.state.size]}>
               <Text>2</Text>
@@ -219,7 +219,14 @@ const styles = StyleSheet.create({
   activityBox: {
     flex: 1,
     height: Layout.activityBoxHeight,
-    backgroundColor: "black"
+    backgroundColor: "black",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  overlayImage: {
+    width: "100%",
+    height: 750,
+    resizeMode: "cover"
   },
   activityHeadline: {
     color: "white",

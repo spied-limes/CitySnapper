@@ -68,7 +68,7 @@ export default class HomeScreen extends React.Component {
   componentDidMount() {
     const userId = firebase.auth().currentUser
       ? firebase.auth().currentUser.uid
-      : "RichIveGivenUpOnTheArrowsGoodbyeArrows";
+      : "RichIDidItTheresABackgroundImageOnASlider";
 
     console.log("permittedLocationUse: ", this.state.permittedLocationUse);
     !this.state.permittedLocationUse &&
@@ -337,13 +337,8 @@ export default class HomeScreen extends React.Component {
             autoplay={false}
             onAnimateNextPage={p => console.log(p)}
           >
-            <View style={[{ backgroundColor: "#BADA55" }, this.state.size]}>
-              <Button
-                style={{ flex: 1, alignItems: "center" }}
-                onPress={() => this.props.navigation.navigate("Camera")}
-                title="Open Camera"
-                color="#841584"
-              />
+            <View style={[styles.mapSliderPage, this.state.size]}>
+              <Text>2</Text>
             </View>
             <View style={[{ backgroundColor: "red" }, this.state.size]}>
               <Text>2</Text>
