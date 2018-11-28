@@ -1,9 +1,7 @@
 import * as firebase from 'firebase';
 import { firebaseSecrets } from '../secrets';
-// initialize firebase
 const firebaseConfig = firebaseSecrets;
-// const b64toBlob = require('b64-to-blob');
-
+// const eaglesJersey = require('../eaglesJersey.jpg');
 firebase.initializeApp(firebaseConfig);
 
 export const db = firebase.database();
@@ -29,18 +27,41 @@ export function writeUserData(userId, userObj) {
     });
 }
 
+// to store images in storage
 export function writeAndCompareImage(image) {
   //Create a storage ref
-  image._data.type = 'image/jpg';
+  // image._data.type = 'image/jpeg';
   const storageRef = firebase
     .storage()
     .ref()
-    .child('user1/testing123456');
-  console.log('this is the image', image);
+    .child('user1/testing12345.jpg');
+  console.log(
+    'this is the image',
+    'data:image/jpg;base64,' + image.slice(0, 100)
+  );
+  const reggedBase64 = image;
+  console.log('IMAGE: ', typeof image);
+  return storageRef
+    .putString(image.trim(), 'base64', {
+      contentType: 'image/jpg',
+    })
+    .then(function(snapshot) {
+      console.log('uploaded a raw string!');
+    });
+}
 
-  return storageRef.put(image).then(function(snapshot) {
-    console.log('uploaded a raw string!');
-  });
+//to store image base64 in database
+export async function writeBase64ToDb(image) {
+  try {
+    const userId = firebase.auth().currentUser
+      ? firebase.auth().currentUser.uid
+      : 12345;
+    await db.ref('/users/' + userId + '/images').set({
+      image: image,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 // CRUD funcs for users in firebase db

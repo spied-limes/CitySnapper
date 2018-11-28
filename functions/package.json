@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^2.3.1",
+    "algorithmia": "^0.3.10",
     "firebase-admin": "~6.0.0",
     "firebase-functions": "^2.1.0",
     "request": "^2.88.0"

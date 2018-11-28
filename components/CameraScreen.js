@@ -24,7 +24,10 @@ import {
   MaterialCommunityIcons,
   Octicons,
 } from '@expo/vector-icons';
-import { writeAndCompareImage } from '../firebase/firebaseConfig';
+import {
+  writeAndCompareImage,
+  writeBase64ToDb,
+} from '../firebase/firebaseConfig';
 
 const landmarkSize = 2;
 
@@ -151,10 +154,17 @@ export default class CameraScreen extends React.Component {
     try {
       if (this.camera) {
         const takenPicture = await this.camera.takePictureAsync({
-          // base64: true,
+          quality: 0.2,
+          base64: true,
         });
-        console.log('this is taken picture', takenPicture);
-        this.handleUpload(takenPicture.uri);
+        // console.log('this is taken picture', takenPicture.uri);
+        // console.log('this is the taken picture', takenPicture);
+
+        // writeAndCompareImage(takenPicture.base64);
+
+        writeBase64ToDb(takenPicture.base64);
+
+        // this.handleUpload(takenPicture.uri);
       }
     } catch (error) {
       console.log('i have an error', error);
@@ -162,10 +172,11 @@ export default class CameraScreen extends React.Component {
   };
 
   handleUpload = async uri => {
+    console.log('this is uri', uri);
     const response = await fetch(uri);
+
     console.log('hello', response);
     const blobbedPicture = await response.blob();
-
     writeAndCompareImage(blobbedPicture);
   };
 
