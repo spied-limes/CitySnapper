@@ -221,7 +221,7 @@ export default class Quiz extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.answerButton}
-                  onPress={() => navigate("CheckIn")}
+                  onPress={() => navigate("CheckIn", { name: "Times Square" })}
                 >
                   <Text style={styles.answerText}>No</Text>
                 </TouchableOpacity>
@@ -261,7 +261,7 @@ export default class Quiz extends React.Component {
             <View style={styles.navBox}>
               <View>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate("Map")}
+                  onPress={() => this.props.navigation.navigate("CheckIn")}
                 >
                   <Ionicons
                     name={

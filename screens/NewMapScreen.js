@@ -263,9 +263,10 @@ export default class HomeScreen extends React.Component {
             bgColor={"white"}
             tintColor={"#000000"}
             optionTextStyle={{ color: "red" }}
-            activityTintColor={"green"} // checkImage={} // arrowImg={}
-            titleStyle={{ color: "#333333" }}
-            // maxHeight={300}
+            activityTintColor={"green"}
+            titleStyle={
+              { color: "#333333" } // checkImage={} // arrowImg={}
+            } // maxHeight={300}
             handler={(selection, row) =>
               this.setState({
                 text: data[selection][row],
@@ -328,17 +329,17 @@ export default class HomeScreen extends React.Component {
         <View style={styles.placeSelectBox} _onLayout={this._onLayoutDidChange}>
           <Carousel
             style={this.state.size}
-            arrows
             leftArrowText={"＜"}
             leftArrowStyle={{ color: "white", fontSize: 22, margin: 20 }}
             rightArrowText={"＞"}
             rightArrowStyle={{ color: "white", fontSize: 22, margin: 20 }}
             pageInfo
+            arrows
             autoplay={false}
             onAnimateNextPage={p => console.log(p)}
           >
-            <View style={[styles.mapSliderPage, this.state.size]}>
-              <Text>2</Text>
+            <View style={[{ backgroundColor: "pink" }, this.state.size]}>
+              <Text>0</Text>
             </View>
             <View style={[{ backgroundColor: "red" }, this.state.size]}>
               <Text>2</Text>
