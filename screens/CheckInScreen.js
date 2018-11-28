@@ -119,16 +119,30 @@ class CheckInScreen extends React.Component {
             currentPage={3}
             onAnimateNextPage={p => console.log(p, "is current page")}
           >
-            <View style={[{ backgroundColor: "#BADA55" }, this.state.size]}>
+            <View style={[styles.activityButtonBox, this.state.size]}>
               <ImageBackground
                 source={require("../assets/images/ESB2-BW.jpg")}
                 style={styles.overlayImage}
               >
-                <Text style={styles.activityHeadline}>{params.name}></Text>
+                <TouchableOpacity
+                  style={styles.stretchActivityButton}
+                  onPress={() => this.props.navigation.navigate("Quiz")}
+                >
+                  <Text style={styles.stretchActivityButtonText}>
+                    Needs Param Passed In
+                  </Text>
+                </TouchableOpacity>
               </ImageBackground>
             </View>
-            <View style={[{ backgroundColor: "red" }, this.state.size]}>
-              <Text>2</Text>
+            <View style={[styles.activityButtonBox, this.state.size]}>
+              <TouchableOpacity
+                style={styles.stretchActivityButton}
+                onPress={() => this.props.navigation.navigate("Quiz")}
+              >
+                <Text style={styles.stretchActivityButtonText}>
+                  Test Your Knowledge
+                </Text>
+              </TouchableOpacity>
             </View>
             <View style={[{ backgroundColor: "blue" }, this.state.size]}>
               <Text>3</Text>
@@ -233,5 +247,24 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 24,
     fontFamily: "Abril-FatFace"
+  },
+  activityButtonBox: {
+    flex: 1,
+    alignItems: "stretch",
+    backgroundColor: "red"
+  },
+  stretchActivityButton: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  stretchActivityButtonText: {
+    color: "white",
+    fontSize: 24,
+    fontFamily: "Abril-FatFace",
+    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    textShadowOffset: { width: -2, height: 2 },
+    textShadowRadius: 2,
+    zIndex: 10
   }
 });

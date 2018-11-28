@@ -7,6 +7,7 @@ import IntroSlider from "../screens/IntroSliderScreens";
 import CheckInScreen from "../screens/CheckInScreen";
 import GetDirections from "../screens/GetDirections";
 import CameraScreen from "../components/CameraScreen";
+import QuizScreen from "../screens/QuizScreen";
 
 export default createSwitchNavigator({
   // You could add another route here for authentication.
@@ -16,5 +17,6 @@ export default createSwitchNavigator({
   Map: MapScreen,
   CheckIn: CheckInScreen,
   Directions: GetDirections,
-  Camera: CameraScreen
+  Camera: CameraScreen,
+  Quiz: QuizScreen
 });
