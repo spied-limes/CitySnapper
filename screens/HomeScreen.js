@@ -261,7 +261,6 @@ class HomeScreen extends React.Component {
                 <TouchableOpacity
                   underlayColor="black"
                   onPress={() => {
-                    console.log("SIGN UP pressed");
                     LayoutAnimation.easeInEaseOut();
                     this.setState({ logInForm: false });
                   }}
@@ -279,7 +278,6 @@ class HomeScreen extends React.Component {
                   active={true}
                   underlayColor="black"
                   onPress={() => {
-                    console.log("LOG IN pressed");
                     LayoutAnimation.easeInEaseOut();
                     this.setState({ logInForm: true });
                   }}
@@ -338,7 +336,8 @@ class HomeScreen extends React.Component {
                   >
                     <Text style={{ color: "white" }}>Login</Text>
                   </Button>
-                  <Button
+                  {/* CAMERA BUTTON FOR DEBUG */}
+                  {/* <Button
                     style={{ marginTop: 15 }}
                     full
                     rounded
@@ -346,7 +345,7 @@ class HomeScreen extends React.Component {
                     onPress={() => this.props.navigation.navigate("CheckIn")}
                   >
                     <Text style={{ color: "black" }}>Go to Camera</Text>
-                  </Button>
+                  </Button> */}
                 </View>
               ) : (
                 <View>
@@ -404,7 +403,8 @@ class HomeScreen extends React.Component {
                   >
                     <Text style={{ color: "white" }}>Sign Up</Text>
                   </Button>
-                  <Button
+                  {/* MAP BUTTON FOR DEBUG */}
+                  {/* <Button
                     style={{ marginTop: 15 }}
                     full
                     rounded
@@ -417,7 +417,7 @@ class HomeScreen extends React.Component {
                     }
                   >
                     <Text style={{ color: "black" }}>Go to Map</Text>
-                  </Button>
+                  </Button> */}
                 </View>
               )}
             </View>

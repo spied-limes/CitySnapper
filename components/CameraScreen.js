@@ -152,9 +152,29 @@ export default class CameraScreen extends React.Component {
   takePicture = () => {
     if (this.camera) {
       this.camera.takePictureAsync({
-        onPictureSaved: this.onPictureSaved
+        // onPictureSaved: this.onPictureSaved
       });
     }
+  };
+
+  showAlert = () => {
+    Alert.alert(
+      "Matching Success",
+      "You did it!",
+      [
+        {
+          text: "OK",
+          onPress: () => {
+            this.props.navigation.navigate("CheckIn", {
+              location: "empireStateBuilding"
+            });
+          }
+        }
+      ],
+      {
+        cancelable: false
+      }
+    );
   };
 
   handleMountError = ({ message }) => console.error(message);
@@ -212,10 +232,10 @@ export default class CameraScreen extends React.Component {
 ╚██████╔╝██║  ██║███████╗███████╗███████╗██║  ██║   ██║
  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝   ╚═╝
   */
-  renderGallery() {
+  renderGallery = () => {
     // return <GalleryScreen onPress={this.toggleView.bind(this)} />;
     console.log("this is where the gallery would go");
-  }
+  };
 
   renderNoPermissions = () => (
     <View style={styles.noPermissions}>
@@ -271,7 +291,7 @@ export default class CameraScreen extends React.Component {
       </TouchableOpacity>
       <View style={{ flex: 0.4 }}>
         <TouchableOpacity
-          onPress={this.takePicture}
+          onPress={this.showAlert}
           style={{ alignSelf: "center" }}
         >
           <Ionicons
