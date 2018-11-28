@@ -2,17 +2,18 @@
 /* eslint-disable react/no-deprecated */
 import React from "react";
 import {
+  Alert,
+  Button,
   Dimensions,
   Image,
-  Alert,
+  ImageBackground,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableHighlight,
-  View,
-  Button,
-  TextInput
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { createStackNavigator } from "react-navigation";
@@ -266,9 +267,10 @@ export default class HomeScreen extends React.Component {
             activityTintColor={"green"}
             titleStyle={
               { color: "#333333" } // checkImage={} // arrowImg={}
-            } // maxHeight={300}
+            }
             handler={(selection, row) =>
               this.setState({
+                // maxHeight={300}
                 text: data[selection][row],
                 latitude: coordinates[row].latitude,
                 longitude: coordinates[row].longitude
@@ -326,75 +328,47 @@ export default class HomeScreen extends React.Component {
             />
           )}
         </View>
-        <View style={styles.placeSelectBox} _onLayout={this._onLayoutDidChange}>
+        <View style={styles.locationBox} onLayout={this._onLayoutDidChange}>
           <Carousel
             style={this.state.size}
             leftArrowText={"＜"}
-            leftArrowStyle={{ color: "white", fontSize: 22, margin: 20 }}
+            leftArrowStyle={{ color: "white", fontSize: 50, marginLeft: 20 }}
             rightArrowText={"＞"}
-            rightArrowStyle={{ color: "white", fontSize: 22, margin: 20 }}
-            pageInfo
+            rightArrowStyle={{ color: "white", fontSize: 50, marginRight: 20 }}
             arrows
             autoplay={false}
-            onAnimateNextPage={p => console.log(p)}
+            currentPage={3}
+            onAnimateNextPage={p => console.log(p, "is current page")}
           >
-            <View style={[{ backgroundColor: "pink" }, this.state.size]}>
-              <Text>0</Text>
+            <View style={[styles.locationButtonBox, this.state.size]}>
+              <ImageBackground
+                source={require("../assets/images/ESB2-BW.jpg")}
+                style={styles.overlayImage}
+              >
+                <TouchableOpacity
+                  style={styles.stretchLocationButton}
+                  onPress={() => this.props.navigation.navigate("Quiz")}
+                >
+                  <Text style={styles.stretchLocationButtonText}>
+                    Needs Param Passed In
+                  </Text>
+                </TouchableOpacity>
+              </ImageBackground>
             </View>
-            <View style={[{ backgroundColor: "red" }, this.state.size]}>
-              <Text>2</Text>
+            <View style={[styles.locationButtonBox, this.state.size]}>
+              <TouchableOpacity
+                style={styles.stretchLocationButton}
+                onPress={() => this.props.navigation.navigate("Quiz")}
+              >
+                <Text style={styles.stretchLocationButtonText}>
+                  Test Your Knowledge
+                </Text>
+              </TouchableOpacity>
             </View>
             <View style={[{ backgroundColor: "blue" }, this.state.size]}>
               <Text>3</Text>
             </View>
           </Carousel>
-          {/* <View style={styles.prevPlaceSelect}>
-            <TouchableHighlight
-              onPress={() => {
-                console.log("Previous arrow touched.");
-                console.log("Will scroll to previous location.\n");
-                // this.setNextRegionCoord(-1, coordsMaxIndex, coordinates);
-              }}
-            >
-              <Ionicons
-                name={
-                  Platform.OS === "ios" ? `ios-arrow-back` : "md-arrow-back"
-                }
-                size={50}
-                color="white"
-              />
-            </TouchableHighlight>
-          </View>
-          <View style={styles.placeName}>
-            <Text
-              style={{
-                fontSize: 20,
-                color: "white",
-                fontFamily: "Abril-FatFace"
-              }}
-            >
-              {this.state.text}
-            </Text>
-          </View>
-          <View style={styles.nextPlaceSelect}>
-            <TouchableHighlight
-              onPress={() => {
-                console.log("Next arrow hit.");
-                console.log("Will scroll to next location.\n");
-                // this.setNextRegionCoord(1, coordsMaxIndex, coordinates);
-              }}
-            >
-              <Ionicons
-                name={
-                  Platform.OS === "ios"
-                    ? `ios-arrow-forward`
-                    : "md-arrow-forward"
-                }
-                size={50}
-                color="white"
-              />
-            </TouchableHighlight>
-          </View> */}
         </View>
       </View>
     );
@@ -437,24 +411,40 @@ const styles = StyleSheet.create({
   oldDropDown: {
     flex: 2
   },
-  placeSelectBox: {
+  locationsBox: {
     flex: 1,
-    backgroundColor: "black"
-  },
-  prevPlaceSelect: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  placeName: {
-    flex: 3,
-    alignItems: "center",
+    backgroundColor: "black",
     justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.4)"
+    alignItems: "center"
   },
-  nextPlaceSelect: {
+  locationsButtonBox: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
+    alignItems: "stretch",
+    backgroundColor: "red"
+  },
+  overlayImage: {
+    width: "100%",
+    height: 750,
+    resizeMode: "cover"
+  },
+  stretchLocationsButton: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  stretchLocationsButtonText: {
+    color: "white",
+    fontSize: 24,
+    fontFamily: "Abril-FatFace",
+    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    textShadowOffset: { width: -2, height: 2 },
+    textShadowRadius: 2,
+    zIndex: 10
+  },
+  LocationsHeadline: {
+    color: "white",
+    flex: 1,
+    fontSize: 24,
+    fontFamily: "Abril-FatFace"
   }
 });

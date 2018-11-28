@@ -237,21 +237,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  overlayImage: {
-    width: "100%",
-    height: 750,
-    resizeMode: "cover"
-  },
-  activityHeadline: {
-    color: "white",
-    flex: 1,
-    fontSize: 24,
-    fontFamily: "Abril-FatFace"
-  },
   activityButtonBox: {
     flex: 1,
     alignItems: "stretch",
     backgroundColor: "red"
+  },
+  overlayImage: {
+    width: "100%",
+    height: 750,
+    resizeMode: "cover"
   },
   stretchActivityButton: {
     flex: 1,
@@ -266,5 +260,11 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: -2, height: 2 },
     textShadowRadius: 2,
     zIndex: 10
+  },
+  activityHeadline: {
+    color: "white",
+    flex: 1,
+    fontSize: 24,
+    fontFamily: "Abril-FatFace"
   }
 });
