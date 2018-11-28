@@ -261,7 +261,6 @@ class HomeScreen extends React.Component {
                 <TouchableOpacity
                   underlayColor="black"
                   onPress={() => {
-                    console.log("SIGN UP pressed");
                     LayoutAnimation.easeInEaseOut();
                     this.setState({ logInForm: false });
                   }}
@@ -279,7 +278,6 @@ class HomeScreen extends React.Component {
                   active={true}
                   underlayColor="black"
                   onPress={() => {
-                    console.log("LOG IN pressed");
                     LayoutAnimation.easeInEaseOut();
                     this.setState({ logInForm: true });
                   }}

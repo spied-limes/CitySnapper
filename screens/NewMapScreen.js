@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable quotes */
 /* eslint-disable react/no-deprecated */
 import React from "react";
@@ -49,7 +50,6 @@ export default class HomeScreen extends React.Component {
       // for current storage
       currentLat: null,
       currentLong: null,
-      currCoordIndex: 0,
       permittedLocationUse: false
     };
   }
@@ -111,11 +111,6 @@ export default class HomeScreen extends React.Component {
       );
   }
 
-  _onLayoutDidChange = e => {
-    const layout = e.nativeEvent.layout;
-    this.setState({ size: { width: layout.width, height: layout.height } });
-  };
-
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== "granted") {
@@ -134,72 +129,47 @@ export default class HomeScreen extends React.Component {
     });
   };
 
-  setNextRegionCoord(number, maxIndex, coordsArray) {
-    let index = this.state.currCoordIndex;
-    if (index + number < 0) {
-      this.setState({
-        currCoordIndex: maxIndex
-      });
-    } else if (index + number > maxIndex) {
-      this.setState({
-        currCoordIndex: 0
-      });
-    } else {
-      index += number;
-      this.setState({
-        currCoordIndex: index
-      });
-    }
-    let nextIndex = this.state.currCoordIndex;
-    let nextLocation = coordsArray[nextIndex];
-    console.log("next index is:", nextIndex);
-    console.log("next location is:", nextLocation);
+  // Both of these functions use `this.map`, a ref created INSIDE the <MapView /> component
+  changeLocationAndState(regionObj, locationName) {
+    this.map.animateToRegion(regionObj, 1500);
 
-    let newRegion = {
-      latitude: nextLocation.latitude,
-      longitude: nextLocation.longitude,
-      latitudeDelta: nextLocation.latitudeDelta,
-      longitudeDelta: nextLocation.longitudeDelta
+    navigateCoords = {
+      destLat: regionObj.latitude,
+      destLong: regionObj.longitude,
+      currentLat: this.state.currentLat,
+      currentLong: this.state.currentLong
     };
 
-    this.map.animateToRegion(newRegion, 750);
-    this.setState({ text: nextLocation.locationName });
+    console.log("navigateCoords", navigateCoords);
   }
+
+  fitAllMarkers(markers) {
+    this.map.fitToCoordinates(markers, {
+      edgePadding: mapPadding,
+      animated: true
+    });
+  }
+
+  _onLayoutDidChange = e => {
+    const layout = e.nativeEvent.layout;
+    this.setState({ size: { width: layout.width, height: layout.height } });
+  };
 
   render() {
     const { push, navigate } = this.props.navigation;
 
-    // OLD DROPDOWN DATA
-    const data = [
-      [
-        "Current Location",
-        "Times Square",
-        "Fullstack Academy",
-        "World Trade Center",
-        "Museum of Sex"
-      ]
-    ];
-    //will have to be data
-    const coordinates = [
-      {
-        locationName: "Current Location",
-        latitude: this.state.currentLat,
-        longitude: this.state.currentLong,
-        latitudeDelta: 0.003,
-        longitudeDelta: 0.0015
-      },
-      {
-        //times square
-        locationName: "Times Square",
-        latitude: 40.7589,
-        longitude: -73.9851,
-        latitudeDelta: 0.003,
-        longitudeDelta: 0.0015
-      },
+    const sliderCoords = [
       {
         locationName: "Fullstack Academy",
         latitude: 40.7051,
         longitude: -74.0092,
+        latitudeDelta: 0.003,
+        longitudeDelta: 0.0015
+      },
+      {
+        locationName: "Times Square",
+        latitude: 40.7589,
+        longitude: -73.9851,
         latitudeDelta: 0.003,
         longitudeDelta: 0.0015
       },
@@ -211,15 +181,20 @@ export default class HomeScreen extends React.Component {
         longitudeDelta: 0.0015
       },
       {
-        locationName: "Museum of Sex",
-        latitude: 40.7441,
-        longitude: -73.9874,
+        locationName: "Empire State Building",
+        latitude: 40.7484,
+        longitude: -73.9856,
         latitudeDelta: 0.003,
         longitudeDelta: 0.0015
       }
     ];
 
-    const coordsMaxIndex = coordinates.length - 1;
+    let navigateCoords = {
+      latitude: null,
+      longitude: null,
+      currentLat: this.state.currentLat,
+      currentLong: this.state.currentLong
+    };
 
     return (
       <View style={styles.container}>
@@ -258,118 +233,233 @@ export default class HomeScreen extends React.Component {
             /> */}
           </MapView>
         </View>
-        <View style={styles.oldDropDown}>
-          <DropdownMenu
-            style={{ flex: 1 }}
-            bgColor={"white"}
-            tintColor={"#000000"}
-            optionTextStyle={{ color: "red" }}
-            activityTintColor={"green"}
-            titleStyle={
-              { color: "#333333" } // checkImage={} // arrowImg={}
-            }
-            handler={(selection, row) =>
-              this.setState({
-                // maxHeight={300}
-                text: data[selection][row],
-                latitude: coordinates[row].latitude,
-                longitude: coordinates[row].longitude
-              })
-            }
-            data={data}
-          >
-            {/*
-    ____        __  __                     ____
-   / __ )____  / /_/ /_____  ____ ___     / __ )____  _  __
-  / __  / __ \/ __/ __/ __ \/ __ `__ \   / __  / __ \| |/_/
- / /_/ / /_/ / /_/ /_/ /_/ / / / / / /  / /_/ / /_/ />  <
-/_____/\____/\__/\__/\____/_/ /_/ /_/  /_____/\____/_/|_|
-*/}
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Text>Current Location: {this.state.text}</Text>
-              <Text>Lat: {this.state.latitude}</Text>
-              <Text>Lng: {this.state.longitude}</Text>
-            </View>
-          </DropdownMenu>
-          {/*
-   ________              __         ____         ____        __  __
-  / ____/ /_  ___  _____/ /__      /  _/___     / __ )__  __/ /_/ /_____  ____
- / /   / __ \/ _ \/ ___/ //_/_____ / // __ \   / __  / / / / __/ __/ __ \/ __ \
-/ /___/ / / /  __/ /__/ ,< /_____// // / / /  / /_/ / /_/ / /_/ /_/ /_/ / / / /
-\____/_/ /_/\___/\___/_/|_|     /___/_/ /_/  /_____/\__,_/\__/\__/\____/_/ /_/
-        */}
-          {this.state.latitude === this.state.currentLat &&
-          this.state.longitude === this.state.currentLong ? (
-            <Button
-              style={{ flex: 1 }}
-              onPress={() => navigate("CheckIn", { name: this.state.text })}
-              title="Check In"
-              color="#841584"
-            />
-          ) : (
-            <Button
-              style={{ flex: 1, alignItems: "center" }}
-              onPress={() =>
-                navigate("Directions", {
-                  destLat: this.state.latitude,
-                  destLong: this.state.longitude,
-                  currentLong: this.state.currentLong,
-                  currentLat: this.state.currentLat
-                })
-              }
-              title="Get Directions"
-              color="#841584"
-            />
-          )}
-        </View>
-        <View style={styles.locationBox} onLayout={this._onLayoutDidChange}>
+        {/*
+    __  ___           _____ ___     __
+   /  |/  /___ _____ / ___// (_)___/ /__  _____
+  / /|_/ / __ `/ __ \\__ \/ / / __  / _ \/ ___/
+ / /  / / /_/ / /_/ /__/ / / / /_/ /  __/ /
+/_/  /_/\__,_/ .___/____/_/_/\__,_/\___/_/
+            /_/
+          */}
+        <View style={styles.locationsBox} onLayout={this._onLayoutDidChange}>
           <Carousel
+            ref={ref => (this.carousel = ref)}
             style={this.state.size}
             leftArrowText={"＜"}
-            leftArrowStyle={{ color: "white", fontSize: 50, marginLeft: 20 }}
+            leftArrowStyle={{ color: "white", fontSize: 30, marginLeft: 20 }}
             rightArrowText={"＞"}
-            rightArrowStyle={{ color: "white", fontSize: 50, marginRight: 20 }}
+            rightArrowStyle={{ color: "white", fontSize: 30, marginRight: 20 }}
             arrows
             autoplay={false}
-            currentPage={3}
-            onAnimateNextPage={p => console.log(p, "is current page")}
+            currentPage={0}
+            onAnimateNextPage={slideIdx => {
+              const nextRegion = {
+                latitude: sliderCoords[slideIdx].latitude,
+                longitude: sliderCoords[slideIdx].longitude,
+                latitudeDelta: sliderCoords[slideIdx].latitudeDelta,
+                longitudeDelta: sliderCoords[slideIdx].longitudeDelta
+              };
+              const locationName = sliderCoords[slideIdx].locationName;
+              this.changeLocationAndState(nextRegion, locationName);
+            }}
           >
+            {/*
+    __                     __  _            _____ ___     __
+   / /   ____  _________ _/ /_(_)___  ____ / ___// (_)___/ /__  __________
+  / /   / __ \/ ___/ __ `/ __/ / __ \/ __ \\__ \/ / / __  / _ \/ ___/ ___/
+ / /___/ /_/ / /__/ /_/ / /_/ / /_/ / / / /__/ / / / /_/ /  __/ /  (__  )
+/_____/\____/\___/\__,_/\__/_/\____/_/ /_/____/_/_/\__,_/\___/_/  /____/
+
+          */}
+            {/* ##### FULLSTACK ACADEMY SLIDER ##### */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
-                source={require("../assets/images/ESB2-BW.jpg")}
+                source={require("../assets/images/FSA.jpg")}
                 style={styles.overlayImage}
               >
-                <TouchableOpacity
-                  style={styles.stretchLocationButton}
-                  onPress={() => this.props.navigation.navigate("Quiz")}
-                >
-                  <Text style={styles.stretchLocationButtonText}>
-                    Needs Param Passed In
-                  </Text>
-                </TouchableOpacity>
+                <View style={styles.bgColorOverlay}>
+                  <View style={styles.stretchLocationButton}>
+                    <Text style={styles.locationButtonText}>
+                      Fullstack Academy
+                    </Text>
+                  </View>
+                </View>
               </ImageBackground>
             </View>
+
+            {/* ##### TIMES SQUARE SLIDER ##### */}
             <View style={[styles.locationButtonBox, this.state.size]}>
-              <TouchableOpacity
-                style={styles.stretchLocationButton}
-                onPress={() => this.props.navigation.navigate("Quiz")}
+              <ImageBackground
+                source={require("../assets/images/timesSquare.jpg")}
+                style={styles.overlayImage}
               >
-                <Text style={styles.stretchLocationButtonText}>
-                  Test Your Knowledge
-                </Text>
-              </TouchableOpacity>
+                <View style={styles.bgColorOverlay}>
+                  <View style={styles.stretchLocationButton}>
+                    <Text
+                      style={[
+                        styles.locationButtonText,
+                        { marginTop: 50, paddingTop: 15 }
+                      ]}
+                    >
+                      Times Square
+                    </Text>
+                  </View>
+                  <View style={styles.locationActivityButtonBox}>
+                    <TouchableOpacity
+                      style={styles.locationActivityButton}
+                      onPress={() =>
+                        this.props.navigation.navigate("CheckIn", {
+                          name: "Times Square"
+                        })
+                      }
+                    >
+                      <Text style={styles.stretchLocationButtonText}>
+                        View Activities
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.locationActivityButton}
+                      onPress={() =>
+                        this.props.navigation.navigate(
+                          "Directions",
+                          navigateCoords
+                        )
+                      }
+                    >
+                      <Text style={styles.stretchLocationButtonText}>
+                        Navigate Here
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </ImageBackground>
             </View>
-            <View style={[{ backgroundColor: "blue" }, this.state.size]}>
-              <Text>3</Text>
+
+            {/* ##### WORLD TRADE CENTER SLIDER ##### */}
+            <View style={[styles.locationButtonBox, this.state.size]}>
+              <ImageBackground
+                source={require("../assets/images/WTC.jpg")}
+                style={styles.overlayImage}
+              >
+                <View style={styles.bgColorOverlay}>
+                  <View style={styles.stretchLocationButton}>
+                    <Text
+                      style={[
+                        styles.locationButtonText,
+                        { marginTop: 50, paddingTop: 15 }
+                      ]}
+                    >
+                      World Trade Center
+                    </Text>
+                  </View>
+                  <View style={styles.locationActivityButtonBox}>
+                    <TouchableOpacity
+                      style={styles.locationActivityButton}
+                      onPress={() =>
+                        this.props.navigation.navigate("CheckIn", {
+                          name: "Times Square"
+                        })
+                      }
+                    >
+                      <Text style={styles.stretchLocationButtonText}>
+                        View Activities
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.locationActivityButton}
+                      onPress={() =>
+                        this.props.navigation.navigate(
+                          "Directions",
+                          navigateCoords
+                        )
+                      }
+                    >
+                      <Text style={styles.stretchLocationButtonText}>
+                        Navigate Here
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </ImageBackground>
+            </View>
+
+            {/* ##### EMPIRE STATE BUILDING SLIDER ##### */}
+            <View style={[styles.locationButtonBox, this.state.size]}>
+              <ImageBackground
+                source={require("../assets/images/ESB.jpg")}
+                style={styles.overlayImage}
+              >
+                <View style={styles.bgColorOverlay}>
+                  <View style={styles.stretchLocationButton}>
+                    <Text
+                      style={[
+                        styles.locationButtonText,
+                        { marginTop: 50, paddingTop: 15 }
+                      ]}
+                    >
+                      Empire State Building
+                    </Text>
+                  </View>
+                  <View style={styles.locationActivityButtonBox}>
+                    <TouchableOpacity
+                      style={styles.locationActivityButton}
+                      onPress={() =>
+                        this.props.navigation.navigate("CheckIn", {
+                          name: "Times Square"
+                        })
+                      }
+                    >
+                      <Text style={styles.stretchLocationButtonText}>
+                        View Activities
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.locationActivityButton}
+                      onPress={() =>
+                        this.props.navigation.navigate(
+                          "Directions",
+                          navigateCoords
+                        )
+                      }
+                    >
+                      <Text style={styles.stretchLocationButtonText}>
+                        Navigate Here
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </ImageBackground>
             </View>
           </Carousel>
         </View>
+        {/*
+      ________              __         ____         ____        __  __
+     / ____/ /_  ___  _____/ /__      /  _/___     / __ )__  __/ /_/ /_____  ____
+    / /   / __ \/ _ \/ ___/ //_/_____ / // __ \   / __  / / / / __/ __/ __ \/ __ \
+   / /___/ / / /  __/ /__/ ,< /_____// // / / /  / /_/ / /_/ / /_/ /_/ /_/ / / / /
+   \____/_/ /_/\___/\___/_/|_|     /___/_/ /_/  /_____/\__,_/\__/\__/\____/_/ /_/
+  */}
+        {/* <View style={styles.bottomButtonBox}>
+          <Button
+            style={{ flex: 1 }}
+            onPress={() => navigate("CheckIn", { name: this.state.text })}
+            title="Check In"
+            color="#841584"
+          />
+          <Button
+            style={{ flex: 1, alignItems: "center" }}
+            onPress={() =>
+              navigate("Directions", {
+                destLat: this.state.latitude,
+                destLong: this.state.longitude,
+                currentLong: this.state.currentLong,
+                currentLat: this.state.currentLat
+              })
+            }
+            title="Get Directions"
+            color="#841584"
+          />
+        </View> */}
       </View>
     );
   }
@@ -381,11 +471,6 @@ const styles = StyleSheet.create({
     marginTop: 27,
     backgroundColor: "#fff"
   },
-  topButtons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingHorizontal: 25
-  },
   map: {
     left: 0,
     right: 0,
@@ -393,46 +478,33 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: "absolute"
   },
-  mapCommentContainer: {
-    flex: 2,
-    padding: 15,
-    backgroundColor: "beige",
-    zIndex: 10
-  },
-  mapComment: {
-    fontSize: 18,
-    textAlign: "center",
-    justifyContent: "center",
-    color: "white"
-  },
   mapFlexContainer: {
-    flex: 2
-  },
-  oldDropDown: {
-    flex: 2
+    flex: 65
   },
   locationsBox: {
-    flex: 1,
-    backgroundColor: "black",
+    flex: 35,
     justifyContent: "center",
     alignItems: "center"
   },
-  locationsButtonBox: {
+  bgColorOverlay: {
     flex: 1,
-    alignItems: "stretch",
-    backgroundColor: "red"
+    backgroundColor: "rgba(0,0,0,.35)"
+  },
+  locationButtonBox: {
+    flex: 1,
+    alignItems: "stretch"
   },
   overlayImage: {
     width: "100%",
-    height: 750,
+    height: height * 0.35,
     resizeMode: "cover"
   },
-  stretchLocationsButton: {
-    flex: 1,
+  stretchLocationButton: {
+    flex: 3,
     justifyContent: "center",
     alignItems: "center"
   },
-  stretchLocationsButtonText: {
+  stretchLocationButtonText: {
     color: "white",
     fontSize: 24,
     fontFamily: "Abril-FatFace",
@@ -446,5 +518,25 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 24,
     fontFamily: "Abril-FatFace"
+  },
+  locationButtonText: {
+    color: "white",
+    fontSize: 36,
+    justifyContent: "center",
+    fontFamily: "Abril-FatFace",
+    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    textShadowOffset: { width: -2, height: 2 },
+    textShadowRadius: 2,
+    marginHorizontal: 100,
+    zIndex: 10
+  },
+  locationActivityButtonBox: {
+    flex: 1,
+    flexDirection: "row"
+  },
+  locationActivityButton: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });

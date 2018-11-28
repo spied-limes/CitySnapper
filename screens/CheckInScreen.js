@@ -111,9 +111,9 @@ class CheckInScreen extends React.Component {
           <Carousel
             style={this.state.size}
             leftArrowText={"＜"}
-            leftArrowStyle={{ color: "white", fontSize: 50, marginLeft: 20 }}
+            leftArrowStyle={{ color: "white", fontSize: 30, marginLeft: 20 }}
             rightArrowText={"＞"}
-            rightArrowStyle={{ color: "white", fontSize: 50, marginRight: 20 }}
+            rightArrowStyle={{ color: "white", fontSize: 30, marginRight: 20 }}
             arrows
             autoplay={false}
             currentPage={3}
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   },
   overlayImage: {
     width: "100%",
-    height: 750,
+    height: Layout.activityBoxHeight,
     resizeMode: "cover"
   },
   stretchActivityButton: {

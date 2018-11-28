@@ -75,7 +75,7 @@ export default class GetDirections extends React.Component {
               this.map = ref;
             }}
             region={{
-              // This is hardcoded in the snapping dropdown version
+              // This is here for currentLocationRefocus
               latitude: params.currentLat,
               longitude: params.currentLong,
               latitudeDelta: this.state.latitudeDelta,
@@ -89,7 +89,7 @@ export default class GetDirections extends React.Component {
               origin={origin}
               destination={destination}
               apikey={GOOGLE_MAPS_APIKEY}
-              mode={"walking"}
+              mode={"transit"}
               strokeWidth={8}
               strokeColor="hotpink"
             />
