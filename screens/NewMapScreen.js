@@ -315,7 +315,7 @@ export default class HomeScreen extends React.Component {
                       style={styles.locationActivityButton}
                       onPress={() =>
                         this.props.navigation.navigate("CheckIn", {
-                          name: "Times Square"
+                          location: "Times Square"
                         })
                       }
                     >
@@ -363,7 +363,7 @@ export default class HomeScreen extends React.Component {
                       style={styles.locationActivityButton}
                       onPress={() =>
                         this.props.navigation.navigate("CheckIn", {
-                          name: "Times Square"
+                          location: "Times Square"
                         })
                       }
                     >
@@ -411,7 +411,7 @@ export default class HomeScreen extends React.Component {
                       style={styles.locationActivityButton}
                       onPress={() =>
                         this.props.navigation.navigate("CheckIn", {
-                          name: "Times Square"
+                          location: "empireStateBuilding"
                         })
                       }
                     >

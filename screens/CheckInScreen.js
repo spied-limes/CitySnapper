@@ -32,6 +32,8 @@ import Carousel from "react-native-looped-carousel";
 
 const { width, height } = Dimensions.get("window");
 
+let refDataObject = {};
+
 class CheckInScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -52,6 +54,29 @@ class CheckInScreen extends React.Component {
     };
   }
 
+  componentDidMount = async () => {
+    try {
+      await this.props.watchUser();
+      await this.props.watchActivities();
+      await this.props.watchPlaces();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  componentDidUpdate = async () => {
+    try {
+      const { params } = this.props.navigation.state;
+      const locationForDB = params.location;
+
+      if (this.props.places && this.props.places[locationForDB]) {
+        refDataObject = this.props.places[params.location];
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   _onLayoutDidChange = e => {
     const layout = e.nativeEvent.layout;
     this.setState({ size: { width: layout.width, height: layout.height } });
@@ -59,6 +84,31 @@ class CheckInScreen extends React.Component {
 
   render() {
     const { params } = this.props.navigation.state;
+    // console.log(this.props.places);
+    // this.props.places[params.location];
+    // console.log("locationForDB");
+    // console.log(locationForDB);
+    // console.log("\n\nthis.props.places[params.location].splashImage");
+    // console.log("\n\nthis.props.places");
+    // console.log(this.props.places);
+
+    // this.props.places && const {
+    //   borough,
+    //   content,
+    //   latitude,
+    //   latitudeDelta,
+    //   longitude,
+    //   longitudeDelta,
+    //   name,
+    //   spectralImage,
+    //   splashImage,
+    //   streetAddress,
+    //   tagline,
+    //   wikipediaLink
+    // } = refDataObject;
+
+    // console.log("splashImage");
+    // console.log(splashImage); // NOPE
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -102,7 +152,7 @@ class CheckInScreen extends React.Component {
                 50 million visitors annually.
               </Text>
               <Text style={styles.infoBoxText}>
-                you have checked in to {params.name}
+                {/* you have checked in to {params.name} */}
               </Text>
             </View>
           </View>
@@ -120,19 +170,19 @@ class CheckInScreen extends React.Component {
             onAnimateNextPage={p => console.log(p, "is current page")}
           >
             <View style={[styles.activityButtonBox, this.state.size]}>
-              <ImageBackground
+              {/* <ImageBackground
                 source={require("../assets/images/ESB2-BW.jpg")}
                 style={styles.overlayImage}
+              > */}
+              <TouchableOpacity
+                style={styles.stretchActivityButton}
+                onPress={() => this.props.navigation.navigate("Camera")}
               >
-                <TouchableOpacity
-                  style={styles.stretchActivityButton}
-                  onPress={() => this.props.navigation.navigate("Quiz")}
-                >
-                  <Text style={styles.stretchActivityButtonText}>
-                    Needs Param Passed In
-                  </Text>
-                </TouchableOpacity>
-              </ImageBackground>
+                <Text style={styles.stretchActivityButtonText}>
+                  Recreate a Historical Photo
+                </Text>
+              </TouchableOpacity>
+              {/* </ImageBackground> */}
             </View>
             <View style={[styles.activityButtonBox, this.state.size]}>
               <TouchableOpacity
@@ -143,9 +193,6 @@ class CheckInScreen extends React.Component {
                   Test Your Knowledge
                 </Text>
               </TouchableOpacity>
-            </View>
-            <View style={[{ backgroundColor: "blue" }, this.state.size]}>
-              <Text>3</Text>
             </View>
           </Carousel>
         </View>
@@ -240,7 +287,7 @@ const styles = StyleSheet.create({
   activityButtonBox: {
     flex: 1,
     alignItems: "stretch",
-    backgroundColor: "red"
+    backgroundColor: "navy"
   },
   overlayImage: {
     width: "100%",
