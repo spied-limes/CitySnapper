@@ -40,23 +40,50 @@ var Algorithmia = require('algorithmia');
 exports.compareImages2 = functions.database
   .ref('/users/12345/images')
   .onCreate((snapshot, context) => {
-    console.log('this is snapshot', snapshot);
-    console.log('this is the base64', snapshot._data.image);
     const algoInput = snapshot._data.image;
-    var input = [algoInput, algoInput];
-    // const client = Algorithmia.client('simU/Rj2U+vuIKeFWywiBm9LBJ41');
-    // const theAlgo = client.algo('zskurultay/ImageSimilarity/0.1.4');
-    // console.log('algooo', theAlgo);
+    console.log(algoInput);
+
+    var input = [
+      'data:image/jpeg;base64,' + algoInput,
+      'data:image/jpeg;base64,' + algoInput,
+    ];
     let hello;
-    Algorithmia.client('simU/Rj2U+vuIKeFWywiBm9LBJ41')
+
+    const newClient = Algorithmia.client('simU/Rj2U+vuIKeFWywiBm9LBJ41');
+
+    // console.log('this is in algo client', newClient);
+    // console.log('hello', newClient.algo);
+    // console.log(
+    //   'this is in another thing ',
+    //   newClient.algo('zskurultay/ImageSimilarity/0.1.4').__proto__
+    // );
+    // console.log(
+    //   '!!@#!@#!@#!23 ',
+    //   newClient.algo('zskurultay/ImageSimilarity/0.1.4').pipe
+    // );
+    // console.log(
+    //   'hello world ',
+    //   newClient.algo('zskurultay/ImageSimilarity/0.1.4').pipe(input)
+    // );
+    const answer = newClient
       .algo('zskurultay/ImageSimilarity/0.1.4')
       .pipe(input)
       .then(response => {
         hello = response.get();
-        return hello;
-      })
-      .catch(error => {
-        console.log('hello2', error);
-        return error;
+        return console.log(response.get());
       });
+
+    return hello;
+    // Algorithmia.client('simU/Rj2U+vuIKeFWywiBm9LBJ41')
+    //   .algo('zskurultay/ImageSimilarity/0.1.4')
+    //   .pipe(input)
+    //   .then(response => {
+    //     hello = response.get();
+    //     console.log(hello);
+    //   })
+    //   .catch(error => {
+    //     console.log('hello2', error);
+    //     return error;
+    //   });
+    // return hello;
   });
