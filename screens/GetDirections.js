@@ -49,15 +49,19 @@ export default class GetDirections extends React.Component {
     const { push, navigate } = this.props.navigation;
     const { params } = this.props.navigation.state;
 
+    console.log("params");
+    console.log(params);
     const origin = {
-      latitude: params.currentLat,
-      longitude: params.currentLong
+      latitude: 40.7051,
+      longitude: -74.0092
     };
     const destination = {
       latitude: params.destLat,
       longitude: params.destLong
     };
 
+    console.log("destination");
+    console.log(destination);
     // Both const below are args passed into class methods for button onPress
     const markers = [origin, destination];
     const region = {
@@ -85,13 +89,15 @@ export default class GetDirections extends React.Component {
             followsUserLocation={true}
             style={styles.map}
           >
+            <MapView.Marker coordinate={origin} />
+            <MapView.Marker coordinate={destination} />
             <MapViewDirections
               origin={origin}
               destination={destination}
               apikey={GOOGLE_MAPS_APIKEY}
-              mode={"transit"}
+              mode={"walking"}
               strokeWidth={8}
-              strokeColor="hotpink"
+              strokeColor="green"
             />
           </MapView>
         </View>

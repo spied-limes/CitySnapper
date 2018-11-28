@@ -32,6 +32,11 @@ import Carousel from "react-native-looped-carousel";
 
 const { width, height } = Dimensions.get("window");
 
+let navigateCoords = {
+  destLat: null,
+  destLong: null
+};
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
@@ -131,14 +136,13 @@ export default class HomeScreen extends React.Component {
 
   // Both of these functions use `this.map`, a ref created INSIDE the <MapView /> component
   changeLocationAndState(regionObj, locationName) {
-    this.map.animateToRegion(regionObj, 1500);
-
     navigateCoords = {
-      destLat: regionObj.latitude,
-      destLong: regionObj.longitude,
       currentLat: this.state.currentLat,
-      currentLong: this.state.currentLong
+      currentLong: this.state.currentLong,
+      destLat: regionObj.latitude,
+      destLong: regionObj.longitude
     };
+    this.map.animateToRegion(regionObj, 1500);
 
     console.log("navigateCoords", navigateCoords);
   }
@@ -154,6 +158,14 @@ export default class HomeScreen extends React.Component {
     const layout = e.nativeEvent.layout;
     this.setState({ size: { width: layout.width, height: layout.height } });
   };
+
+  /*
+    ____                 __
+   / __ \___  ____  ____/ /__  _____
+  / /_/ / _ \/ __ \/ __  / _ \/ ___/
+ / _, _/  __/ / / / /_/ /  __/ /
+/_/ |_|\___/_/ /_/\__,_/\___/_/
+*/
 
   render() {
     const { push, navigate } = this.props.navigation;
@@ -188,13 +200,6 @@ export default class HomeScreen extends React.Component {
         longitudeDelta: 0.0015
       }
     ];
-
-    let navigateCoords = {
-      latitude: null,
-      longitude: null,
-      currentLat: this.state.currentLat,
-      currentLong: this.state.currentLong
-    };
 
     return (
       <View style={styles.container}>
@@ -260,6 +265,7 @@ export default class HomeScreen extends React.Component {
                 longitudeDelta: sliderCoords[slideIdx].longitudeDelta
               };
               const locationName = sliderCoords[slideIdx].locationName;
+
               this.changeLocationAndState(nextRegion, locationName);
             }}
           >
@@ -522,7 +528,7 @@ const styles = StyleSheet.create({
   locationButtonText: {
     color: "white",
     fontSize: 36,
-    justifyContent: "center",
+    textAlign: "center",
     fontFamily: "Abril-FatFace",
     textShadowColor: "rgba(0, 0, 0, 0.95)",
     textShadowOffset: { width: -2, height: 2 },
