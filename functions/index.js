@@ -73,7 +73,7 @@ exports.compareImages2 = functions.database
         return console.log(response.get());
       });
 
-    return hello;
+    return -hello;
     // Algorithmia.client('simU/Rj2U+vuIKeFWywiBm9LBJ41')
     //   .algo('zskurultay/ImageSimilarity/0.1.4')
     //   .pipe(input)
