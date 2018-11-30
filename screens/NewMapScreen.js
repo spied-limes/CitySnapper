@@ -233,6 +233,10 @@ export default class HomeScreen extends React.Component {
             showsUserLocation={true}
             style={styles.map}
           >
+            {sliderCoords.map(coord => (
+              <Marker key={coord.locationName} coordinate={coord} />
+            ))}
+
             {/* <Marker
               coordinate={{ latitude: 40.6, longitude: -74 }}
               title={"first marker"}
@@ -493,34 +497,6 @@ export default class HomeScreen extends React.Component {
             </View>
           </Carousel>
         </View>
-        {/*
-      ________              __         ____         ____        __  __
-     / ____/ /_  ___  _____/ /__      /  _/___     / __ )__  __/ /_/ /_____  ____
-    / /   / __ \/ _ \/ ___/ //_/_____ / // __ \   / __  / / / / __/ __/ __ \/ __ \
-   / /___/ / / /  __/ /__/ ,< /_____// // / / /  / /_/ / /_/ / /_/ /_/ /_/ / / / /
-   \____/_/ /_/\___/\___/_/|_|     /___/_/ /_/  /_____/\__,_/\__/\__/\____/_/ /_/
-  */}
-        {/* <View style={styles.bottomButtonBox}>
-          <Button
-            style={{ flex: 1 }}
-            onPress={() => navigate("CheckIn", { name: this.state.text })}
-            title="Check In"
-            color="#841584"
-          />
-          <Button
-            style={{ flex: 1, alignItems: "center" }}
-            onPress={() =>
-              navigate("Directions", {
-                destLat: this.state.latitude,
-                destLong: this.state.longitude,
-                currentLong: this.state.currentLong,
-                currentLat: this.state.currentLat
-              })
-            }
-            title="Get Directions"
-            color="#841584"
-          />
-        </View> */}
       </View>
     );
   }
