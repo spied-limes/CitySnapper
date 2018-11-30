@@ -38,7 +38,7 @@ var Algorithmia = require('algorithmia');
 // });
 
 exports.compareImages2 = functions.database
-  .ref('/users/12345/images')
+  .ref('/users/12345/images') //needs to be tweaked
   .onCreate((snapshot, context) => {
     const algoInput = snapshot._data.image;
     console.log(algoInput);
@@ -70,20 +70,11 @@ exports.compareImages2 = functions.database
       .pipe(input)
       .then(response => {
         hello = response.get();
-        return console.log(response.get());
+        return response.get(); //you need to change this return statement so that it records the answer and sends it to the client
       });
 
     return -hello;
-    // Algorithmia.client('simU/Rj2U+vuIKeFWywiBm9LBJ41')
-    //   .algo('zskurultay/ImageSimilarity/0.1.4')
-    //   .pipe(input)
-    //   .then(response => {
-    //     hello = response.get();
-    //     console.log(hello);
-    //   })
-    //   .catch(error => {
-    //     console.log('hello2', error);
-    //     return error;
-    //   });
-    // return hello;
+    //create ref for database
+    //put hello into database
+    //when the database updates --> client needs to hear it
   });
