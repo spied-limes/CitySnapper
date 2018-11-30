@@ -1,5 +1,5 @@
-import * as firebase from "firebase";
-import { firebaseSecrets } from "../secrets";
+import * as firebase from 'firebase';
+import { firebaseSecrets } from '../secrets';
 
 // initialize firebase
 const firebaseConfig = firebaseSecrets;
@@ -13,13 +13,13 @@ export async function writeUserData(userId, userObj) {
   try {
     await firebase
       .database()
-      .ref("/users/" + userId)
+      .ref('/users/' + userId)
       .set({
         name: userObj.name,
         email: userObj.email,
-        homebaseLatitude: "",
-        homebaseLongitude: "",
-        places: "object"
+        homebaseLatitude: '',
+        homebaseLongitude: '',
+        places: 'object',
       });
   } catch (error) {
     console.error(error);
@@ -50,10 +50,24 @@ export async function setUserHomebaseLocation(userId, userObj) {
   try {
     await firebase
       .database()
-      .ref("/users/" + userId)
+      .ref('/users/' + userId)
       .update({
         homebaseLatitude: userObj.homebaseLatitude,
-        homebaseLongitude: userObj.homebaseLongitude
+        homebaseLongitude: userObj.homebaseLongitude,
+      });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Func to update user location permission. userPermission should  be a boolean.
+export async function setUserLocationPermissionTrue(userId) {
+  try {
+    await firebase
+      .database()
+      .ref('/users/' + userId)
+      .update({
+        permittedLocationUse: true,
       });
   } catch (error) {
     console.error(error);
@@ -72,20 +86,20 @@ export async function updateUserActivityData(placeId, activityId, activityObj) {
     );
 
     console.log(
-      "\nupdate func activityData: ",
+      '\nupdate func activityData: ',
       prevActivityData,
-      "\nupdate func activityObj",
+      '\nupdate func activityObj',
       activityObj
     );
 
     await firebase
       .database()
       .ref(
-        "/users/" + userId + "/places/" + placeId + "/actvities/" + activityId
+        '/users/' + userId + '/places/' + placeId + '/actvities/' + activityId
       )
       .update({
         ...prevActivityData,
-        ...activityObj
+        ...activityObj,
       });
   } catch (error) {
     console.error(error);
@@ -99,10 +113,10 @@ async function userActivityUpdateHelper(userId, placeId, activityId) {
 
     await db
       .ref(
-        "/users/" + userId + "/places/" + placeId + "/actvities/" + activityId
+        '/users/' + userId + '/places/' + placeId + '/actvities/' + activityId
       )
       .on(
-        "value",
+        'value',
         function(snapshot) {
           activityData = snapshot.val();
         },
@@ -110,7 +124,7 @@ async function userActivityUpdateHelper(userId, placeId, activityId) {
           console.log(error);
         }
       );
-    console.log("helper func userActivityData: ", activityData);
+    console.log('helper func userActivityData: ', activityData);
     return activityData;
   } catch (error) {
     console.error(error);
