@@ -9,7 +9,6 @@ import {
   View
 } from "react-native";
 import React from "react";
-import { List, ListItem } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { navigate } from "react-navigation";
 
@@ -221,7 +220,9 @@ export default class Quiz extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.answerButton}
-                  onPress={() => navigate("CheckIn", { name: "Times Square" })}
+                  onPress={() =>
+                    navigate("CheckIn", { location: "Times Square" })
+                  }
                 >
                   <Text style={styles.answerText}>No</Text>
                 </TouchableOpacity>
@@ -261,7 +262,11 @@ export default class Quiz extends React.Component {
             <View style={styles.navBox}>
               <View>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate("CheckIn")}
+                  onPress={() =>
+                    this.props.navigation.navigate("CheckIn", {
+                      location: "Times Square"
+                    })
+                  }
                 >
                   <Ionicons
                     name={
@@ -288,7 +293,11 @@ export default class Quiz extends React.Component {
             <View style={styles.returnToCheckInBox}>
               <TouchableOpacity
                 style={styles.answerButton}
-                onPress={() => this.props.navigation.navigate("CheckIn")}
+                onPress={() =>
+                  this.props.navigation.navigate("CheckIn", {
+                    location: "Times Square"
+                  })
+                }
               >
                 <Text style={styles.answerText}>Return to Check In</Text>
               </TouchableOpacity>
@@ -317,7 +326,7 @@ export default class Quiz extends React.Component {
               <TouchableOpacity
                 onPress={() =>
                   this.props.navigation.navigate("CheckIn", {
-                    name: "Times Square"
+                    location: "Times Square"
                   })
                 }
               >

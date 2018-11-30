@@ -142,7 +142,7 @@ export default class HomeScreen extends React.Component {
       destLat: regionObj.latitude,
       destLong: regionObj.longitude
     };
-    this.map.animateToRegion(regionObj, 1500);
+    this.map.animateToRegion(regionObj, 1000);
 
     console.log("navigateCoords", navigateCoords);
   }
@@ -175,29 +175,36 @@ export default class HomeScreen extends React.Component {
         locationName: "Fullstack Academy",
         latitude: 40.7051,
         longitude: -74.0092,
-        latitudeDelta: 0.003,
-        longitudeDelta: 0.0015
+        latitudeDelta: 0.004,
+        longitudeDelta: 0.002
       },
       {
         locationName: "Times Square",
         latitude: 40.7589,
         longitude: -73.9851,
-        latitudeDelta: 0.003,
-        longitudeDelta: 0.0015
+        latitudeDelta: 0.004,
+        longitudeDelta: 0.002
       },
       {
         locationName: "World Trade Center",
         latitude: 40.7118,
         longitude: -74.0131,
-        latitudeDelta: 0.003,
-        longitudeDelta: 0.0015
+        latitudeDelta: 0.004,
+        longitudeDelta: 0.002
       },
       {
         locationName: "Empire State Building",
         latitude: 40.7484,
         longitude: -73.9856,
-        latitudeDelta: 0.003,
-        longitudeDelta: 0.0015
+        latitudeDelta: 0.004,
+        longitudeDelta: 0.002
+      },
+      {
+        locationName: "Metropolitan Museum of Art",
+        latitude: 40.7794,
+        longitude: -73.9632,
+        latitudeDelta: 0.004,
+        longitudeDelta: 0.002
       }
     ];
 
@@ -400,10 +407,58 @@ export default class HomeScreen extends React.Component {
                     <Text
                       style={[
                         styles.locationButtonText,
-                        { marginTop: 50, paddingTop: 15 }
+                        { marginTop: 25, paddingTop: 0 }
                       ]}
                     >
                       Empire State Building
+                    </Text>
+                  </View>
+                  <View style={styles.locationActivityButtonBox}>
+                    <TouchableOpacity
+                      style={styles.locationActivityButton}
+                      onPress={() =>
+                        this.props.navigation.navigate("CheckIn", {
+                          location: "empireStateBuilding"
+                        })
+                      }
+                    >
+                      <Text style={styles.stretchLocationButtonText}>
+                        View Activities
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.locationActivityButton}
+                      onPress={() =>
+                        this.props.navigation.navigate(
+                          "Directions",
+                          navigateCoords
+                        )
+                      }
+                    >
+                      <Text style={styles.stretchLocationButtonText}>
+                        Navigate Here
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </ImageBackground>
+            </View>
+
+            {/* ##### MUSEUM OF METROPOLITAN ART SLIDER ##### */}
+            <View style={[styles.locationButtonBox, this.state.size]}>
+              <ImageBackground
+                source={require("../assets/images/ESB.jpg")}
+                style={styles.overlayImage}
+              >
+                <View style={styles.bgColorOverlay}>
+                  <View style={styles.stretchLocationButton}>
+                    <Text
+                      style={[
+                        styles.locationButtonText,
+                        { marginTop: 50, paddingTop: 15 }
+                      ]}
+                    >
+                      Metropolitan Museum of Art
                     </Text>
                   </View>
                   <View style={styles.locationActivityButtonBox}>
@@ -512,7 +567,7 @@ const styles = StyleSheet.create({
   },
   stretchLocationButtonText: {
     color: "white",
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: "Abril-FatFace",
     textShadowColor: "rgba(0, 0, 0, 0.95)",
     textShadowOffset: { width: -2, height: 2 },
@@ -527,7 +582,7 @@ const styles = StyleSheet.create({
   },
   locationButtonText: {
     color: "white",
-    fontSize: 36,
+    fontSize: 30,
     textAlign: "center",
     fontFamily: "Abril-FatFace",
     textShadowColor: "rgba(0, 0, 0, 0.95)",

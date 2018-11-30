@@ -179,7 +179,7 @@ class CheckInScreen extends React.Component {
                 onPress={() => this.props.navigation.navigate("Camera")}
               >
                 <Text style={styles.stretchActivityButtonText}>
-                  Recreate a Historical Photo
+                  Recreate a \nHistorical Photo
                 </Text>
               </TouchableOpacity>
               {/* </ImageBackground> */}

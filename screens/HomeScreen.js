@@ -3,9 +3,7 @@
 import React from "react";
 import {
   Alert,
-  Animated,
   ImageBackground,
-  Keyboard,
   KeyboardAvoidingView,
   LayoutAnimation,
   StyleSheet,
@@ -24,10 +22,7 @@ import {
 } from "../redux/app-redux";
 import { Button, Container, Form, Icon, Input, Item } from "native-base";
 import * as firebase from "firebase";
-import {
-  writeUserData,
-  updateUserActivityData
-} from "../firebase/firebaseConfig";
+import { writeUserData } from "../firebase/firebaseConfig";
 
 // ###################################
 // Prep for Monday 26 Nov code review.
@@ -337,7 +332,7 @@ class HomeScreen extends React.Component {
                     <Text style={{ color: "white" }}>Login</Text>
                   </Button>
                   {/* CAMERA BUTTON FOR DEBUG */}
-                  {/* <Button
+                  <Button
                     style={{ marginTop: 15 }}
                     full
                     rounded
@@ -345,7 +340,7 @@ class HomeScreen extends React.Component {
                     onPress={() => this.props.navigation.navigate("CheckIn")}
                   >
                     <Text style={{ color: "black" }}>Go to Camera</Text>
-                  </Button> */}
+                  </Button>
                 </View>
               ) : (
                 <View>
@@ -404,20 +399,15 @@ class HomeScreen extends React.Component {
                     <Text style={{ color: "white" }}>Sign Up</Text>
                   </Button>
                   {/* MAP BUTTON FOR DEBUG */}
-                  {/* <Button
+                  <Button
                     style={{ marginTop: 15 }}
                     full
                     rounded
                     warning
-                    onPress={
-                      () => this.props.navigation.navigate("Map")
-                      // this.props.navigation.navigate("CheckIn", {
-                      //   name: "Times Square"
-                      // })
-                    }
+                    onPress={() => this.props.navigation.navigate("Map")}
                   >
                     <Text style={{ color: "black" }}>Go to Map</Text>
-                  </Button> */}
+                  </Button>
                 </View>
               )}
             </View>
@@ -465,8 +455,8 @@ const styles = StyleSheet.create({
   },
   textLogo: {
     color: "white",
-    fontSize: 80,
-    lineHeight: 84,
+    fontSize: 60,
+    lineHeight: 66,
     fontFamily: "Abril-FatFace",
     textShadowColor: "black",
     textShadowOffset: { width: 3, height: 3 },
@@ -492,7 +482,7 @@ const styles = StyleSheet.create({
   toggleButtons: {
     color: "rgba(255,255,255,0.5)",
     fontFamily: "Abril-FatFace",
-    fontSize: 36,
+    fontSize: 30,
     textShadowColor: "black",
     textShadowOffset: { width: 3, height: 1 },
     textShadowRadius: 3
