@@ -64,18 +64,20 @@ class CheckInScreen extends React.Component {
     }
   };
 
-  componentDidUpdate = async () => {
-    try {
-      const { params } = this.props.navigation.state;
-      const locationForDB = params.location;
+  // Removes chance of red errors for during demo recording
+  //
+  // componentDidUpdate = async () => {
+  //   try {
+  //     const { params } = this.props.navigation.state;
+  //     const locationForDB = params.location;
 
-      if (this.props.places && this.props.places[locationForDB]) {
-        refDataObject = this.props.places[params.location];
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     if (this.props.places && this.props.places[locationForDB]) {
+  //       refDataObject = this.props.places[params.location];
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   _onLayoutDidChange = e => {
     const layout = e.nativeEvent.layout;
@@ -169,6 +171,21 @@ class CheckInScreen extends React.Component {
             currentPage={3}
             onAnimateNextPage={p => console.log(p, "is current page")}
           >
+            {/* ##### QUIZ SLIDE ##### */}
+            <View style={[styles.activityButtonBox, this.state.size]}>
+              <TouchableOpacity
+                style={styles.stretchActivityButton}
+                onPress={() => this.props.navigation.navigate("Quiz")}
+              >
+                <Text style={styles.stretchActivityButtonHeadline}>
+                  Test Your Knowledge
+                </Text>
+                <Text style={styles.stretchActivityButtonText}>
+                  See if you can answer these five challenging questions.
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/* ##### HISTORIC PHOTO SLIDE ##### */}
             <View style={[styles.activityButtonBox, this.state.size]}>
               {/* <ImageBackground
                 source={require("../assets/images/ESB2-BW.jpg")}
@@ -178,21 +195,14 @@ class CheckInScreen extends React.Component {
                 style={styles.stretchActivityButton}
                 onPress={() => this.props.navigation.navigate("Camera")}
               >
+                <Text style={styles.stretchActivityButtonHeadline}>
+                  Recreate A Historic Photo
+                </Text>
                 <Text style={styles.stretchActivityButtonText}>
-                  Recreate a \nHistorical Photo
+                  Step back into the past and stand in the photographer's shoes.
                 </Text>
               </TouchableOpacity>
               {/* </ImageBackground> */}
-            </View>
-            <View style={[styles.activityButtonBox, this.state.size]}>
-              <TouchableOpacity
-                style={styles.stretchActivityButton}
-                onPress={() => this.props.navigation.navigate("Quiz")}
-              >
-                <Text style={styles.stretchActivityButtonText}>
-                  Test Your Knowledge
-                </Text>
-              </TouchableOpacity>
             </View>
           </Carousel>
         </View>
@@ -299,10 +309,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  stretchActivityButtonHeadline: {
+    color: "white",
+    fontSize: 28,
+    paddingHorizontal: 65,
+    textAlign: "center",
+    fontFamily: "Abril-FatFace",
+    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    textShadowOffset: { width: -2, height: 2 },
+    textShadowRadius: 2,
+    zIndex: 10
+  },
   stretchActivityButtonText: {
     color: "white",
-    fontSize: 24,
-    fontFamily: "Abril-FatFace",
+    paddingTop: 15,
+    paddingHorizontal: 75,
+    textAlign: "center",
+    fontSize: 18,
     textShadowColor: "rgba(0, 0, 0, 0.95)",
     textShadowOffset: { width: -2, height: 2 },
     textShadowRadius: 2,

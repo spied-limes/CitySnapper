@@ -19,7 +19,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { createStackNavigator } from "react-navigation";
 import MapViewDirections from "react-native-maps-directions";
-import MapView, { Marker, AnimatedRegion, Animated } from "react-native-maps";
+import MapView, { AnimatedRegion, Animated } from "react-native-maps";
 import DropdownMenu from "react-native-dropdown-menu";
 import { Constants, Location, Permissions } from "expo";
 import CheckinScreen from "./CheckInScreen";
@@ -135,14 +135,14 @@ export default class HomeScreen extends React.Component {
   };
 
   // Both of these functions use `this.map`, a ref created INSIDE the <MapView /> component
-  changeLocationAndState(regionObj, locationName) {
+  changeLocationAndState(regionObj) {
     navigateCoords = {
       currentLat: this.state.currentLat,
       currentLong: this.state.currentLong,
       destLat: regionObj.latitude,
       destLong: regionObj.longitude
     };
-    this.map.animateToRegion(regionObj, 1000);
+    this.map.animateToRegion(regionObj, 750);
 
     console.log("navigateCoords", navigateCoords);
   }
@@ -233,20 +233,15 @@ export default class HomeScreen extends React.Component {
             showsUserLocation={true}
             style={styles.map}
           >
-            {sliderCoords.map(coord => (
-              <Marker key={coord.locationName} coordinate={coord} />
+            {sliderCoords.map(coordinate => (
+              <MapView.Marker
+                key={`${coordinate.locationName}`}
+                coordinate={{
+                  latitude: coordinate.latitude,
+                  longitude: coordinate.longitude
+                }}
+              />
             ))}
-
-            {/* <Marker
-              coordinate={{ latitude: 40.6, longitude: -74 }}
-              title={"first marker"}
-              description={"jkh"}
-              onPress={() =>
-                this.state.latitude === 40.6 && longitude === -74
-                  ? console.log("success")
-                  : console.log("failure")
-              }
-            /> */}
           </MapView>
         </View>
         {/*
@@ -288,7 +283,14 @@ export default class HomeScreen extends React.Component {
 /_____/\____/\___/\__,_/\__/_/\____/_/ /_/____/_/_/\__,_/\___/_/  /____/
 
           */}
-            {/* ##### FULLSTACK ACADEMY SLIDER ##### */}
+            {/*
+    ______      ____     __             __
+   / ____/_  __/ / /____/ /_____ ______/ /__
+  / /_  / / / / / / ___/ __/ __ `/ ___/ //_/
+ / __/ / /_/ / / (__  ) /_/ /_/ / /__/ ,<
+/_/    \__,_/_/_/____/\__/\__,_/\___/_/|_|
+
+           */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
                 source={require("../assets/images/FSA.jpg")}
@@ -304,7 +306,14 @@ export default class HomeScreen extends React.Component {
               </ImageBackground>
             </View>
 
-            {/* ##### TIMES SQUARE SLIDER ##### */}
+            {/*
+  _______                     _____
+ /_  __(_)___ ___  ___  _____/ ___/____ ___  ______ _________
+  / / / / __ `__ \/ _ \/ ___/\__ \/ __ `/ / / / __ `/ ___/ _ \
+ / / / / / / / / /  __(__  )___/ / /_/ / /_/ / /_/ / /  /  __/
+/_/ /_/_/ /_/ /_/\___/____//____/\__, /\__,_/\__,_/_/   \___/
+                                   /_/
+            */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
                 source={require("../assets/images/timesSquare.jpg")}
@@ -352,7 +361,14 @@ export default class HomeScreen extends React.Component {
               </ImageBackground>
             </View>
 
-            {/* ##### WORLD TRADE CENTER SLIDER ##### */}
+            {/*
+ _       __           __    ________               __
+| |     / /___  _____/ /___/ /_  __/________ _____/ /__
+| | /| / / __ \/ ___/ / __  / / / / ___/ __ `/ __  / _ \
+| |/ |/ / /_/ / /  / / /_/ / / / / /  / /_/ / /_/ /  __/
+|__/|__/\____/_/  /_/\__,_/ /_/ /_/   \__,_/\__,_/\___/
+
+            */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
                 source={require("../assets/images/WTC.jpg")}
@@ -400,7 +416,14 @@ export default class HomeScreen extends React.Component {
               </ImageBackground>
             </View>
 
-            {/* ##### EMPIRE STATE BUILDING SLIDER ##### */}
+            {/*
+    ______                _          _____ __        __
+   / ____/___ ___  ____  (_)_______ / ___// /_____ _/ /____
+  / __/ / __ `__ \/ __ \/ / ___/ _ \\__ \/ __/ __ `/ __/ _ \
+ / /___/ / / / / / /_/ / / /  /  __/__/ / /_/ /_/ / /_/  __/
+/_____/_/ /_/ /_/ .___/_/_/   \___/____/\__/\__,_/\__/\___/
+               /_/
+            */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
                 source={require("../assets/images/ESB.jpg")}
@@ -411,7 +434,7 @@ export default class HomeScreen extends React.Component {
                     <Text
                       style={[
                         styles.locationButtonText,
-                        { marginTop: 25, paddingTop: 0 }
+                        { marginTop: 50, paddingTop: 0 }
                       ]}
                     >
                       Empire State Building
@@ -448,10 +471,16 @@ export default class HomeScreen extends React.Component {
               </ImageBackground>
             </View>
 
-            {/* ##### MUSEUM OF METROPOLITAN ART SLIDER ##### */}
+            {/*
+  ________         __  ___     __
+ /_  __/ /_  ___  /  |/  /__  / /_
+  / / / __ \/ _ \/ /|_/ / _ \/ __/
+ / / / / / /  __/ /  / /  __/ /_
+/_/ /_/ /_/\___/_/  /_/\___/\__/
+            */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
-                source={require("../assets/images/ESB.jpg")}
+                source={require("../assets/images/TheMet.jpg")}
                 style={styles.overlayImage}
               >
                 <View style={styles.bgColorOverlay}>

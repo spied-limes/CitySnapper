@@ -1,3 +1,5 @@
+/* eslint-disable quotes */
+/* eslint-disable no-use-before-define */
 import {
   Constants,
   Camera,
@@ -10,15 +12,18 @@ import {
   Alert,
   Button,
   ImageBackground,
+  Modal,
+  Platform,
+  Slider,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  Slider,
-  Platform
+  TouchableHighlight,
+  View
 } from "react-native";
 // import GalleryScreen from "../components/Gallery";
 import { navigate } from "react-navigation";
+import { WaveIndicator } from "react-native-indicators";
 
 import {
   Ionicons,
@@ -77,7 +82,8 @@ export default class CameraScreen extends React.Component {
     pictureSizes: [],
     pictureSizeId: 0,
     showGallery: false,
-    showMoreOptions: false
+    showMoreOptions: false,
+    modalVisible: false
   };
   static navigationOptions = { header: null };
 
@@ -152,7 +158,7 @@ export default class CameraScreen extends React.Component {
   takePicture = () => {
     if (this.camera) {
       this.camera.takePictureAsync({
-        // onPictureSaved: this.onPictureSaved
+        // onPictureSaved: this.onPictureSaved});
       });
     }
   };
@@ -247,7 +253,7 @@ export default class CameraScreen extends React.Component {
 
   renderTopBar = () => (
     <View style={styles.topBar}>
-      <TouchableOpacity style={styles.toggleButton} onPress={this.toggleFacing}>
+      {/* <TouchableOpacity style={styles.toggleButton} onPress={this.toggleFacing}>
         <Ionicons name="ios-reverse-camera" size={32} color="white" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.toggleButton} onPress={this.toggleFlash}>
@@ -275,49 +281,59 @@ export default class CameraScreen extends React.Component {
         >
           AF
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 
   renderBottomBar = () => (
     <View style={styles.bottomBar}>
-      <TouchableOpacity
-        style={styles.bottomButton}
-        onPress={() => {
-          this.props.navigation.navigate("Map");
+      <View
+        style={{
+          flex: 8,
+          justifyContent: "center",
+          backgroundColor: "transparent"
         }}
       >
-        <MaterialIcons name="photo-size-select-large" size={40} color="white" />
-      </TouchableOpacity>
-      <View style={{ flex: 0.4 }}>
         <TouchableOpacity
-          onPress={this.showAlert}
-          style={{ alignSelf: "center" }}
+          onPress={() => {
+            this.setModalVisible(true);
+          }}
+          style={{ justifyContent: "center", alignItems: "center" }}
         >
+          {/* style={{ alignSelf: "center" }} */}
+          {/* > */}
           <Ionicons
             name="ios-radio-button-on"
-            size={80}
+            size={125}
             color="white"
             opacity="1"
           />
         </TouchableOpacity>
       </View>
-      {/*
-
-      OLD Gallery Component button
-
-      <TouchableOpacity style={styles.bottomButton} onPress={this.toggleView}>
-        <View>
-          <Ionicons name="md-images" size={40} color="white" />
-          {this.state.newPhotos && <View style={styles.newPhotosDot} />}
-        </View>
-      </TouchableOpacity> */}
+      <View
+        style={{
+          flex: 2,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "black"
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 24,
+            fontFamily: "Abril-FatFace",
+            color: "white"
+          }}
+        >
+          Description of old photo
+        </Text>
+      </View>
     </View>
   );
 
   renderMoreOptions = () => (
     <View style={styles.options}>
-      <View style={styles.pictureSizeContainer}>
+      {/* <View style={styles.pictureSizeContainer}>
         <Text style={styles.pictureQualityLabel}>Resolution</Text>
         <View style={styles.pictureSizeChooser}>
           <TouchableOpacity
@@ -336,12 +352,37 @@ export default class CameraScreen extends React.Component {
             <Ionicons name="md-arrow-dropright" size={24} color="white" />
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
     </View>
   );
 
   renderCamera = () => (
     <View style={{ flex: 1 }}>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={this.state.modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <View>
+            <Text>Hello World!</Text>
+
+            <TouchableHighlight
+              onPress={() => {
+                this.setModalVisible(!this.state.modalVisible);
+                this.props.navigation.navigate("CheckIn", {
+                  location: "Times Square"
+                });
+              }}
+            >
+              <Text>Hide Modal</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </Modal>
       <ImageBackground
         source={require("../assets/images/ESB2-BW.jpg")}
         style={styles.overlayImage}
@@ -384,6 +425,10 @@ export default class CameraScreen extends React.Component {
     </View>
   );
 
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
   render() {
     const cameraScreenContent = this.state.permissionsGranted
       ? this.renderCamera()
@@ -418,12 +463,9 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight / 2
   },
   bottomBar: {
-    paddingBottom: 5,
-    backgroundColor: "transparent",
-    alignSelf: "center",
-    justifyContent: "space-between",
-    flex: 0.12,
-    flexDirection: "row"
+    alignItems: "stretch",
+    justifyContent: "center",
+    flex: 0.25
   },
   noPermissions: {
     flex: 1,
@@ -499,5 +541,8 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row"
+  },
+  modalContainer: {
+    backgroundColor: "transparent"
   }
 });
