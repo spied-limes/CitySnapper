@@ -168,41 +168,49 @@ class CheckInScreen extends React.Component {
             rightArrowStyle={{ color: "white", fontSize: 30, marginRight: 20 }}
             arrows
             autoplay={false}
-            currentPage={3}
+            currentPage={0}
             onAnimateNextPage={p => console.log(p, "is current page")}
           >
             {/* ##### QUIZ SLIDE ##### */}
             <View style={[styles.activityButtonBox, this.state.size]}>
-              <TouchableOpacity
-                style={styles.stretchActivityButton}
-                onPress={() => this.props.navigation.navigate("Quiz")}
+              <ImageBackground
+                source={require("../assets/images/QuizBG.jpg")}
+                style={styles.overlayImage}
               >
-                <Text style={styles.stretchActivityButtonHeadline}>
-                  Test Your Knowledge
-                </Text>
-                <Text style={styles.stretchActivityButtonText}>
-                  See if you can answer these five challenging questions.
-                </Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.stretchActivityButton}
+                  onPress={() => this.props.navigation.navigate("Quiz")}
+                >
+                  <Text style={styles.stretchActivityButtonHeadline}>
+                    Test Your Knowledge
+                  </Text>
+                  <Text style={styles.stretchActivityButtonText}>
+                    See if you can answer these five challenging questions.
+                  </Text>
+                </TouchableOpacity>
+              </ImageBackground>
             </View>
             {/* ##### HISTORIC PHOTO SLIDE ##### */}
             <View style={[styles.activityButtonBox, this.state.size]}>
-              {/* <ImageBackground
-                source={require("../assets/images/ESB2-BW.jpg")}
+              <ImageBackground
+                source={require("../assets/images/OTS1.jpg")}
                 style={styles.overlayImage}
-              > */}
-              <TouchableOpacity
-                style={styles.stretchActivityButton}
-                onPress={() => this.props.navigation.navigate("Camera")}
               >
-                <Text style={styles.stretchActivityButtonHeadline}>
-                  Recreate A Historic Photo
-                </Text>
-                <Text style={styles.stretchActivityButtonText}>
-                  Step back into the past and stand in the photographer's shoes.
-                </Text>
-              </TouchableOpacity>
-              {/* </ImageBackground> */}
+                <View style={styles.bgOverlayBox}>
+                  <TouchableOpacity
+                    style={styles.stretchActivityButton}
+                    onPress={() => this.props.navigation.navigate("Camera")}
+                  >
+                    <Text style={styles.stretchActivityButtonHeadline}>
+                      Recreate A Historic Photo
+                    </Text>
+                    <Text style={styles.stretchActivityButtonText}>
+                      Step back into the past and stand in the photographer's
+                      shoes.
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </ImageBackground>
             </View>
           </Carousel>
         </View>

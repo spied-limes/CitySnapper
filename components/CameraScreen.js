@@ -23,7 +23,7 @@ import {
 } from "react-native";
 // import GalleryScreen from "../components/Gallery";
 import { navigate } from "react-navigation";
-import { WaveIndicator } from "react-native-indicators";
+import { BarIndicator } from "react-native-indicators";
 
 import {
   Ionicons,
@@ -83,7 +83,8 @@ export default class CameraScreen extends React.Component {
     pictureSizeId: 0,
     showGallery: false,
     showMoreOptions: false,
-    modalVisible: false
+    modalVisible: false,
+    showAnswer: false
   };
   static navigationOptions = { header: null };
 
@@ -166,13 +167,13 @@ export default class CameraScreen extends React.Component {
   showAlert = () => {
     Alert.alert(
       "Matching Success",
-      "You did it!",
+      "Your picture was an 81% match!",
       [
         {
           text: "OK",
           onPress: () => {
             this.props.navigation.navigate("CheckIn", {
-              location: "empireStateBuilding"
+              location: "Times Square"
             });
           }
         }
@@ -297,11 +298,10 @@ export default class CameraScreen extends React.Component {
         <TouchableOpacity
           onPress={() => {
             this.setModalVisible(true);
+            this.showPhotoResults();
           }}
           style={{ justifyContent: "center", alignItems: "center" }}
         >
-          {/* style={{ alignSelf: "center" }} */}
-          {/* > */}
           <Ionicons
             name="ios-radio-button-on"
             size={125}
@@ -318,15 +318,7 @@ export default class CameraScreen extends React.Component {
           backgroundColor: "black"
         }}
       >
-        <Text
-          style={{
-            fontSize: 24,
-            fontFamily: "Abril-FatFace",
-            color: "white"
-          }}
-        >
-          Description of old photo
-        </Text>
+        <Text style={styles.historicPhotoCaption}>Times Square, 1930</Text>
       </View>
     </View>
   );
@@ -356,74 +348,111 @@ export default class CameraScreen extends React.Component {
     </View>
   );
 
-  renderCamera = () => (
-    <View style={{ flex: 1 }}>
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={this.state.modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-        }}
-      >
-        <View style={styles.modalContainer}>
-          <View>
-            <Text>Hello World!</Text>
-
-            <TouchableHighlight
-              onPress={() => {
-                this.setModalVisible(!this.state.modalVisible);
-                this.props.navigation.navigate("CheckIn", {
-                  location: "Times Square"
-                });
-              }}
-            >
-              <Text>Hide Modal</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
-      </Modal>
-      <ImageBackground
-        source={require("../assets/images/ESB2-BW.jpg")}
-        style={styles.overlayImage}
-      >
-        <Camera
-          ref={ref => {
-            this.camera = ref;
+  /*
+                        __          ______
+   ________  ____  ____/ /__  _____/ ____/___ _____ ___  ___  _________ _
+  / ___/ _ \/ __ \/ __  / _ \/ ___/ /   / __ `/ __ `__ \/ _ \/ ___/ __ `/
+ / /  /  __/ / / / /_/ /  __/ /  / /___/ /_/ / / / / / /  __/ /  / /_/ /
+/_/   \___/_/ /_/\__,_/\___/_/   \____/\__,_/_/ /_/ /_/\___/_/   \__,_/
+*/
+  renderCamera = () => {
+    return (
+      <View style={{ flex: 1 }}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            console.log("Back button hit; Modal has been closed.");
           }}
-          style={styles.camera}
-          onCameraReady={this.collectPictureSizes}
-          type={this.state.type}
-          flashMode={this.state.flash}
-          autoFocus={this.state.autoFocus}
-          zoom={this.state.zoom}
-          whiteBalance={this.state.whiteBalance}
-          ratio={this.state.ratio}
-          pictureSize={this.state.pictureSize}
-          onMountError={this.handleMountError}
-          onFacesDetected={
-            this.state.faceDetecting ? this.onFacesDetected : undefined
-          }
-          onFaceDetectionError={this.onFaceDetectionError}
-          barCodeScannerSettings={{
-            barCodeTypes: [
-              BarCodeScanner.Constants.BarCodeType.qr,
-              BarCodeScanner.Constants.BarCodeType.pdf417
-            ]
-          }}
-          onBarCodeScanned={
-            this.state.barcodeScanning ? this.onBarCodeScanned : undefined
-          }
         >
-          {this.renderTopBar()}
-          {this.renderBottomBar()}
-        </Camera>
-      </ImageBackground>
-      {this.state.faceDetecting && this.renderFaces()}
-      {this.state.faceDetecting && this.renderLandmarks()}
-      {this.state.showMoreOptions && this.renderMoreOptions()}
-    </View>
-  );
+          <View style={styles.modalContainer}>
+            <View style={styles.processingBlocks} />
+            {!this.state.showAnswer ? (
+              <View style={styles.processingContainer}>
+                <Text style={styles.processingTitle}>Processing...</Text>
+                <View>
+                  <BarIndicator color="white" count={5} size={60} />
+                </View>
+              </View>
+            ) : (
+              <View style={styles.processingContainer}>
+                <View style={styles.answerBox}>
+                  <Text style={styles.processingTitle}>Nice!</Text>
+                </View>
+
+                <View style={styles.answerBox}>
+                  <Text style={styles.processingText}>
+                    Your picture was an 81% match.
+                  </Text>
+                </View>
+                <TouchableHighlight
+                  style={styles.answerBoxButton}
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                    this.props.navigation.navigate("CheckIn", {
+                      location: "Times Square"
+                    });
+                  }}
+                >
+                  <Text style={styles.modalReturnButtonText}>
+                    Back to Activities
+                  </Text>
+                </TouchableHighlight>
+              </View>
+            )}
+            <View style={styles.processingBlocks} />
+          </View>
+        </Modal>
+        <ImageBackground
+          source={require("../assets/images/OTS1.jpg")}
+          style={styles.overlayImage}
+        >
+          <Camera
+            ref={ref => {
+              this.camera = ref;
+            }}
+            style={styles.camera}
+            onCameraReady={this.collectPictureSizes}
+            type={this.state.type}
+            flashMode={this.state.flash}
+            autoFocus={this.state.autoFocus}
+            zoom={this.state.zoom}
+            whiteBalance={this.state.whiteBalance}
+            ratio={this.state.ratio}
+            pictureSize={this.state.pictureSize}
+            onMountError={this.handleMountError}
+            onFacesDetected={
+              this.state.faceDetecting ? this.onFacesDetected : undefined
+            }
+            onFaceDetectionError={this.onFaceDetectionError}
+            barCodeScannerSettings={{
+              barCodeTypes: [
+                BarCodeScanner.Constants.BarCodeType.qr,
+                BarCodeScanner.Constants.BarCodeType.pdf417
+              ]
+            }}
+            onBarCodeScanned={
+              this.state.barcodeScanning ? this.onBarCodeScanned : undefined
+            }
+          >
+            {this.renderTopBar()}
+            {this.renderBottomBar()}
+          </Camera>
+        </ImageBackground>
+        {this.state.faceDetecting && this.renderFaces()}
+        {this.state.faceDetecting && this.renderLandmarks()}
+        {this.state.showMoreOptions && this.renderMoreOptions()}
+      </View>
+    );
+  };
+
+  showPhotoResults = () => {
+    setTimeout(() => {
+      console.log("Timer done; setting new state.");
+      this.setState({ showAnswer: true });
+    }, 2000);
+  };
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
@@ -542,7 +571,49 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row"
   },
+  historicPhotoCaption: {
+    fontSize: 24,
+    fontFamily: "Abril-FatFace",
+    color: "white"
+  },
   modalContainer: {
-    backgroundColor: "transparent"
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.75)",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  processingContainer: {
+    flex: 3,
+    justifyContent: "center"
+  },
+  processingBlocks: {
+    flex: 3.5
+  },
+  processingTitle: {
+    textAlign: "center",
+    fontSize: 40,
+    fontFamily: "Abril-FatFace",
+    color: "white"
+  },
+  processingText: {
+    textAlign: "center",
+    fontSize: 20,
+    color: "white"
+  },
+  answerBox: {
+    flex: 1,
+    justifyContent: "space-between"
+  },
+  answerBoxButton: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  modalReturnButtonText: {
+    flex: 1,
+    alignSelf: "center",
+    textAlign: "center",
+    color: "white",
+    fontSize: 20
   }
 });
