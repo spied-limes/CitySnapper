@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable quotes */
 /* eslint-disable react/no-deprecated */
-import React from "react";
+import React from 'react';
 import {
   Alert,
   Button,
@@ -14,32 +14,40 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { createStackNavigator } from "react-navigation";
-import MapViewDirections from "react-native-maps-directions";
-import MapView, { AnimatedRegion, Animated } from "react-native-maps";
-import DropdownMenu from "react-native-dropdown-menu";
-import { Constants, Location, Permissions } from "expo";
-import CheckinScreen from "./CheckInScreen";
-import * as firebase from "firebase";
+  View,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { createStackNavigator } from 'react-navigation';
+import MapViewDirections from 'react-native-maps-directions';
+import MapView, { AnimatedRegion, Animated } from 'react-native-maps';
+import DropdownMenu from 'react-native-dropdown-menu';
+import { Constants, Location, Permissions } from 'expo';
+import CheckinScreen from './CheckInScreen';
+import * as firebase from 'firebase';
+
+import Carousel from 'react-native-looped-carousel';
 import {
   updateUserCurrentLocation,
-  setUserHomebaseLocation
-} from "../firebase/firebaseConfig";
-import Carousel from "react-native-looped-carousel";
+  setUserHomebaseLocation,
+  setUserLocationPermissionTrue,
+} from '../firebase/firebaseConfig';
+import {
+  watchUserData,
+  watchPlaceData,
+  watchActivityData,
+} from '../redux/app-redux';
+import { connect } from 'react-redux';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
 let navigateCoords = {
   destLat: null,
-  destLong: null
+  destLong: null,
 };
 
-export default class HomeScreen extends React.Component {
+class MapScreen extends React.Component {
   static navigationOptions = {
-    header: null
+    header: null,
   };
 
   constructor() {
@@ -51,76 +59,87 @@ export default class HomeScreen extends React.Component {
       latitudeDelta: 0.003,
       longitudeDelta: 0.0015,
       errorMessage: null,
-      text: "Current Location",
+      text: 'Current Location',
       // for current storage
       currentLat: null,
       currentLong: null,
-      permittedLocationUse: false
+      permittedLocationUse: false,
     };
   }
 
   // This componentWillMount does the work of getInitialState() in setting up the region
-  componentWillMount() {
-    if (Platform.OS === "android" && !Constants.isDevice) {
-      this.setState({
-        errorMessage:
-          "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
-      });
-    } else {
-      this._getLocationAsync();
-    }
-  }
+  // componentWillMount() {
+  //   if (Platform.OS === 'android' && !Constants.isDevice) {
+  //     this.setState({
+  //       errorMessage:
+  //         'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+  //     });
+  //   } else {
+  //     this._getLocationAsync();
+  //   }
+  // }
 
-  componentDidMount() {
-    const userId = firebase.auth().currentUser
-      ? firebase.auth().currentUser.uid
-      : "RichIDidItTheresABackgroundImageOnASlider";
+  // async componentDidMount() {
+  //   const userId = firebase.auth().currentUser
+  //     ? firebase.auth().currentUser.uid
+  //     : 'RichIDidItTheresABackgroundImageOnASlider';
 
-    console.log("permittedLocationUse: ", this.state.permittedLocationUse);
-    !this.state.permittedLocationUse &&
-      Alert.alert(
-        "Set Homebase",
-        "Use current location as homeBase?",
-        [
-          {
-            text: "NO",
-            onPress: () => {
-              console.log("NO Pressed");
-              this.setState({
-                errorMessage: "Permission to access location was denied"
-              });
-            }
-          },
-          {
-            text: "OK",
-            onPress: async () => {
-              this.setState({ permittedLocationUse: true });
-              await this._getLocationAsync();
-              await setUserHomebaseLocation(userId, {
-                homebaseLatitude: this.state.currentLat,
-                homebaseLongitude: this.state.currentLong
-              });
-              console.log(
-                "this.state.currentLat:",
-                this.state.currentLat,
-                "this.state.currentLong:",
-                this.state.currentLong
-              );
-              console.log("OK Pressed");
-            }
-          }
-        ],
-        {
-          cancelable: false
-        }
-      );
-  }
+  //   // populate props with latest redux info
+  //   await this.props.watchUser();
+  //   await this.props.watchPlaces();
+  //   await this.props.watchActivities();
+
+  //   // if user hasn't set homebase yet:
+
+  //   this.props.userData &&
+  //     console.log(
+  //       'permittedLocationUse: ',
+  //       this.props.userData.permittedLocationUse
+  //     );
+  //   !this.props.userData.permittedLocationUse &&
+  //     Alert.alert(
+  //       'Set Homebase',
+  //       'Use current location as homeBase?',
+  //       [
+  //         {
+  //           text: 'NO',
+  //           onPress: () => {
+  //             console.log('NO Pressed');
+  //             this.setState({
+  //               errorMessage: 'Permission to access location was denied',
+  //             });
+  //           },
+  //         },
+  //         {
+  //           text: 'OK',
+  //           onPress: async () => {
+  //             this.setState({ permittedLocationUse: true });
+  //             await this._getLocationAsync();
+  //             await setUserHomebaseLocation(userId, {
+  //               homebaseLatitude: this.state.currentLat,
+  //               homebaseLongitude: this.state.currentLong,
+  //             });
+  //             console.log(
+  //               'this.state.currentLat:',
+  //               this.state.currentLat,
+  //               'this.state.currentLong:',
+  //               this.state.currentLong
+  //             );
+  //             console.log('OK Pressed');
+  //           },
+  //         },
+  //       ],
+  //       {
+  //         cancelable: false,
+  //       }
+  //     );
+  // }
 
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
+    if (status !== 'granted') {
       this.setState({
-        errorMessage: "Permission to access location was denied"
+        errorMessage: 'Permission to access location was denied',
       });
     }
 
@@ -130,7 +149,7 @@ export default class HomeScreen extends React.Component {
       longitude: location.coords.longitude,
       latitude: location.coords.latitude,
       currentLong: location.coords.longitude,
-      currentLat: location.coords.latitude
+      currentLat: location.coords.latitude,
     });
   };
 
@@ -140,17 +159,17 @@ export default class HomeScreen extends React.Component {
       currentLat: this.state.currentLat,
       currentLong: this.state.currentLong,
       destLat: regionObj.latitude,
-      destLong: regionObj.longitude
+      destLong: regionObj.longitude,
     };
     this.map.animateToRegion(regionObj, 750);
 
-    console.log("navigateCoords", navigateCoords);
+    console.log('navigateCoords', navigateCoords);
   }
 
   fitAllMarkers(markers) {
     this.map.fitToCoordinates(markers, {
       edgePadding: mapPadding,
-      animated: true
+      animated: true,
     });
   }
 
@@ -172,40 +191,40 @@ export default class HomeScreen extends React.Component {
 
     const sliderCoords = [
       {
-        locationName: "Fullstack Academy",
+        locationName: 'Fullstack Academy',
         latitude: 40.7051,
         longitude: -74.0092,
         latitudeDelta: 0.004,
-        longitudeDelta: 0.002
+        longitudeDelta: 0.002,
       },
       {
-        locationName: "Times Square",
+        locationName: 'Times Square',
         latitude: 40.7589,
         longitude: -73.9851,
         latitudeDelta: 0.004,
-        longitudeDelta: 0.002
+        longitudeDelta: 0.002,
       },
       {
-        locationName: "World Trade Center",
+        locationName: 'World Trade Center',
         latitude: 40.7118,
         longitude: -74.0131,
         latitudeDelta: 0.004,
-        longitudeDelta: 0.002
+        longitudeDelta: 0.002,
       },
       {
-        locationName: "Empire State Building",
+        locationName: 'Empire State Building',
         latitude: 40.7484,
         longitude: -73.9856,
         latitudeDelta: 0.004,
-        longitudeDelta: 0.002
+        longitudeDelta: 0.002,
       },
       {
-        locationName: "Metropolitan Museum of Art",
+        locationName: 'Metropolitan Museum of Art',
         latitude: 40.7794,
         longitude: -73.9632,
         latitudeDelta: 0.004,
-        longitudeDelta: 0.002
-      }
+        longitudeDelta: 0.002,
+      },
     ];
 
     return (
@@ -228,7 +247,7 @@ export default class HomeScreen extends React.Component {
               latitude: this.state.latitude,
               longitude: this.state.longitude,
               latitudeDelta: 0.005,
-              longitudeDelta: 0.00155
+              longitudeDelta: 0.00155,
             }}
             showsUserLocation={true}
             style={styles.map}
@@ -238,7 +257,7 @@ export default class HomeScreen extends React.Component {
                 key={`${coordinate.locationName}`}
                 coordinate={{
                   latitude: coordinate.latitude,
-                  longitude: coordinate.longitude
+                  longitude: coordinate.longitude,
                 }}
               />
             ))}
@@ -256,10 +275,10 @@ export default class HomeScreen extends React.Component {
           <Carousel
             ref={ref => (this.carousel = ref)}
             style={this.state.size}
-            leftArrowText={"＜"}
-            leftArrowStyle={{ color: "white", fontSize: 30, marginLeft: 20 }}
-            rightArrowText={"＞"}
-            rightArrowStyle={{ color: "white", fontSize: 30, marginRight: 20 }}
+            leftArrowText={'＜'}
+            leftArrowStyle={{ color: 'white', fontSize: 30, marginLeft: 20 }}
+            rightArrowText={'＞'}
+            rightArrowStyle={{ color: 'white', fontSize: 30, marginRight: 20 }}
             arrows
             autoplay={false}
             currentPage={0}
@@ -268,7 +287,7 @@ export default class HomeScreen extends React.Component {
                 latitude: sliderCoords[slideIdx].latitude,
                 longitude: sliderCoords[slideIdx].longitude,
                 latitudeDelta: sliderCoords[slideIdx].latitudeDelta,
-                longitudeDelta: sliderCoords[slideIdx].longitudeDelta
+                longitudeDelta: sliderCoords[slideIdx].longitudeDelta,
               };
               const locationName = sliderCoords[slideIdx].locationName;
 
@@ -293,7 +312,7 @@ export default class HomeScreen extends React.Component {
            */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
-                source={require("../assets/images/FSA.jpg")}
+                source={require('../assets/images/FSA.jpg')}
                 style={styles.overlayImage}
               >
                 <View style={styles.bgColorOverlay}>
@@ -316,7 +335,7 @@ export default class HomeScreen extends React.Component {
             */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
-                source={require("../assets/images/timesSquare.jpg")}
+                source={require('../assets/images/timesSquare.jpg')}
                 style={styles.overlayImage}
               >
                 <View style={styles.bgColorOverlay}>
@@ -324,7 +343,7 @@ export default class HomeScreen extends React.Component {
                     <Text
                       style={[
                         styles.locationButtonText,
-                        { marginTop: 50, paddingTop: 15 }
+                        { marginTop: 50, paddingTop: 15 },
                       ]}
                     >
                       Times Square
@@ -334,8 +353,8 @@ export default class HomeScreen extends React.Component {
                     <TouchableOpacity
                       style={styles.locationActivityButton}
                       onPress={() =>
-                        this.props.navigation.navigate("CheckIn", {
-                          location: "Times Square"
+                        this.props.navigation.navigate('CheckIn', {
+                          location: 'Times Square',
                         })
                       }
                     >
@@ -347,7 +366,7 @@ export default class HomeScreen extends React.Component {
                       style={styles.locationActivityButton}
                       onPress={() =>
                         this.props.navigation.navigate(
-                          "Directions",
+                          'Directions',
                           navigateCoords
                         )
                       }
@@ -371,7 +390,7 @@ export default class HomeScreen extends React.Component {
             */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
-                source={require("../assets/images/WTC.jpg")}
+                source={require('../assets/images/WTC.jpg')}
                 style={styles.overlayImage}
               >
                 <View style={styles.bgColorOverlay}>
@@ -379,7 +398,7 @@ export default class HomeScreen extends React.Component {
                     <Text
                       style={[
                         styles.locationButtonText,
-                        { marginTop: 50, paddingTop: 15 }
+                        { marginTop: 50, paddingTop: 15 },
                       ]}
                     >
                       World Trade Center
@@ -389,8 +408,8 @@ export default class HomeScreen extends React.Component {
                     <TouchableOpacity
                       style={styles.locationActivityButton}
                       onPress={() =>
-                        this.props.navigation.navigate("CheckIn", {
-                          location: "Times Square"
+                        this.props.navigation.navigate('CheckIn', {
+                          location: 'Times Square',
                         })
                       }
                     >
@@ -402,7 +421,7 @@ export default class HomeScreen extends React.Component {
                       style={styles.locationActivityButton}
                       onPress={() =>
                         this.props.navigation.navigate(
-                          "Directions",
+                          'Directions',
                           navigateCoords
                         )
                       }
@@ -426,7 +445,7 @@ export default class HomeScreen extends React.Component {
             */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
-                source={require("../assets/images/ESB.jpg")}
+                source={require('../assets/images/ESB.jpg')}
                 style={styles.overlayImage}
               >
                 <View style={styles.bgColorOverlay}>
@@ -434,7 +453,7 @@ export default class HomeScreen extends React.Component {
                     <Text
                       style={[
                         styles.locationButtonText,
-                        { marginTop: 50, paddingTop: 0 }
+                        { marginTop: 50, paddingTop: 0 },
                       ]}
                     >
                       Empire State Building
@@ -444,8 +463,8 @@ export default class HomeScreen extends React.Component {
                     <TouchableOpacity
                       style={styles.locationActivityButton}
                       onPress={() =>
-                        this.props.navigation.navigate("CheckIn", {
-                          location: "empireStateBuilding"
+                        this.props.navigation.navigate('CheckIn', {
+                          location: 'empireStateBuilding',
                         })
                       }
                     >
@@ -457,7 +476,7 @@ export default class HomeScreen extends React.Component {
                       style={styles.locationActivityButton}
                       onPress={() =>
                         this.props.navigation.navigate(
-                          "Directions",
+                          'Directions',
                           navigateCoords
                         )
                       }
@@ -480,7 +499,7 @@ export default class HomeScreen extends React.Component {
             */}
             <View style={[styles.locationButtonBox, this.state.size]}>
               <ImageBackground
-                source={require("../assets/images/TheMet.jpg")}
+                source={require('../assets/images/TheMet.jpg')}
                 style={styles.overlayImage}
               >
                 <View style={styles.bgColorOverlay}>
@@ -488,7 +507,7 @@ export default class HomeScreen extends React.Component {
                     <Text
                       style={[
                         styles.locationButtonText,
-                        { marginTop: 50, paddingTop: 15 }
+                        { marginTop: 50, paddingTop: 15 },
                       ]}
                     >
                       Metropolitan Museum of Art
@@ -498,8 +517,8 @@ export default class HomeScreen extends React.Component {
                     <TouchableOpacity
                       style={styles.locationActivityButton}
                       onPress={() =>
-                        this.props.navigation.navigate("CheckIn", {
-                          location: "empireStateBuilding"
+                        this.props.navigation.navigate('CheckIn', {
+                          location: 'empireStateBuilding',
                         })
                       }
                     >
@@ -511,7 +530,7 @@ export default class HomeScreen extends React.Component {
                       style={styles.locationActivityButton}
                       onPress={() =>
                         this.props.navigation.navigate(
-                          "Directions",
+                          'Directions',
                           navigateCoords
                         )
                       }
@@ -531,78 +550,99 @@ export default class HomeScreen extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    userData: state.userData,
+    activities: state.activities,
+    places: state.places,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    watchUser: () => dispatch(watchUserData()),
+    watchActivities: () => dispatch(watchActivityData()),
+    watchPlaces: () => dispatch(watchPlaceData()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MapScreen);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 27,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   map: {
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
-    position: "absolute"
+    position: 'absolute',
   },
   mapFlexContainer: {
-    flex: 65
+    flex: 65,
   },
   locationsBox: {
     flex: 35,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   bgColorOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,.35)"
+    backgroundColor: 'rgba(0,0,0,.35)',
   },
   locationButtonBox: {
     flex: 1,
-    alignItems: "stretch"
+    alignItems: 'stretch',
   },
   overlayImage: {
-    width: "100%",
+    width: '100%',
     height: height * 0.35,
-    resizeMode: "cover"
+    resizeMode: 'cover',
   },
   stretchLocationButton: {
     flex: 3,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   stretchLocationButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 20,
-    fontFamily: "Abril-FatFace",
-    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    fontFamily: 'Abril-FatFace',
+    textShadowColor: 'rgba(0, 0, 0, 0.95)',
     textShadowOffset: { width: -2, height: 2 },
     textShadowRadius: 2,
-    zIndex: 10
+    zIndex: 10,
   },
   LocationsHeadline: {
-    color: "white",
+    color: 'white',
     flex: 1,
     fontSize: 24,
-    fontFamily: "Abril-FatFace"
+    fontFamily: 'Abril-FatFace',
   },
   locationButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 30,
-    textAlign: "center",
-    fontFamily: "Abril-FatFace",
-    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    textAlign: 'center',
+    fontFamily: 'Abril-FatFace',
+    textShadowColor: 'rgba(0, 0, 0, 0.95)',
     textShadowOffset: { width: -2, height: 2 },
     textShadowRadius: 2,
     marginHorizontal: 100,
-    zIndex: 10
+    zIndex: 10,
   },
   locationActivityButtonBox: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: 'row',
   },
   locationActivityButton: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  }
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
