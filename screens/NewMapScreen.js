@@ -68,16 +68,16 @@ class MapScreen extends React.Component {
   }
 
   // This componentWillMount does the work of getInitialState() in setting up the region
-  // componentWillMount() {
-  //   if (Platform.OS === 'android' && !Constants.isDevice) {
-  //     this.setState({
-  //       errorMessage:
-  //         'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-  //     });
-  //   } else {
-  //     this._getLocationAsync();
-  //   }
-  // }
+  componentWillMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage:
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+  }
 
   // async componentDidMount() {
   //   const userId = firebase.auth().currentUser

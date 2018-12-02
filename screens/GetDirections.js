@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
+import { Ionicons } from '@expo/vector-icons';
 import { GOOGLE_MAPS_APIKEY } from '../secrets';
 import MapViewDirections from 'react-native-maps-directions';
 import MapView, { Marker, AnimatedRegion, Animated } from 'react-native-maps';
@@ -57,8 +57,9 @@ export default class GetDirections extends React.Component {
     console.log('params');
     console.log(params);
     const origin = {
-      latitude: 40.7051,
-      longitude: -74.0092,
+      // Below the commented out code (params.currentLat/Long) represent user location. the hardcoded location is fullstack nyc
+      latitude: 40.7051 /*params.currentLat*/,
+      longitude: -74.0092 /*params.currentLong*/,
     };
     const destination = {
       latitude: params.destLat,
@@ -70,8 +71,9 @@ export default class GetDirections extends React.Component {
     // Both const below are args passed into class methods for button onPress
     const markers = [origin, destination];
     const region = {
-      latitude: params.currentLat,
-      longitude: params.currentLong,
+      // the commented out code is what is supposed to be there to refocus on actual usr location, the hard coded coords are for demo purposes
+      latitude: /*params.currentLat*/ 40.7051,
+      longitude: /*params.currentLong8*/ -74.0092,
       latitudeDelta: this.state.latitudeDelta,
       longitudeDelta: this.state.longitudeDelta,
     };
@@ -85,8 +87,9 @@ export default class GetDirections extends React.Component {
             }}
             region={{
               // This is here for currentLocationRefocus
-              latitude: params.currentLat,
-              longitude: params.currentLong,
+              // the commented out code is what is supposed to be there to refocus on actual usr location, the hard coded coords are for demo purposes
+              latitude: /*params.currentLat*/ 40.7051,
+              longitude: /*params.currentLong8*/ -74.0092,
               latitudeDelta: this.state.latitudeDelta,
               longitudeDelta: this.state.longitudeDelta,
             }}
@@ -123,7 +126,14 @@ export default class GetDirections extends React.Component {
               style={styles.locationActivityButton}
               onPress={() => navigate('Map')}
             >
-              <Text style={styles.stretchLocationButtonText}>Go Back</Text>
+              <Ionicons
+                name={
+                  Platform.OS === 'ios' ? `ios-arrow-back` : 'md-arrow-back'
+                }
+                size={40}
+                color="white"
+              />
+              {/* <Text style={styles.stretchLocationButtonText}>Go Back</Text> */}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -131,7 +141,7 @@ export default class GetDirections extends React.Component {
               onPress={() => this.currentLocationRefocus(region)}
             >
               <Text style={styles.stretchLocationButtonText}>
-                Focus on Current Location
+                Show Location
               </Text>
             </TouchableOpacity>
 
@@ -139,7 +149,7 @@ export default class GetDirections extends React.Component {
               style={styles.locationActivityButton}
               onPress={() => this.fitAllMarkers(markers)}
             >
-              <Text style={styles.stretchLocationButtonText}>Fit Both</Text>
+              <Text style={styles.stretchLocationButtonText}>Show Route</Text>
             </TouchableOpacity>
           </View>
           {/* </View> */}
