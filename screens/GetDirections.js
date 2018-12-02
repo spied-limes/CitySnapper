@@ -121,7 +121,7 @@ export default class GetDirections extends React.Component {
  */}
         <View style={styles.locationButtonBox}>
           {/* <View style={styles.bgColorOverlay}> */}
-          <View style={styles.locationActivityButtonBox}>
+          <View style={[styles.locationActivityButtonBoxLeft]}>
             <TouchableOpacity
               style={styles.locationActivityButton}
               onPress={() => navigate('Map')}
@@ -140,16 +140,14 @@ export default class GetDirections extends React.Component {
               style={styles.locationActivityButton}
               onPress={() => this.currentLocationRefocus(region)}
             >
-              <Text style={styles.stretchLocationButtonText}>
-                Show Location
-              </Text>
+              <Text style={styles.stretchLocationButtonText}>Location</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.locationActivityButton}
               onPress={() => this.fitAllMarkers(markers)}
             >
-              <Text style={styles.stretchLocationButtonText}>Show Route</Text>
+              <Text style={styles.stretchLocationButtonText}>Route</Text>
             </TouchableOpacity>
           </View>
           {/* </View> */}
@@ -198,6 +196,10 @@ const styles = StyleSheet.create({
   },
   locationActivityButtonBox: {
     flex: 1,
+    flexDirection: 'row',
+  },
+  locationActivityButtonBoxLeft: {
+    flex: 2,
     flexDirection: 'row',
   },
   locationActivityButton: {
