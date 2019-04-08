@@ -366,43 +366,48 @@ export default class CameraScreen extends React.Component {
             console.log("Back button hit; Modal has been closed.");
           }}
         >
-          <View style={styles.modalContainer}>
-            <View style={styles.processingBlocks} />
-            {!this.state.showAnswer ? (
-              <View style={styles.processingContainer}>
-                <Text style={styles.processingTitle}>Processing...</Text>
-                <View>
-                  <BarIndicator color="white" count={5} size={60} />
+          <ImageBackground
+            source={require("../assets/images/OTS1.jpg")}
+            style={styles.modalImage}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.processingBlocks} />
+              {!this.state.showAnswer ? (
+                <View style={styles.processingContainer}>
+                  <Text style={styles.processingTitle}>Processing...</Text>
+                  <View>
+                    <BarIndicator color="white" count={5} size={60} />
+                  </View>
                 </View>
-              </View>
-            ) : (
-              <View style={styles.processingContainer}>
-                <View style={styles.answerBox}>
-                  <Text style={styles.processingTitle}>Nice!</Text>
-                </View>
+              ) : (
+                <View style={styles.processingContainer}>
+                  <View style={styles.answerBox}>
+                    <Text style={styles.processingTitle}>Nice!</Text>
+                  </View>
 
-                <View style={styles.answerBox}>
-                  <Text style={styles.processingText}>
-                    Your picture was an 81% match.
-                  </Text>
+                  <View style={styles.answerBox}>
+                    <Text style={styles.processingText}>
+                      Your picture was an 81% match.
+                    </Text>
+                  </View>
+                  <TouchableHighlight
+                    style={styles.answerBoxButton}
+                    onPress={() => {
+                      this.setModalVisible(!this.state.modalVisible);
+                      this.props.navigation.navigate("CheckIn", {
+                        location: "Times Square"
+                      });
+                    }}
+                  >
+                    <Text style={styles.modalReturnButtonText}>
+                      Back to Activities
+                    </Text>
+                  </TouchableHighlight>
                 </View>
-                <TouchableHighlight
-                  style={styles.answerBoxButton}
-                  onPress={() => {
-                    this.setModalVisible(!this.state.modalVisible);
-                    this.props.navigation.navigate("CheckIn", {
-                      location: "Times Square"
-                    });
-                  }}
-                >
-                  <Text style={styles.modalReturnButtonText}>
-                    Back to Activities
-                  </Text>
-                </TouchableHighlight>
-              </View>
-            )}
-            <View style={styles.processingBlocks} />
-          </View>
+              )}
+              <View style={styles.processingBlocks} />
+            </View>
+          </ImageBackground>
         </Modal>
         <ImageBackground
           source={require("../assets/images/OTS1.jpg")}
@@ -479,6 +484,11 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "cover",
     opacity: 0.5
+  },
+  modalImage: {
+    width: undefined,
+    height: "100%",
+    resizeMode: "cover"
   },
   camera: {
     flex: 1,
@@ -578,7 +588,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.75)",
+    // backgroundColor: "rgba(0,0,0,1)",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -591,13 +601,13 @@ const styles = StyleSheet.create({
   },
   processingTitle: {
     textAlign: "center",
-    fontSize: 40,
+    fontSize: 48,
     fontFamily: "Abril-FatFace",
     color: "white"
   },
   processingText: {
     textAlign: "center",
-    fontSize: 20,
+    fontSize: 24,
     color: "white"
   },
   answerBox: {

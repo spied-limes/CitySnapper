@@ -332,7 +332,7 @@ class HomeScreen extends React.Component {
                     <Text style={{ color: "white" }}>Login</Text>
                   </Button>
                   {/* CAMERA BUTTON FOR DEBUG */}
-                  <Button
+                  {/* <Button
                     style={{ marginTop: 15 }}
                     full
                     rounded
@@ -340,7 +340,7 @@ class HomeScreen extends React.Component {
                     onPress={() => this.props.navigation.navigate("CheckIn")}
                   >
                     <Text style={{ color: "black" }}>Go to Camera</Text>
-                  </Button>
+                  </Button> */}
                 </View>
               ) : (
                 <View>
@@ -399,7 +399,7 @@ class HomeScreen extends React.Component {
                     <Text style={{ color: "white" }}>Sign Up</Text>
                   </Button>
                   {/* MAP BUTTON FOR DEBUG */}
-                  <Button
+                  {/* <Button
                     style={{ marginTop: 15 }}
                     full
                     rounded
@@ -407,7 +407,7 @@ class HomeScreen extends React.Component {
                     onPress={() => this.props.navigation.navigate("Map")}
                   >
                     <Text style={{ color: "black" }}>Go to Map</Text>
-                  </Button>
+                  </Button> */}
                 </View>
               )}
             </View>

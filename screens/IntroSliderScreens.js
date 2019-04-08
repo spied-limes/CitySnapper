@@ -1,20 +1,20 @@
-import React from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, View, Text, Image } from 'react-native';
-import { connect } from 'react-redux';
+import React from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, View, Text, Image } from "react-native";
+import { connect } from "react-redux";
 import {
   watchUserData,
   watchPlaceData,
-  watchActivityData,
-} from '../redux/app-redux';
-import * as firebase from 'firebase';
+  watchActivityData
+} from "../redux/app-redux";
+import * as firebase from "firebase";
 import {
   writeUserData,
-  updateUserActivityData,
-} from '../firebase/firebaseConfig';
-import { navigate } from 'react-navigation';
-import { LinearGradient } from 'expo';
-import AppIntroSlider from 'react-native-app-intro-slider';
+  updateUserActivityData
+} from "../firebase/firebaseConfig";
+import { navigate } from "react-navigation";
+import { LinearGradient } from "expo";
+import AppIntroSlider from "react-native-app-intro-slider";
 
 /*
    _____ __        __
@@ -28,27 +28,27 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    alignItems: "center",
+    justifyContent: "space-around"
   },
   image: {
     width: 320,
-    height: 320,
+    height: 320
   },
   text: {
-    color: 'rgba(255, 255, 255, 0.8)',
-    backgroundColor: 'transparent',
-    textAlign: 'center',
+    color: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: "transparent",
+    textAlign: "center",
     paddingHorizontal: 16,
-    fontSize: 18,
+    fontSize: 18
   },
   title: {
     fontSize: 30,
-    color: 'white',
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
+    color: "white",
+    backgroundColor: "transparent",
+    textAlign: "center",
+    marginBottom: 16
+  }
 });
 
 /*
@@ -63,8 +63,8 @@ class IntroSlider extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      name: '',
+      email: "",
+      name: ""
     };
   }
   _renderItem = props => (
@@ -75,15 +75,15 @@ class IntroSlider extends React.Component {
           paddingTop: props.topSpacer,
           paddingBottom: props.bottomSpacer,
           width: props.width,
-          height: props.height,
-        },
+          height: props.height
+        }
       ]}
       colors={props.colors}
       start={{ x: 0, y: 0.1 }}
       end={{ x: 0.1, y: 1 }}
     >
       <Ionicons
-        style={{ backgroundColor: 'transparent' }}
+        style={{ backgroundColor: "transparent" }}
         name={props.icon}
         size={200}
         color="white"
@@ -106,31 +106,30 @@ class IntroSlider extends React.Component {
 
     const slides = [
       {
-        key: 'somethun',
+        key: "somethun",
         title: `Welcome to CitySnapper, \n${this.props.userData &&
           this.props.userData.name}!`,
         text:
-          'CitySnapper was created to bring the \nworld of the past into the present! \nPick a place to explore to get directions there. \nOnce there try some activites!  ',
-        icon: 'ios-laptop',
-        // image: require('../assets/images/fake_logo.png'),
+          "CitySnapper was created to bring the \nworld of the past into the present!\n\nPick a place to explore, get directions there\nand do some activities!",
+        icon: "md-map", // image: require('../assets/images/fake_logo.png'),
         // imageStyle: styles.image,
-        colors: ['#63E2FF', '#B066FE'],
+        colors: ["#63E2FF", "#B066FE"]
       },
       {
-        key: 'somethun1',
-        title: 'Actvities',
+        key: "somethun1",
+        title: "Activities",
         text:
-          'CitySnapper makes learning fun! \nTry our photo matching challenge! \nPlay a round of trivia! ',
-        icon: 'ios-options',
-        colors: ['#A3A1FF', '#3A3897'],
+          "CitySnapper makes learning fun!\n\nPlay a round of trivia and\ntry our photo matching challenge!",
+        icon: "ios-camera",
+        colors: ["#A3A1FF", "#3A3897"]
       },
       {
-        key: 'somethun2',
-        title: 'The CitySnapper Team',
-        text: 'Ricardo Dominguez \nChristian Mejia \nKasim Alam \nShaun Tung',
-        icon: 'ios-people',
-        colors: ['#29ABE2', '#4F00BC'],
-      },
+        key: "somethun2",
+        title: "The CitySnapper Team",
+        text: "Ricardo Dominguez\nChristian Mejia\nKasim Alam\nShaun Tung",
+        icon: "ios-people",
+        colors: ["#29ABE2", "#4F00BC"]
+      }
     ];
 
     return (
@@ -143,12 +142,12 @@ class IntroSlider extends React.Component {
         // hideNextButton
         // hideDoneButton
         onSkip={() => {
-          console.log('\nSkip button pressed');
-          this.props.navigation.navigate('Map');
+          console.log("\nSkip button pressed");
+          this.props.navigation.navigate("Map");
         }}
         onDone={() => {
-          console.log('\nDone button pressed');
-          this.props.navigation.navigate('Map');
+          console.log("\nDone button pressed");
+          this.props.navigation.navigate("Map");
         }}
       />
     );
@@ -159,7 +158,7 @@ const mapStateToProps = state => {
   return {
     userData: state.userData,
     activities: state.activities,
-    places: state.places,
+    places: state.places
   };
 };
 
@@ -167,7 +166,7 @@ const mapDispatchToProps = dispatch => {
   return {
     watchUser: () => dispatch(watchUserData()),
     watchActivities: () => dispatch(watchActivityData()),
-    watchPlaces: () => dispatch(watchPlaceData()),
+    watchPlaces: () => dispatch(watchPlaceData())
   };
 };
 
