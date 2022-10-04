@@ -13,7 +13,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "expo": "^31.0.2",
+    "expo": "^46.0.14",
     "firebase": "^5.5.9",
     "native-base": "^2.8.1",
     "react": "16.5.0",
